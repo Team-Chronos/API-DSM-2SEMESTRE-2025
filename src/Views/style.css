@@ -6,6 +6,8 @@
 }
 :root{
     --blue: rgb(28, 28, 255);
+    --dark-blue: rgb(13, 13, 139);
+    --muito-dark-blue: rgb(13, 13, 99);
 }
 body{
     min-height: 100vh;
@@ -102,6 +104,22 @@ button[type="submit"]{
     background: rgba(0,0,0,0.3);
     border: 1.5px solid var(--blue);
     box-sizing: border-box;
+}
+button[type="submit"]:hover{
+    background: var(--blue);
+    border: 1.5px solid var(--blue);
+    cursor: pointer;
+    #setaLogin{
+        color: var(--muito-dark-blue);
+    }
+}
+button[type="submit"]:active{
+    background: var(--muito-dark-blue) !important;
+    border: 1.5px solid var(--muito-dark-blue) !important;
+    cursor: pointer;
+    #setaLogin{
+        color: var(--blue);
+    }
 }
 
 #entrar-btn-text {
