@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Digite seu email" required><br>
+    <input type="password" id="senha" placeholder="Digite sua senha" required><br>
+    <button type="submit">Entrar</button>
+  </form>
+  <p id="mensagem"></p>
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      const resposta = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha })
+      });
+
+      const resultado = await resposta.json();
+      document.getElementById("mensagem").textContent = resultado.mensagem;
+    });
+</script>
+</body>
+</html>
