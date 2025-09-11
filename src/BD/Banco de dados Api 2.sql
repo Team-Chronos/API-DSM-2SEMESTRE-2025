@@ -24,7 +24,25 @@ CREATE TABLE Gestor (
     FOREIGN KEY (ID_colaborador) REFERENCES Colaboradores(ID_colaborador)
 );
 
-SHOW TABLES;
+CREATE TABLE  Evento (
+    ID_Evento INT PRIMARY KEY,
+    Nome_Evento VARCHAR(255) NOT NULL,
+    Data_Evento DATETIME NOT NULL,
+    Local_Evento VARCHAR(255),
+    Descricao TEXT,
+    ID_Setor INT,
+    FOREIGN KEY (ID_Setor) REFERENCES Setor(ID_Setor)
+);
+
+CREATE TABLE  Participacao_Evento (
+    ID_Participacao INT PRIMARY KEY,
+    ID_Evento INT,
+    ID_Colaborador INT,
+    Status VARCHAR(50),
+    FOREIGN KEY (ID_Evento) REFERENCES Evento(ID_Evento),
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador)
+);
+
 
 
 
