@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root{
+    --blue: rgb(28, 28, 255);
+    --dark-blue: rgb(13, 13, 139);
+    --muito-dark-blue: rgb(13, 13, 99);
+}
+body{
+    min-height: 100vh;
+    max-width: 100vw;
+}
+#barra-lateral {
+    background-image: linear-gradient(var(--blue) 40%, black);
+    color: white;
+    height: 100vh;
+    padding: 1rem;
+    padding-top: 3rem;
+
+    flex-grow: 1;
+}
+main {
+    flex-grow: 8;
+    padding: 20px;
+    max-height: 100vh;
+
+    background-color: #eee;
+}
+
+#colab-info{
+    font-weight: 500;
+}
+#colab-img{
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+}
+
+nav > ul{
+    row-gap: 30px;
+}
+nav > ul > li{
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    column-gap: 15px;
+
+    display: flex;
+    align-items: center;
+}
+nav > ul > li > .bi::before {
+    font-size: 32px;
+}
+
+#logo{
+    width: fit-content;
+    font-family: poppins, sans-serif;
+}
+#newe{
+    color: var(--blue);
+    font-size: 40px;
+    font-weight: 700;
+}
+#logistica{
+    margin-top: -10px;
+    font-size: 10px;
+    font-weight: 700;
+}
