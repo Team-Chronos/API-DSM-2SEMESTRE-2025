@@ -43,7 +43,6 @@ CREATE TABLE  Participacao_Evento (
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador)
 );
 
-SHOW TABLES;
 
 
 
