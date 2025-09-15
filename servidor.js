@@ -91,6 +91,48 @@ app.get("/colaboradores", (req, res) => {
     res.json(results);
   });
 });
+// Rota lista
+app.get("/colaboradores/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.query("SELECT * FROM Colaboradores WHERE ID_colaborador = ?", [id], (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar colaborador:", err);
+      return res.status(500).json({ mensagem: "Erro no servidor" });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ mensagem: "Colaborador não encontrado." });
+    }
+    res.json(results[0]);
+  });
+});
+
+// Rota para editar um colaborador
+app.put("/colaboradores/:id", (req, res) => {
+    const { id } = req.params;
+    const { nome, email, cpf, setor } = req.body;
+
+    const sql = `
+        UPDATE Colaboradores
+        SET Nome_Col = ?, Email = ?, CPF = ?, Setor = ?
+        WHERE ID_colaborador = ?
+    `;
+    
+    const params = [nome, email, cpf, setor, id];
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            console.error("Erro ao editar colaborador:", err);
+            return res.status(500).json({ mensagem: "Erro ao editar colaborador." });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ mensagem: "Colaborador não encontrado." });
+        }
+
+        res.json({ mensagem: "Colaborador atualizado com sucesso!" });
+    });
+});
 // inicia servidor
 app.listen(3000, () => {
   console.log("Servidor rodando em http://localhost:3000");
