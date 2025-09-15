@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 
 const app = express();
 app.use(express.static("Views")); // serve o index.html
+app.use(express.static("models"));
 app.use(bodyParser.json());
 
 // conexão com o banco MySQL
@@ -35,5 +36,5 @@ app.post("/login", (req, res) => {
 
 // inicia servidor
 app.listen(3000, () => {
-  console.log("Servidor rodando em http://localhost:3000");
+  console.log("Servidor rodando em http://localhost:3000/login.html");
 });

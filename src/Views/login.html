@@ -1,4 +1,4 @@
-<!--
+<!-- 
     formulario de login 
     id, name = email
     id, name = senha
@@ -24,7 +24,7 @@
                 </span>
             </div>
             <div id="rowForm" class="row pe-3 ps-3 pb-4 col-lg-8">
-                <form class="d-flex flex-column" action="/login" method="POST">
+                <form class="d-flex flex-column" id="loginForm">
                     <h2 class="mb-4">Entrar</h2>
                     <div class="mb-3">
                         <input type="email" class="form-control" id="email" name="email" placeholder="E-mail" required>
@@ -46,9 +46,11 @@
                     </button>
                 </form>
             </div>
+            <p id="mensagem"></p>
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="login.js"></script>
 </body>
-</html>
+</html>,
