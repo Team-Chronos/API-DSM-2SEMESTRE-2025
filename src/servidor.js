@@ -3,7 +3,7 @@ import mysql from "mysql2";
 import bodyParser from "body-parser";
 
 const app = express();
-app.use(express.static("view")); // serve o index.html
+app.use(express.static("Views")); // serve o index.html
 app.use(bodyParser.json());
 
 // conexão com o banco MySQL
