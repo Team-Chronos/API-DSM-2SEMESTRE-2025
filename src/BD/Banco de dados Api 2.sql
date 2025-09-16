@@ -2,13 +2,13 @@ create database Api_2;
 use Api_2;
 
 CREATE TABLE Setor (
-    ID_Setor INT PRIMARY KEY,
+    ID_Setor INT AUTO_INCREMENT PRIMARY KEY,
     Nome_Setor VARCHAR(255),
     Descricao VARCHAR(255)
 );
 
 CREATE TABLE Colaboradores (
-    ID_colaborador INT PRIMARY KEY,
+    ID_colaborador INT AUTO_INCREMENT PRIMARY KEY,
     Nome_Col VARCHAR(255),
     Setor INT,
     CPF VARCHAR(11),
@@ -43,6 +43,10 @@ CREATE TABLE  Participacao_Evento (
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador)
 );
 
-
+INSERT INTO Setor (Nome_Setor)
+VALUES
+('Adm'),
+('Comercial'),
+('Operacional');
 
 
