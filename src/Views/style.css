@@ -82,7 +82,6 @@ nav > ul > li > .bi::before {
 
 main {
     width: 80%;
-    padding: 20px;
     max-height: 100vh;
 
     background-color: #eee;
