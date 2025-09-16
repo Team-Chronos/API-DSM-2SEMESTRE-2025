@@ -10,10 +10,11 @@ window.addEventListener('DOMContentLoaded', function () {
         const descricao = document.getElementById('descricao').value;
         const responsavelAta = document.getElementById('responsavel_ata').value;
 
-        const dataObj = new Date(data + 'T00:00:00');
-        const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+        // Formata a data para o padrão brasileiro (dd/mm/aaaa)
+        const dataObj = new Date(data);
+        const dataFormatada = dataObj.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
 
-        const textoAta = 
+        const textoAta =
 `ATA DE REUNIÃO
 
 Título: ${titulo}
@@ -32,18 +33,17 @@ A presente ata foi redigida por ${responsavelAta} e reflete os pontos discutidos
         document.getElementById('resultado').textContent = textoAta;
     });
 
+    // --- SEÇÃO CORRIGIDA ---
     // Exportar para PDF
     document.getElementById('btn-download-pdf').addEventListener('click', function () {
         const elemento = document.getElementById('resultado');
 
-        if (!elemento.textContent.trim()) {
-            alert("Por favor, gere a ata antes de exportar para PDF.");
+        // Verifica se a ata foi gerada antes de tentar baixar
+        const placeholderText = 'A ata gerada aparecerá aqui após preencher o formulário e clicar no botão.';
+        if (elemento.textContent.trim() === placeholderText || !elemento.textContent.trim()) {
+            alert("Por favor, gere a ata na página antes de exportar para PDF.");
             return;
         }
-
-        // Criar cópia temporária com <br> para preservar quebras no PDF
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = elemento.textContent.replace(/\n/g, '<br>');
 
         const opt = {
             margin:       [10, 10, 10, 10],
@@ -51,12 +51,11 @@ A presente ata foi redigida por ${responsavelAta} e reflete os pontos discutidos
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak:    { mode: ['css', 'legacy'] }
+            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
-        setTimeout(() => {
-            html2pdf().set(opt).from(tempDiv).save();
-        }, 200);
+        // Gera o PDF diretamente do elemento visível 'resultado', que já está formatado pelo CSS
+        html2pdf().set(opt).from(elemento).save();
     });
 
 });
