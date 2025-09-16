@@ -12,7 +12,6 @@
   <a href ="#dod">DoD</a>  |
   <a href ="#sprint"> Cronograma de Sprints</a>  |
   <a href ="#tecnologias">Tecnologias</a> |
-  <a href ="#manual">Manual de Instalação</a>  | 
   <a href ="#equipe"> Equipe</a> |
 </p>
 
@@ -61,7 +60,7 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 ## 🏃‍ DoR - Definition of Ready <a id="dor"></a>
 
 * User Stories com **Critérios de Aceitação**
-* Subtarefas divididas **a partir das US**
+* Cenários **a partir das US**
 * Design no **Canva**
 * Modelagem do **Banco de Dados**
 
@@ -79,7 +78,7 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | ------------------------------------------------ |
-| 🔖 **SPRINT 1** | 08/09 - 28/09 |                                                  |
+| 🔖 **SPRINT 1** | 08/09 - 28/09 | [Sprint 1](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%201) |
 | 🔖 **SPRINT 2** | 06/10 - 26/10 |                                                  |
 | 🔖 **SPRINT 3** | 03/11 - 23/11 |                                                  |
 
