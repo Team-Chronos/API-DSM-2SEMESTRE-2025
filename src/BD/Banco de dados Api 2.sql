@@ -2,12 +2,18 @@ CREATE DATABASE Api_2;
 USE Api_2;
 
 CREATE TABLE Setor (
+    ID_Setor INT AUTO_INCREMENT PRIMARY KEY,
+    Nome_Setor VARCHAR(255),
+=======
     ID_Setor INT PRIMARY KEY AUTO_INCREMENT,
     Nome_Setor VARCHAR(255) NOT NULL,
     Descricao VARCHAR(255)
 );
 
 CREATE TABLE Colaboradores (
+
+    ID_colaborador INT AUTO_INCREMENT PRIMARY KEY,
+    Nome_Col VARCHAR(255),
     ID_colaborador INT PRIMARY KEY AUTO_INCREMENT,
     Nome_Col VARCHAR(255) NOT NULL,
     Setor INT,
@@ -46,6 +52,13 @@ CREATE TABLE Participacao_Evento (
 );
 
 
+INSERT INTO Setor (Nome_Setor)
+VALUES
+('Adm'),
+('Comercial'),
+('Operacional');
+
+
 CREATE TABLE Local_Trabalho (
     ID_Local INT PRIMARY KEY AUTO_INCREMENT,
     ID_Colaborador INT NOT NULL,
@@ -55,3 +68,4 @@ CREATE TABLE Local_Trabalho (
     Data_Fim DATE,
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador)
 );
+
