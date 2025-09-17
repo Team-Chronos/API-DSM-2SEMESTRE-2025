@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let eventoAtualId = null;
     let colaboradorAtualId = 1; 
 
-    // Carregar eventos
     async function carregarEventos() {
         try {
             const resposta = await fetch('/eventos');
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 container.appendChild(card);
             });
             
-            // Adicionar event listeners aos botões
             document.querySelectorAll('.btn-responder-evento').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     eventoAtualId = e.target.getAttribute('data-id');
@@ -62,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
     
-    // Configurar botão de enviar resposta
     document.getElementById('enviarRespostaEvento').addEventListener('click', async () => {
         const respostaSelecionada = document.querySelector('input[name="respostaEvento"]:checked');
         
@@ -86,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             
             bootstrap.Modal.getInstance(document.getElementById('respostaEventoModal')).hide();
-            carregarEventos(); // Recarregar a lista de eventos
+            carregarEventos(); 
             
         } catch (error) {
             console.error('Erro ao enviar resposta:', error);
