@@ -1,0 +1,52 @@
+<!-- 
+    form inputs: nome, email, senha, telefone, cpf, setor, cargo
+    setor select: <option value='?'>?</option>
+    cargo select: <option value='?'>?</option>
+-->
+<div id="cadastroModal" class="modal fade" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="cadastroModalLabel">Cadastro de Colaborador</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="formDiv">
+                    <form id="formCadastro">
+                        <div class="mb-3">
+                            <label for="nome">Nome:</label>
+                            <input class="form-control" type="text" name="nome" id="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email">Email:</label>
+                            <input class="form-control" type="email" name="email" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="senha">Senha:</label>
+                            <input class="form-control" type="password" name="senha" id="senha" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefone">Telefone:</label>
+                            <input class="form-control" type="tel" name="telefone" id="telefone" maxlength="15" placeholder="(99) 99999-9999" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cpf">CPF:</label>
+                            <input class="form-control" type="text" title="CPF somente números: 00000000000" inputmode="numeric" maxlength="14" name="cpf" id="cpf" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="setor">Setor:</label>
+                            <select class="form-control form-select" name="setor" id="setor">
+                                <option value="1">ADM</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button"  data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" form="formCadastro" type="submit">Cadastrar</button>
+                
+            </div>
+        </div>
+    </div>
+</div>

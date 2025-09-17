@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",     // seu usuário do MySQL
-  password: "fatec", // sua senha do MySQL
+  password: "rafa", // sua senha do MySQL
   database: "Api_2"
 });
 
@@ -36,9 +36,9 @@ app.post("/login", (req, res) => {
 });
 // Rota de cadastro
 app.post("/cadastro", async (req, res) => {
-  const { nome, email, senha, cpf, setor } = req.body;
+  const { nome, email, senha, telefone, cpf, setor } = req.body;
 
-  if (!nome || !email || !senha || !cpf || !setor) {
+  if (!nome || !email || !senha || !telefone || !cpf || !setor) {
     return res.status(400).json({ mensagem: "Preencha todos os campos!" });
   }
 
@@ -54,8 +54,8 @@ app.post("/cadastro", async (req, res) => {
     }
 
     const senhaHash = await bcrypt.hash(senha, 10);
-    const insertQuery = "INSERT INTO Colaboradores (Nome_Col, Email, Senha, CPF, Setor) VALUES (?, ?, ?, ?, ?)";
-    await db.promise().query(insertQuery, [nome, email, senhaHash, cpf, setor]);
+    const insertQuery = "INSERT INTO Colaboradores (Nome_Col, Email, Senha, Telefone, CPF, Setor) VALUES (?, ?, ?, ?, ?, ?)";
+    await db.promise().query(insertQuery, [nome, email, senhaHash, telefone, cpf, setor]);
 
     res.json({ mensagem: "Usuário cadastrado com sucesso!" });
 

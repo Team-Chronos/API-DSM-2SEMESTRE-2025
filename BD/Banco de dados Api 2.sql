@@ -14,6 +14,7 @@ CREATE TABLE Colaboradores (
     CPF VARCHAR(11),
     Senha VARCHAR(255),
     Perfil VARCHAR(255),
+    Telefone VARCHAR(11),
     Email VARCHAR(255),
     FOREIGN KEY (Setor) REFERENCES Setor(ID_Setor)
 );
@@ -45,7 +46,7 @@ CREATE TABLE  Participacao_Evento (
 
 INSERT INTO Setor (Nome_Setor)
 VALUES
-('Adm'),
+('Administrativo'),
 ('Comercial'),
 ('Operacional');
 
