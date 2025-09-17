@@ -1,3 +1,7 @@
+function formatarTelefone(tel){
+    return tel.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3')
+}
+
 async function carregarColaboradores() {
     try {
         const resposta = await fetch('/colaboradores');
@@ -12,14 +16,15 @@ async function carregarColaboradores() {
         }
 
         const tabela = document.createElement('table');
-        tabela.className = 'tabela-colaboradores'; 
+        tabela.className = 'table table-responsive align-middle';
+        tabela.id = 'tbColaboradores';
         
         tabela.innerHTML = `
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
-                    <th>CPF</th>
+                    <th>Telefone</th>
                     <th>Email</th>
                     <th>Ações</th>
                 </tr>
@@ -32,12 +37,13 @@ async function carregarColaboradores() {
         colaboradores.forEach(colaborador => {
             const linha = document.createElement('tr');
             linha.innerHTML = `
-                <td>ID: ${colaborador.ID_colaborador}</td>
+                <td>${colaborador.ID_colaborador}</td>
                 <td>${colaborador.Nome_Col}</td>
-                <td>${colaborador.CPF}</td> <td>${colaborador.Email}</td>
+                <td class="tel-colab" value="${colaborador.Telefone}">${formatarTelefone(colaborador.Telefone)}</td>
+                <td>${colaborador.Email}</td>
                 <td class="botoes-tabela">
-                    <button class="btn-tabela-excluir" onclick="excluirColaborador('${colaborador.ID_colaborador}')">Excluir</button>
-                    <button class="btn-tabela-editar" onclick="editarColaborador('${colaborador.ID_colaborador}')">Editar</button>
+                    <span class="btn-tabela-editar pointer" onclick="editarColaborador('${colaborador.ID_colaborador}')"><i class="bi bi-pencil-square"></i></span>
+                    <span class="btn-tabela-excluir pointer" onclick="excluirColaborador('${colaborador.ID_colaborador}')"><i class="bi bi-trash"></i></span>
                 </td>
             `;
             corpoTabela.appendChild(linha);

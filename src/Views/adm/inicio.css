@@ -1,0 +1,50 @@
+#btn-colaboradores,
+#btn-eventos {
+    color: white;
+    background-color: var(--dark-blue);
+    z-index: 1;
+    border-radius: 0;
+}
+
+#btn-colaboradores:active,
+#btn-eventos:active {
+    border-color: transparent !important;
+}
+
+#btn-colaboradores.ativo,
+#btn-eventos.ativo {
+    background-color: var(--blue);
+    z-index: 2;
+}
+
+#btn-colaboradores{
+    border-radius: 10px 0 0 0;
+}
+#btn-eventos{
+    border-radius: 0 10px 0 0;
+}
+
+#btn-modal-cad {
+    color: white;
+    background-color: var(--blue);
+    margin-left: auto;
+}
+
+.botoes-tabela {
+    font-size: 20px;
+    color: white !important;
+    column-gap: .5rem;
+    row-gap: .4rem;
+}
+
+.btn-tabela-editar {
+    background-color: dodgerblue;
+    border-radius: 5px;
+    padding: 2px 5px;
+}
+
+.btn-tabela-excluir {
+    background-color: red;
+    border-radius: 5px;
+    padding: 2px 5px;
+}

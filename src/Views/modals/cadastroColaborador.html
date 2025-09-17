@@ -1,8 +1,3 @@
-<!-- 
-    form inputs: nome, email, senha, telefone, cpf, setor, cargo
-    setor select: <option value='?'>?</option>
-    cargo select: <option value='?'>?</option>
--->
 <div id="cadastroModal" class="modal fade" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -27,16 +22,16 @@
                         </div>
                         <div class="mb-3">
                             <label for="telefone">Telefone:</label>
-                            <input class="form-control" type="tel" name="telefone" id="telefone" maxlength="15" placeholder="(99) 99999-9999" required>
+                            <input class="form-control" type="tel" name="telefone" inputmode="numeric" id="telefone" maxlength="15" placeholder="(99) 99999-9999" required>
                         </div>
                         <div class="mb-3">
                             <label for="cpf">CPF:</label>
-                            <input class="form-control" type="text" title="CPF somente números: 00000000000" inputmode="numeric" maxlength="14" name="cpf" id="cpf" required>
+                            <input class="form-control" type="text" title="CPF somente números: 00000000000" inputmode="numeric" maxlength="14" name="cpf" id="cpf" placeholder="000.000.000-00" required>
                         </div>
                         <div class="mb-3">
                             <label for="setor">Setor:</label>
                             <select class="form-control form-select" name="setor" id="setor">
-                                <option value="1">ADM</option>
+                                <option>1</option>
                             </select>
                         </div>
                     </form>

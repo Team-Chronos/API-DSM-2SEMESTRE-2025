@@ -6,6 +6,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    font-family: 'Poppins', sans-serif;
 }
 
 :root {
@@ -81,66 +83,18 @@ nav > ul > li > .bi::before {
     font-weight: 700;
 }
 
-/* Main content area styles */
 main {
     width: 80%;
     max-height: 100vh;
     background-color: #eee;
 }
 
-/* --- Added Styles for the Collaborator List --- */
-
-/* General table style */
-.tabela-colaboradores {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-/* Table header styles */
-.tabela-colaboradores thead th {
-    background-color: #e6e9f0;
-    color: #555555;
-    font-weight: 600;
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 2px solid #dcdfe4;
-}
-
-/* Table body cell styles */
-.tabela-colaboradores tbody td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #e0e4eb;
-    color: #444444;
-}
-
-/* Zebra stripe effect */
-.tabela-colaboradores tbody tr:nth-child(even) {
-    background-color: #eef2f5;
-}
-
-.tabela-colaboradores tbody tr:nth-child(odd) {
-    background-color: #f7f9fc;
-}
-
-/* ID cell style to make it stand out */
-.tabela-colaboradores tbody tr td:first-child {
-    background-color: #dbe2e9;
-    font-weight: 500;
-}
-
-/* Simulating links for names and emails */
-.tabela-colaboradores tbody td:nth-child(2),
-.tabela-colaboradores tbody td:nth-child(4) {
-    color: #007bff;
-    text-decoration: underline;
+.pointer{
     cursor: pointer;
 }
 
-.tabela-colaboradores tbody td:nth-child(2):hover,
-.tabela-colaboradores tbody td:nth-child(4):hover {
-    text-decoration: none;
-    color: #0056b3;
+input[type='search'].search-icon{
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='gray' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2rem;
 }
