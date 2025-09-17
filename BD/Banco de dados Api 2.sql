@@ -49,4 +49,7 @@ VALUES
 ('Comercial'),
 ('Operacional');
 
+ALTER TABLE Evento ADD COLUMN Organizador_ID INT;
+ALTER TABLE Evento ADD FOREIGN KEY (Organizador_ID) REFERENCES Colaboradores(ID_colaborador);
 
+ALTER TABLE Participacao_Evento ADD COLUMN Motivo TEXT;

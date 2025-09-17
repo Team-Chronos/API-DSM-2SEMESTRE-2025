@@ -34,6 +34,7 @@ app.post("/login", (req, res) => {
     }
   );
 });
+
 // Rota de cadastro
 app.post("/cadastro", async (req, res) => {
   const { nome, email, senha, cpf, setor } = req.body;
@@ -91,6 +92,94 @@ app.get("/colaboradores", (req, res) => {
     res.json(results);
   });
 });
+//notificar colaborador sobre eventos
+app.post("/notificar-evento", async (req, res) => {
+    const { idEvento, idColaborador, resposta, motivo } = req.body;
+
+    try {
+        const [eventoResults] = await db.promise().query(`
+            SELECT e.*, c.Email as OrganizadorEmail, c.Nome_Col as OrganizadorNome 
+            FROM Evento e 
+            INNER JOIN Colaboradores c ON e.ID_Organizador = c.ID_colaborador 
+            WHERE e.ID_Evento = ?
+        `, [idEvento]);
+
+        if (eventoResults.length === 0) {
+            return res.status(404).json({ mensagem: "Evento não encontrado." });
+        }
+
+        const evento = eventoResults[0];
+
+        //Buscar informações do colaborador
+        const [colaboradorResults] = await db.promise().query(
+            "SELECT Nome_Col FROM Colaboradores WHERE ID_colaborador = ?",
+            [idColaborador]
+        );
+
+        if (colaboradorResults.length === 0) {
+            return res.status(404).json({ mensagem: "Colaborador não encontrado." });
+        }
+
+        const colaborador = colaboradorResults[0];
+
+        const queryParticipacao = `
+            INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, Status, Motivo) 
+            VALUES (?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE Status = ?, Motivo = ?
+        `;
+        
+        await db.promise().query(queryParticipacao, [
+            idEvento, idColaborador, resposta, motivo,
+            resposta, motivo
+        ]);
+
+        //Enviar email de notificação para o organizador
+        const mailOptions = {
+            from: process.env.EMAIL_USER || 'sistema@newe.com',
+            to: evento.OrganizadorEmail,
+            subject: `Resposta para o evento: ${evento.Nome_Evento}`,
+            html: `
+                <h2>Nova resposta para o evento: ${evento.Nome_Evento}</h2>
+                <p><strong>Colaborador:</strong> ${colaborador.Nome_Col}</p>
+                <p><strong>Resposta:</strong> ${resposta}</p>
+                ${motivo ? `<p><strong>Motivo:</strong> ${motivo}</p>` : ''}
+                <p>Data do evento: ${new Date(evento.Data_Evento).toLocaleDateString('pt-BR')}</p>
+                <p>Local: ${evento.Local_Evento}</p>
+            `
+        };
+
+        // Enviar email 
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Erro ao enviar notificação:', error);
+                // Ainda assim retornamos sucesso
+            } else {
+                console.log('Notificação enviada:', info.response);
+            }
+        });
+
+        res.json({ 
+            mensagem: "Resposta registrada com sucesso e organizador notificado!",
+            notificacaoEnviada: true
+        });
+
+    } catch (err) {
+        console.error("Erro ao processar resposta do evento:", err);
+        res.status(500).json({ mensagem: "Erro ao processar resposta." });
+    }
+});
+
+// eventos.js
+app.get("/eventos", (req, res) => {
+    db.query("SELECT * FROM Evento", (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar eventos:", err);
+            return res.status(500).json({ mensagem: "Erro ao buscar eventos." });
+        }
+        res.json(results);
+    });
+});
+
 // inicia servidor
 app.listen(3000, () => {
   console.log("Servidor rodando em http://localhost:3000");

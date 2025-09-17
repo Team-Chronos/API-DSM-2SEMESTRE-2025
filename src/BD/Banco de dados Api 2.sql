@@ -19,13 +19,12 @@ CREATE TABLE Colaboradores (
     Setor INT,
     CPF VARCHAR(11) UNIQUE,
     Senha VARCHAR(255) NOT NULL,
-    Perfil VARCHAR(255),
     Email VARCHAR(255) UNIQUE,
     FOREIGN KEY (Setor) REFERENCES Setor(ID_Setor)
 );
 
-CREATE TABLE Gestor (
-    ID_gestor INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE Cargo (
+    ID_Cargo INT PRIMARY KEY AUTO_INCREMENT,
     ID_colaborador INT NOT NULL,
     FOREIGN KEY (ID_colaborador) REFERENCES Colaboradores(ID_colaborador)
 );
