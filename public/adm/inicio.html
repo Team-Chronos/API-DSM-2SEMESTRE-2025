@@ -1,17 +1,40 @@
 <div id="adm-inicio" class="mx-5">
-    <header class="d-flex flex-row mt-4 mb-3">
-        <div class="inicio-content-selection d-flex flex-row">
-            <div id="btn-colaboradores" class="btn ativo">Colaboradores</div>
-            <div id="btn-eventos" class="btn">Eventos</div>
+    <header class="d-flex align-items-center justify-content-between mb-4">
+
+        <div>
+            <div class="inicio-content-selection d-flex">
+                <div id="btn-colaboradores" class="btn ativo">Colaboradores</div>
+                <div id="btn-eventos" class="btn">Eventos</div>
+            </div>
         </div>
-        <input class="form-control w-25 search-icon mx-auto" type="search" name="pesquisaAdm" id="pesquisaAdm" placeholder="Pesquisar...">
-        <button id="btn-modal-cad" class="btn" data-bs-toggle="modal" data-bs-target="#cadastroModal">Adicionar</button>
+    
+        <div class="d-flex align-items-center gap-3 mx-4 flex-grow-1 justify-content-center">
+            <div class="pesquisa-principal">
+                <input class="form-control" type="search" id="pesquisaAdm" placeholder="Pesquisar...">
+            </div>
+            <div class="d-flex align-items-center">
+                <label for="filtro-setor" class="form-label mb-0 me-2 flex-shrink-0">Filtrar por Setor:</label>
+                <select id="filtro-setor" class="form-select filtro-select">
+                    <option value="">Todos</option>
+                    <option value="Administrativo">Administrativo</option>
+                    <option value="Comercial">Comercial</option>
+                    <option value="Operacional">Operacional</option>
+                </select>
+            </div>
+        </div>
+    
+        <div>
+            <button id="btn-modal-cad" class="btn" data-bs-toggle="modal" data-bs-target="#cadastroModal">
+                Adicionar
+            </button>
+        </div>
+    
     </header>
     <div id="lista-colaboradores">
-        </div>
+    </div>
 
     <div id="form-edicao-colaborador-container">
-         </div>
+    </div>
 </div>
 
 <div id="cadastroModal" class="modal fade" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
@@ -37,11 +60,13 @@
                     </div>
                     <div class="mb-3">
                         <label for="telefone" class="form-label">Telefone:</label>
-                        <input class="form-control" type="tel" name="telefone" id="telefone" placeholder="(99) 99999-9999" required>
+                        <input class="form-control" type="tel" name="telefone" id="telefone"
+                            placeholder="(99) 99999-9999" required>
                     </div>
                     <div class="mb-3">
                         <label for="cpf" class="form-label">CPF:</label>
-                        <input class="form-control" type="text" name="cpf" id="cpf" placeholder="000.000.000-00" required>
+                        <input class="form-control" type="text" name="cpf" id="cpf" placeholder="000.000.000-00"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="setor" class="form-label">Setor:</label>
