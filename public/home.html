@@ -6,18 +6,22 @@
 -->
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newe - Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/inicio.css">
 </head>
+
 <body>
     <div class="container-fuid d-flex flex-row overflow-hidden">
         <div id="barra-lateral" class="d-flex flex-column align-items-center">
             <div id="colab-info" class="d-flex flex-column align-items-center mb-1">
-                <img id="colab-img" class="mb-2" src="img-colab-test.png" alt="Foto do Colaborador">
+                <img id="colab-img" class="mb-2" src="./images/img-colab-test.png" alt="Foto do Colaborador">
                 <div id="colab-nome" class="mb-1 px-1">Ana Sette Henrique Lima Moura de Paula</div>
                 <div id="modulo">Administrativo</div>
             </div>
@@ -43,6 +47,9 @@
                         <i class="bi bi-file-earmark-text"></i>
                         <span>Certificados</span>
                     </li>
+                    <li id="btn-logout" class="mt-auto text-danger"> <i class="bi bi-box-arrow-right"></i>
+                        <span>Sair</span>
+                    </li>
                 </ul>
             </nav>
             <div id="logo" class="text-center flex-column d-flex mt-auto mb-3">
@@ -56,7 +63,7 @@
         </div>
 
         <main class="d-flex flex-column overflow-y-auto">
-            
+
         </main>
     </div>
 
@@ -78,6 +85,10 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="/js/home.js" defer></script>
 </body>
+
 </html>
