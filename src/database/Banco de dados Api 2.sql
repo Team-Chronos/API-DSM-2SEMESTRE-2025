@@ -50,6 +50,6 @@ VALUES
 ('Comercial'),
 ('Operacional');
 
-INSERT INTO Colaborador (Email, Senha, Setor)
+INSERT INTO Colaboradores (Email, Senha, Setor)
 VALUES
-('jv.moura.sjc@gmail.com', '1234',1);
+('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2',1);

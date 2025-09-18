@@ -25,11 +25,10 @@ body {
 #barra-lateral {
     background-image: linear-gradient(var(--blue) 40%, black);
     color: white;
-    height: 100vh;
+    height: 100vh; 
     padding: 1rem;
-    padding-top: 2rem;
     width: 15%;
-    min-width: 200px;
+    min-width: 250px;
 }
 
 
