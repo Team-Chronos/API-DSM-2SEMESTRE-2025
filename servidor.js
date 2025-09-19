@@ -25,6 +25,23 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
+app.post('/confirmarEvento', (req, res) => {
+    // 1. Pega os dados enviados pelo front-end
+    const { resposta, justificativa } = req.body;
+
+    // 2. Mostra no console do servidor para confirmar que os dados chegaram
+    console.log('Resposta recebida do cliente:');
+    console.log(`- Decisão: ${resposta}`); // Será 'aceito' ou 'recusado'
+    console.log(`- Justificativa: ${justificativa}`); // Será o texto ou uma string vazia
+
+    // 3. AQUI VOCÊ COLOCARIA A LÓGICA DO BANCO DE DADOS
+    // Ex: salvar a resposta no banco de dados, associada a um usuário/evento.
+
+    // 4. Envia uma resposta de sucesso de volta para o front-end
+    res.status(200).json({ mensagem: 'Resposta registrada com sucesso no servidor!' });
+});
+// --- FIM DA NOVA ROTA ---
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
