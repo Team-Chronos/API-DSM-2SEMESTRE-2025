@@ -20,13 +20,13 @@
 <body>
     <div class="container-fuid d-flex flex-row overflow-hidden">
         <div id="barra-lateral" class="d-flex flex-column align-items-center">
-            <div id="colab-info" class="d-flex flex-column align-items-center mb-1 mt-5">
+            <div id="colab-info" class="d-flex flex-column align-items-center mb-1 mt-4">
                 <img id="colab-img" class="mb-3" src="./images/img-colab-test.png" alt="Foto do Colaborador">
                 <div id="colab-nome" class="mb-2 px-1">Ana Sette Henrique Lima Moura de Paula</div>
                 <div id="modulo">Administrativo</div>
             </div>
             <nav class="my-auto">
-                <ul class="list-unstyled d-flex flex-column">
+                <ul class="list-unstyled d-flex flex-column mb-0">
                     <li id="inicio">
                         <i class="bi bi-house-door-fill"></i>
                         <span>Início</span>
@@ -47,7 +47,7 @@
                         <i class="bi bi-file-earmark-text"></i>
                         <span>Certificados</span>
                     </li>
-                    <li id="btn-logout" class="mt-auto text-danger"> <i class="bi bi-box-arrow-right"></i>
+                    <li id="btn-logout" class="text-danger align-self-center"> <i class="bi bi-box-arrow-right"></i>
                         <span>Sair</span>
                     </li>
                 </ul>
@@ -67,6 +67,39 @@
         </main>
     </div>
 
+    <div id="localidadeModal" class="modal fade" tabindex="-1" aria-labelledby="localidadeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="localidadeModalLabel">Informe sua localização</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <form id="formLocalidade" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label d-block">Por favor, qual a sua localidade?</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="local" id="presencial" value="P">
+                                <label class="form-check-label" for="presencial">Presencial</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="local" id="remoto" value="R">
+                                <label class="form-check-label" for="remoto">Remoto</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="local" id="outro" value="O">
+                                <label class="form-check-label" for="outro">Outro</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" form="formLocalidade" type="submit">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="sucessoModal" class="modal fade" tabindex="-1" aria-labelledby="sucessoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -77,6 +110,24 @@
                 <div class="modal-body text-center">
                     <p id="sucessoMensagem"></p>
                     <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="erroModal" class="modal fade" tabindex="-1" aria-labelledby="erroModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="erroModalLabel">Erro!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="erroMensagem" class="fs-5"></p>
+                    <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem;"></i>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
