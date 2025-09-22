@@ -1,47 +1,35 @@
-<div id="adm-inicio" class="mx-5">
-    <header class="d-flex align-items-center justify-content-between mb-4">
-
-        <div>
-            <div class="inicio-content-selection d-flex">
-                <div id="btn-colaboradores" class="btn ativo">Colaboradores</div>
-                <div id="btn-eventos" class="btn">Eventos</div>
-            </div>
+<header class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <div class="inicio-content-selection d-flex">
+            <div id="btn-colaboradores" class="btn ativo">Colaboradores</div>
+            <div id="btn-eventos" class="btn">Eventos</div>
         </div>
-    
-        <div class="d-flex align-items-center gap-3 mx-4 flex-grow-1 justify-content-center">
-            <div class="pesquisa-principal">
-                <input class="form-control" type="search" id="pesquisaAdm" placeholder="Pesquisar...">
-            </div>
-            <div class="d-flex align-items-center">
-                <label for="filtro-setor" class="form-label mb-0 me-2 flex-shrink-0">Filtrar por Setor:</label>
-                <select id="filtro-setor" class="form-select filtro-select">
-                    <option value="">Todos</option>
-                    <option value="Administrativo">Administrativo</option>
-                    <option value="Comercial">Comercial</option>
-                    <option value="Operacional">Operacional</option>
-                </select>
-            </div>
-        </div>
-    
-        <div>
-            <button id="btn-modal-cad" class="btn" data-bs-toggle="modal" data-bs-target="#cadastroModal">
-                Adicionar
-            </button>
-        </div>
-    
-    </header>
-    <div id="lista-colaboradores">
     </div>
-
-    <div id="form-edicao-colaborador-container">
+    <div class="d-flex align-items-center gap-3 mx-4 flex-grow-1 justify-content-center">
+        <div class="pesquisa-principal">
+            <input class="form-control" type="search" id="pesquisaAdm" placeholder="Pesquisar por Nome ou Email...">
+        </div>
+        <div class="d-flex align-items-center">
+            <label for="filtro-setor" class="form-label mb-0 me-2 flex-shrink-0">Filtrar por Setor:</label>
+            <select id="filtro-setor" class="form-select filtro-select">
+                <option value="">Todos</option>
+                <option value="Administrativo">Administrativo</option>
+                <option value="Comercial">Comercial</option>
+                <option value="Operacional">Operacional</option>
+            </select>
+        </div>
     </div>
-</div>
-
-<div id="cadastroModal" class="modal fade" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
+    <div>
+        <button id="btn-modal-cad" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#cadColabMod">Adicionar</button>
+    </div>
+</header>
+<div id="lista-colaboradores"></div>
+<div id="cadColabMod" class="modal fade" tabindex="-1" aria-labelledby="cadColabModLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="cadastroModalLabel">Cadastro de Colaborador</h5>
+                <h5 class="modal-title" id="cadColabModLabel">Cadastro de Colaborador</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -85,8 +73,6 @@
         </div>
     </div>
 </div>
-
-
 <div id="edicaoModal" class="modal fade" tabindex="-1" aria-labelledby="edicaoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -130,8 +116,6 @@
         </div>
     </div>
 </div>
-
-
 <div id="sucessoModal" class="modal fade" tabindex="-1" aria-labelledby="sucessoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -149,20 +133,55 @@
         </div>
     </div>
 </div>
-
-<div id="erroModal" class="modal fade" tabindex="-1" aria-labelledby="erroModalLabel" aria-hidden="true">
+<div id="cadEventMod" class="modal fade" tabindex="-1" aria-labelledby="cadEventModLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="erroModalLabel">Erro!</h5>
+                <h5 class="modal-title" id="cadEventModLabel">Cadastro de Novo Evento</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center">
-                <p id="erroMensagem" class="fs-5"></p>
-                <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem;"></i>
+            <div class="modal-body">
+                <form id="formEvento" novalidate>
+                    <div class="mb-3">
+                        <label for="nome_evento" class="form-label">Nome do Evento:</label>
+                        <input class="form-control" type="text" name="nome_evento" id="nome_evento" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data_evento" class="form-label">Data e Hora do Evento:</label>
+                        <input class="form-control" type="datetime-local" id="data_evento" required>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" form="formEvento" type="submit">Cadastrar Evento</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="edicaoEventoModal" class="modal fade" tabindex="-1" aria-labelledby="edicaoEventoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edicaoEventoModalLabel">Editar Evento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEdicaoEvento" novalidate>
+                    <input type="hidden" id="edit-evento-id">
+                    <div class="mb-3">
+                        <label for="edit-nome_evento" class="form-label">Nome do Evento:</label>
+                        <input type="text" class="form-control" id="edit-nome_evento" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-data_evento" class="form-label">Data e Hora do Evento:</label>
+                        <input type="datetime-local" class="form-control" id="edit-data_evento" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" form="formEdicaoEvento">Salvar Alterações</button>
             </div>
         </div>
     </div>
