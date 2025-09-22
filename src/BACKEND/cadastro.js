@@ -1,4 +1,4 @@
-const transporter = require('./mailer'); // Caminho ao mailer.js
+const transporter = require('./mailer'); 
 require('dotenv').config();
 
 function enviarEmailConfirmacao(destinatario) {
@@ -18,5 +18,5 @@ function enviarEmailConfirmacao(destinatario) {
   });
 }
 
-// Exemplo de chamada 
+
 enviarEmailConfirmacao('email@exemplo.com');
