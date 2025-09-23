@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node servidor.js",
+    "dev": "nodemon servidor.js"
   },
   "repository": {
     "type": "git",
@@ -17,9 +18,13 @@
     "url": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/issues"
   },
   "homepage": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
+    "jsonwebtoken": "9.0.2",
     "express": "^5.1.0",
     "mysql2": "^3.14.5"
   }

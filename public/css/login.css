@@ -1,35 +1,39 @@
-body{
+body {
     color: white;
-    background: url('backgroundLogin.jpg') no-repeat center center fixed;
+    background: url('../images/backgroundLogin.jpg') no-repeat center center fixed;
     background-size: cover;
 
 }
 
-main{
+main {
     background-color: transparent;
     width: initial;
 }
 
 @media (min-width: 576px) {
-    #rowForm{
+    #rowForm {
         padding-left: 5rem !important;
         padding-right: 5rem !important;
     }
 }
+
 @media (min-width: 768px) {
-    #rowForm{
+    #rowForm {
         padding-left: 9rem !important;
         padding-right: 9rem !important;
     }
 }
+
 @media (min-width: 992px) {
-    #rowForm{
+    #rowForm {
         padding-left: 1rem !important;
-        padding-right:1rem !important;
+        padding-right: 1rem !important;
     }
-    .fundo-sombra{
+
+    .fundo-sombra {
         background-color: transparent !important;
     }
+
     .fundo-sombra::before {
         content: "";
         position: absolute;
@@ -38,53 +42,62 @@ main{
         z-index: -1;
         height: 100vh;
 
-        clip-path: polygon(
-            0% 0%,
-            100% 0%,
-            60% 100%,
-            0% 100%
-        );
+        clip-path: polygon(0% 0%,
+                100% 0%,
+                60% 100%,
+                0% 100%);
     }
-    button[type="submit"]{
+
+    button[type="submit"] {
         width: 50% !important;
     }
 }
-.fundo-sombra{
+
+.fundo-sombra {
     min-height: 100vh;
     backdrop-filter: blur(2px);
     background-color: rgba(0, 0, 0, .7);
 }
-#logo{
+
+#logo {
     width: fit-content;
     font-family: poppins, sans-serif;
 }
-#newe{
+
+#newe {
     color: var(--blue);
     font-size: 40px;
     font-weight: 700;
 }
-#logistica{
+
+#logistica {
     margin-top: -10px;
     font-size: 10px;
     font-weight: 700;
 }
-input.form-control::placeholder{
+
+input.form-control::placeholder {
     color: white;
     opacity: 1;
 }
-input.form-control:focus{
+
+input.form-control:focus {
     color: white;
-    background-color: rgba(0, 0, 0, .5);;
+    background-color: rgba(0, 0, 0, .5);
+    ;
     border-color: rgb(40, 40, 255);
     opacity: 1;
     box-shadow: 0 0 0 2px rgba(13, 110, 253, .25);
 }
-input.form-control, button[type="submit"]{
+
+input.form-control,
+button[type="submit"] {
     color: white;
     background: rgba(0, 0, 0, .3);
     border: 1.5px solid var(--blue);
 }
-button[type="submit"]{
+
+button[type="submit"] {
     width: 40%;
     border-radius: 30px;
     display: grid;
@@ -92,23 +105,27 @@ button[type="submit"]{
     align-items: center;
     padding: 0.5rem .7rem;
     color: white;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     border: 1.5px solid var(--blue);
     box-sizing: border-box;
 }
-button[type="submit"]:hover{
+
+button[type="submit"]:hover {
     background: var(--blue);
     border: 1.5px solid var(--blue);
     cursor: pointer;
-    #setaLogin{
+
+    #setaLogin {
         color: var(--muito-dark-blue);
     }
 }
-button[type="submit"]:active{
+
+button[type="submit"]:active {
     background: var(--muito-dark-blue) !important;
     border: 1.5px solid var(--muito-dark-blue) !important;
     cursor: pointer;
-    #setaLogin{
+
+    #setaLogin {
         color: var(--blue);
     }
 }

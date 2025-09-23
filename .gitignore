@@ -12,3 +12,4 @@ yarn-error.log*
 # Cache do sistema
 .DS_Store
 Thumbs.db
+.Rhistory

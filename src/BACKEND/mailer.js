@@ -1,11 +1,11 @@
 const nodemailer = require('nodemailer');
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '.env') }); // Garante que o .env seja lido corretamente
+require('dotenv').config({ path: path.resolve(__dirname, '.env') }); 
 
-// Criação do transporter com as variáveis de ambiente
+
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT), // Certifica que seja número
+  port: Number(process.env.EMAIL_PORT), 
   secure: false, 
   auth: {
     user: process.env.EMAIL_USER,
@@ -13,5 +13,5 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Exportando para uso em outros arquivos
+
 module.exports = transporter;
