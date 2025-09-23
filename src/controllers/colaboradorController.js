@@ -1,6 +1,7 @@
 import Colaborador from '../models/colaborador.js';
 import bcrypt from 'bcrypt';
-
+import jwt from 'jsonwebtoken';
+import { enviarEmailConfirmacao } from './authController.js'; 
 
 export const criarColaborador = async (req, res) => {
     const { nome, email, senha, telefone, cpf, setor } = req.body;
@@ -17,12 +18,19 @@ export const criarColaborador = async (req, res) => {
         const senhaHash = await bcrypt.hash(senha, 10);
         await Colaborador.create({ nome, email, senhaHash, telefone, cpf, setor });
 
-        res.status(201).json({ mensagem: "Usuário cadastrado com sucesso!" });
+        const tokenConfirmacao = jwt.sign({ email }, process.env.JWT_SECRET || 'SEU_SEGREDO_SUPER_SECRETO', { 
+            expiresIn: '24h' 
+        });
+
+        await enviarEmailConfirmacao(email, tokenConfirmacao);
+
+        res.status(201).json({ 
+            mensagem: "Usuário cadastrado com sucesso! Verifique seu email para confirmar o cadastro." 
+        });
     } catch (err) {
         res.status(500).json({ mensagem: "Erro ao cadastrar usuário" });
     }
 };
-
 
 export const listarColaboradores = async (req, res) => {
     try {
@@ -32,7 +40,6 @@ export const listarColaboradores = async (req, res) => {
         res.status(500).json({ mensagem: "Erro ao buscar colaboradores." });
     }
 };
-
 
 export const obterColaboradorPorId = async (req, res) => {
     try {
@@ -44,7 +51,6 @@ export const obterColaboradorPorId = async (req, res) => {
     }
 };
 
-
 export const atualizarColaborador = async (req, res) => {
     try {
         const [result] = await Colaborador.updateById(req.params.id, req.body);
@@ -54,7 +60,6 @@ export const atualizarColaborador = async (req, res) => {
         res.status(500).json({ mensagem: "Erro ao atualizar colaborador." });
     }
 };
-
 
 export const excluirColaborador = async (req, res) => {
     try {
