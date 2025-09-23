@@ -148,8 +148,24 @@
                     </div>
                     <div class="mb-3">
                         <label for="data_evento" class="form-label">Data e Hora do Evento:</label>
-                        <input class="form-control" type="datetime-local" id="data_evento" required>
+                        <input class="form-control" type="datetime-local" name="data_evento" id="data_evento" required>
                     </div>
+                    <div class="mb-3" id="campo_local">
+                        <label for="local_evento" class="form-label">Local ou link do Evento:</label>
+                        <input class="form-control" type="text" name="local_evento" id="local_evento" placeholder="Link ou endereço do evento" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao_evento" class="form-label">Descrição do Evento:</label>
+                        <textarea class="form-control" name="descricao_evento" id="descricao_evento" rows="3" placeholder="Digite uma breve descrição do evento"></textarea>
+                    </div>
+                    <label class="form-label">Participantes:</label>
+                    <div id="colEventoDiv" class="mb-3 py-2 px-3">
+                        <input class="form-control mb-4 w-75 mt-2" type="search" id="pesquisaColEvento" placeholder="Pesquisar por Nome de colaborador">
+                        <div id="colEvento" class="d-grid">
+
+                        </div>
+                    </div>
+                    
                 </form>
             </div>
             <div class="modal-footer">

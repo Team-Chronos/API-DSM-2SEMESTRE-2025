@@ -21,6 +21,8 @@ const cpfInputCadastro = document.getElementById('cpf');
 const telInputCadastro = document.getElementById('telefone');
 const telInputEdicao = document.getElementById('edit-telefone');
 
+const colEventoPesquisa = document.getElementById('pesquisaColEvento')
+
 const getNomeSetor = (setorId) => {
     switch (setorId) {
         case 1: return 'Administrativo';
@@ -222,6 +224,7 @@ formCadastro.addEventListener('submit', async (e) => {
         sucessoModal.show();
         formCadastro.reset();
         carregarColaboradores();
+        recarregar()
     } else {
         alert(result.mensagem);
     }
@@ -271,6 +274,7 @@ formEdicao.addEventListener('submit', async (e) => {
         document.getElementById('sucessoMensagem').innerText = result.mensagem;
         sucessoModal.show();
         carregarColaboradores();
+        recarregar()
     } else {
         alert(result.mensagem);
     }
@@ -318,6 +322,7 @@ tabelaContainer.addEventListener('click', (e) => {
                     .then(res => res.json()).then(result => {
                         alert(result.mensagem);
                         carregarColaboradores();
+                        recarregar()
                     });
             }
         }
@@ -358,4 +363,43 @@ btnEventos.addEventListener('click', () => {
 campoPesquisa.addEventListener('input', filtrarTabela);
 filtroSetor.addEventListener('change', filtrarTabela);
 
+const colEvento = document.querySelector('#colEvento')
+
+async function colEventos (){
+    const response = await fetch(`/api/colaboradores`);
+    const colab = await response.json();
+
+    colEvento.innerHTML = ''
+    colab.forEach((col) => {
+        const formCheck = document.createElement('div')
+        formCheck.className = 'form-check my-2 text-large'
+
+        formCheck.innerHTML = `
+            <input class="form-check-input" id="${col.ID_colaborador}" type="checkbox" value="${col.ID_colaborador}" name="colaboradores[]">
+            <label class="form-check-label" for="${col.ID_colaborador}">${col.Nome_Col}</label>
+        `
+
+        colEvento.appendChild(formCheck)
+    })
+}
+
+colEventoPesquisa.addEventListener('input', function(){
+    let filtro = this.value.toLowerCase();
+    let colaboradores = document.querySelectorAll("#colEvento .form-check");
+
+    colaboradores.forEach(function (col) {
+        let nome = col.querySelector("label").textContent.toLowerCase();
+        if (nome.includes(filtro)) {
+            col.style.display = "inline-block";
+        } else {
+            col.style.display = "none";
+        }
+    });
+})
+
+function recarregar(){
+    colEventos()
+}
+
 carregarColaboradores();
+setTimeout(colEventos, 1000)
