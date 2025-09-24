@@ -26,7 +26,7 @@ CREATE TABLE Gestor (
 );
 
 CREATE TABLE  Evento (
-    ID_Evento INT PRIMARY KEY,
+    ID_Evento INT AUTO_INCREMENT PRIMARY KEY,
     Nome_Evento VARCHAR(255) NOT NULL,
     Data_Evento DATETIME NOT NULL,
     Local_Evento VARCHAR(255),
@@ -50,6 +50,8 @@ VALUES
 ('Comercial'),
 ('Operacional');
 
-INSERT INTO Colaboradores (Email, Senha, Setor)
+INSERT INTO Colaboradores (Nome_Col, Email, Senha, Setor)
 VALUES
-('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2',1);
+('Dev','dev@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2',1),
+('Ana Rubim','anajrbcosta25@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2',2)
+;
