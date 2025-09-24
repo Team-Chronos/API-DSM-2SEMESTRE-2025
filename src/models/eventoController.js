@@ -1,5 +1,5 @@
-import Evento from '../models/evento.js';
 import transporter from '../mailer.js';
+import Evento from '../models/Eventos.js';
 
 const enviarNotificacaoEvento = async (evento, destinatarios) => {
     const mailOptions = {
@@ -32,7 +32,7 @@ const enviarNotificacaoEvento = async (evento, destinatarios) => {
 
 export const criarEvento = async (req, res) => {
     const { titulo, descricao, data_evento, local, setores_notificar } = req.body;
-    const criado_por = req.user.id; // Assume que o usuário está autenticado
+    const criado_por = req.user.id;
 
     if (!titulo || !descricao || !data_evento || !local) {
         return res.status(400).json({ mensagem: "Preencha todos os campos obrigatórios!" });

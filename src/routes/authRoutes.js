@@ -2,8 +2,10 @@ import Colaborador from '../models/colaborador.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import transporter from '../mailer.js';
+import express from 'express';
+const router = express.Router();
 
-export const login = async (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, senha } = req.body;
 
     try {
@@ -33,7 +35,7 @@ export const login = async (req, res) => {
     } catch (err) {
         res.status(500).json({ mensagem: "Erro no servidor" });
     }
-};
+});
 
 export const enviarEmailConfirmacao = async (destinatario, token) => {
     const mailOptions = {
@@ -56,38 +58,45 @@ export const enviarEmailConfirmacao = async (destinatario, token) => {
     }
 };
 
-export const confirmarEmail = async (req, res) => {
-    const { token } = req.params;
+router.post('/registro', async (req, res) => {
+    const { nome, email, senha, telefone, cpf, setor } = req.body;
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'SEU_SEGREDO_SUPER_SECRETO');
-        
-        const [results] = await Colaborador.findByEmail(decoded.email);
-        if (results.length === 0) {
-            return res.status(400).send('Usuário não encontrado.');
+        const [emailResults] = await Colaborador.findByEmail(email);
+        if (emailResults.length > 0) {
+            return res.status(400).json({ mensagem: "Email já cadastrado!" });
         }
 
-        const user = results[0];
-        
-        await Colaborador.confirmarEmail(decoded.email);
-        
-        res.send(`
-            <html>
-                <body>
-                    <h2>E-mail confirmado com sucesso!</h2>
-                    <p>Agora você pode fazer login no sistema.</p>
-                    <a href="/login.html">Ir para Login</a>
-                </body>
-            </html>
-        `);
-    } catch (err) {
-        res.status(400).send(`
-            <html>
-                <body>
-                    <h2>Token inválido ou expirado.</h2>
-                    <p>Por favor, solicite um novo link de confirmação.</p>
-                </body>
-            </html>
-        `);
+        const [cpfResults] = await Colaborador.findByCpf(cpf);
+        if (cpfResults.length > 0) {
+            return res.status(400).json({ mensagem: "CPF já cadastrado!" });
+        }
+
+        const senhaHash = await bcrypt.hash(senha, 10);
+
+        await Colaborador.create({
+            nome, 
+            email, 
+            senhaHash, 
+            telefone, 
+            cpf, 
+            setor
+        });
+
+        const tokenConfirmacao = jwt.sign(
+            { email }, 
+            process.env.JWT_SECRET || 'SEU_SEGREDO_SUPER_SECRETO', 
+            { expiresIn: '24h' }
+        );
+
+        await enviarEmailConfirmacao(email, tokenConfirmacao);
+
+        res.status(201).json({ mensagem: "Colaborador criado com sucesso! Verifique seu email para confirmação." });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensagem: "Erro ao criar colaborador" });
     }
-};
+});
+
+export default router;

@@ -1,6 +1,6 @@
 import express from 'express';
-import { criarEvento, listarEventos, obterEventoPorId } from '../controllers/eventoController.js';
-import { verificarToken } from './authMiddleware.js'; // Você pode criar este middleware simples
+import { verificarToken } from '../routes/authMiddleware.js';
+import { criarEvento, listarEventos, obterEventoPorId } from './eventoController.js';
 
 const router = express.Router();
 

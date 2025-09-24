@@ -15,7 +15,7 @@ const Colaborador = {
     create: (data) => {
         const { nome, email, senhaHash, telefone, cpf, setor } = data;
         const query = "INSERT INTO Colaboradores (Nome_Col, Email, Senha, Telefone, CPF, Setor, verified) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        return db.promise().query(query, [nome, email, senhaHash, telefone, cpf, setor, false]); // Adicione o campo verified
+        return db.promise().query(query, [nome, email, senhaHash, telefone, cpf, setor, false]);
     },
     
     findAll: () => {
