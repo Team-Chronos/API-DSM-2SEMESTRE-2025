@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 
 
 export const criarColaborador = async (req, res) => {
-    const { nome, email, senha, telefone, cpf, setor } = req.body;
+    const { nome, email, senha, telefone, cpf, setor, lo } = req.body;
     if (!nome || !email || !senha || !telefone || !cpf || !setor) {
         return res.status(400).json({ mensagem: "Preencha todos os campos!" });
     }
@@ -63,5 +63,21 @@ export const excluirColaborador = async (req, res) => {
         res.json({ mensagem: "Colaborador excluído com sucesso!" });
     } catch (err) {
         res.status(500).json({ mensagem: "Erro ao excluir colaborador." });
+    }
+};
+
+export const salvarLocalidade = async (req, res) => {
+    const { colaboradorId, localidade } = req.body;
+
+    if (!colaboradorId || !localidade) {
+        return res.status(400).json({ mensagem: "Dados incompletos." });
+    }
+
+    try {
+        await Colaborador.updateLocalidade(colaboradorId, localidade);
+        res.status(200).json({ mensagem: "Localidade salva com sucesso!" });
+    } catch (err) {
+        console.error("Erro ao salvar localidade:", err);
+        res.status(500).json({ mensagem: "Erro interno ao salvar localidade." });
     }
 };

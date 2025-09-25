@@ -5,10 +5,12 @@ const formCadastro = document.getElementById('formCadastro');
 const formEdicao = document.getElementById('formEdicao');
 const campoPesquisa = document.getElementById('pesquisaAdm');
 const filtroSetor = document.getElementById('filtro-setor');
+const filtroModalidade = document.getElementById('filtro-modalidade'); // CORREÇÃO
+const btnAdicionar = document.getElementById('btn-modal-cad');
 const btnColaboradores = document.getElementById('btn-colaboradores');
-const btnEventos = document.getElementById('btn-eventos')
+const btnEventos = document.getElementById('btn-eventos');
 
-const cadastroModal = new bootstrap.Modal(document.getElementById('cadastroModal'));
+const cadColabMod = new bootstrap.Modal(document.getElementById('cadColabMod'));
 const edicaoModal = new bootstrap.Modal(document.getElementById('edicaoModal'));
 const sucessoModal = new bootstrap.Modal(document.getElementById('sucessoModal'));
 
@@ -22,6 +24,15 @@ const getNomeSetor = (setorId) => {
         case 2: return 'Comercial';
         case 3: return 'Operacional';
         default: return 'Desconhecido';
+    }
+};
+
+const getNomeLocalidade = (localidadeChar) => {
+    switch (localidadeChar) {
+        case 'P': return 'Presencial';
+        case 'R': return 'Remoto';
+        case 'O': return 'Outro';
+        default: return 'Não informado';
     }
 };
 
@@ -39,32 +50,35 @@ const formatarInputTelefone = (inputElement) => {
     value = value.replace(/(\d{5})(\d)/, '$1-$2');
     inputElement.value = value;
 };
+
 const filtrarTabela = () => {
     const textoPesquisa = campoPesquisa.value.toLowerCase();
     const setorSelecionado = filtroSetor.value;
-    
+    const modalidadeSelecionada = filtroModalidade.value;
+
     const corpoTabela = document.querySelector("#lista-colaboradores tbody");
-    if (!corpoTabela) return; 
-    
+    if (!corpoTabela) return;
+
     const linhas = corpoTabela.getElementsByTagName('tr');
 
     for (const linha of linhas) {
         const nomeNaLinha = linha.cells[1].textContent.toLowerCase();
         const emailNaLinha = linha.cells[2].textContent.toLowerCase();
         const setorNaLinha = linha.cells[3].textContent;
+        const modalidadeNaLinha = linha.cells[4].textContent;
 
         const correspondeNome = nomeNaLinha.includes(textoPesquisa);
         const correspondeEmail = emailNaLinha.includes(textoPesquisa);
         const correspondeSetor = (setorSelecionado === "" || setorNaLinha === setorSelecionado);
+        const correspondeModalidade = (modalidadeSelecionada === "" || modalidadeNaLinha === modalidadeSelecionada);
 
-        if (  correspondeSetor && (correspondeNome || correspondeEmail) ){
-            linha.style.display = ""; 
-        } else {
-            linha.style.display = "none"; 
-        }
+        linha.style.display = (correspondeSetor && (correspondeNome || correspondeEmail) && correspondeModalidade)
+            ? ""
+            : "none";
     }
 };
-cpfInputCadastro.addEventListener('input', () => {
+
+cpfInputCadastro?.addEventListener('input', () => {
     let value = cpfInputCadastro.value.replace(/\D/g, '');
     value = value.slice(0, 11);
     value = value.replace(/(\d{3})(\d)/, '$1.$2');
@@ -73,22 +87,38 @@ cpfInputCadastro.addEventListener('input', () => {
     cpfInputCadastro.value = value;
 });
 
-telInputCadastro.addEventListener('input', () => formatarInputTelefone(telInputCadastro));
-telInputEdicao.addEventListener('input', () => formatarInputTelefone(telInputEdicao));
+telInputCadastro?.addEventListener('input', () => formatarInputTelefone(telInputCadastro));
+telInputEdicao?.addEventListener('input', () => formatarInputTelefone(telInputEdicao));
 
 const carregarColaboradores = async () => {
     try {
         const response = await fetch('/api/colaboradores');
         const colaboradores = await response.json();
-        
+
         tabelaContainer.innerHTML = '';
-        if (colaboradores.length === 0) { /* ... */ return; }
+        if (colaboradores.length === 0) {
+            tabelaContainer.innerHTML = '<p class="text-center mt-3">Nenhum colaborador cadastrado.</p>';
+            return;
+        }
 
         const tabela = document.createElement('table');
         tabela.className = 'table table-hover align-middle';
         tabela.innerHTML = `
             <thead class="table-light">
-                <tr><th>ID</th><th>Nome</th><th>Email</th><th>Setor</th><th>Telefone</th><th>Ações</th></tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Setor</th>
+                    <th>Modalidade</th>
+                    <th>Telefone</th>
+                    <th class="d-flex justify-content-between align-items-center">
+                        Ações
+                        <button id="btn-refresh" class="ms-3 btn-refresh-header" title="Atualizar Lista">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </th>
+                </tr>
             </thead>
             <tbody>
                 ${colaboradores.map(colab => `
@@ -97,6 +127,7 @@ const carregarColaboradores = async () => {
                         <td>${colab.Nome_Col}</td>
                         <td>${colab.Email}</td>
                         <td>${getNomeSetor(colab.Setor)}</td>
+                        <td>${getNomeLocalidade(colab.Localidade)}</td>
                         <td>${formatarStringTelefone(colab.Telefone)}</td>
                         <td>
                             <span class="btn-tabela-editar" data-id="${colab.ID_colaborador}" style="cursor: pointer;">Editar</span>
@@ -107,7 +138,7 @@ const carregarColaboradores = async () => {
             </tbody>
         `;
         tabelaContainer.appendChild(tabela);
-    }catch (error) {
+    } catch (error) {
         console.error("Erro ao carregar colaboradores:", error);
         tabelaContainer.innerHTML = '<p class="text-center text-danger mt-3">Falha ao carregar dados dos colaboradores.</p>';
     }
@@ -132,7 +163,7 @@ const abrirModalEdicao = async (id) => {
     }
 };
 
-formCadastro.addEventListener('submit', async (e) => {
+formCadastro?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const dados = {
         nome: document.getElementById('nome').value,
@@ -149,7 +180,7 @@ formCadastro.addEventListener('submit', async (e) => {
     });
     const result = await response.json();
     if (response.ok) {
-        cadastroModal.hide();
+        cadColabMod.hide(); // CORREÇÃO
         document.getElementById('sucessoMensagem').innerText = result.mensagem;
         sucessoModal.show();
         formCadastro.reset();
@@ -159,7 +190,7 @@ formCadastro.addEventListener('submit', async (e) => {
     }
 });
 
-formEdicao.addEventListener('submit', async (e) => {
+formEdicao?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('edit-id').value;
     const dados = {
@@ -186,6 +217,16 @@ formEdicao.addEventListener('submit', async (e) => {
 });
 
 tabelaContainer.addEventListener('click', (e) => {
+    if (e.target.closest('#btn-refresh')) {
+        console.log("Botão de atualizar clicado.");
+        if (btnColaboradores.classList.contains('ativo')) {
+            carregarColaboradores();
+        } else if (btnEventos.classList.contains('ativo')) {
+            carregarEventos?.();
+        }
+        return;
+    }
+
     const id = e.target.dataset.id;
     if (!id) return;
 
@@ -203,19 +244,23 @@ tabelaContainer.addEventListener('click', (e) => {
         }
     }
 });
-btnColaboradores.addEventListener('click', () => {
-   
+
+btnColaboradores?.addEventListener('click', () => {
     btnColaboradores.classList.add('ativo');
     btnEventos.classList.remove('ativo');
+    btnAdicionar.setAttribute('data-bs-target', '#cadColabMod');
+    btnAdicionar.innerText = 'Adicionar Colaborador';
     carregarColaboradores();
 });
 
-btnEventos.addEventListener('click', () => {
+btnEventos?.addEventListener('click', () => {
     btnEventos.classList.add('ativo');
     btnColaboradores.classList.remove('ativo');
     tabelaContainer.innerHTML = '<h3 class="text-center mt-5">Área de Eventos em Construção!</h3>';
 });
-campoPesquisa.addEventListener('input', filtrarTabela);
-filtroSetor.addEventListener('change', filtrarTabela);
+
+campoPesquisa?.addEventListener('input', filtrarTabela);
+filtroSetor?.addEventListener('change', filtrarTabela);
+filtroModalidade?.addEventListener('change', filtrarTabela);
 
 carregarColaboradores();

@@ -50,11 +50,26 @@
     padding: 2px 5px;
 }
 .pesquisa-principal {
-    max-width: 450px;
+    max-width: 250px;
     width: 100%;
 }
 
 .filtro-select {
     width: auto; 
     min-width: 150px; 
+}
+
+.btn-refresh-header {
+    background-color: transparent; 
+    border: none;                
+    padding: 2px 6px;             
+    border-radius: 5px;           
+    line-height: 1;             
+    color: #6c757d;               
+}
+
+
+.btn-refresh-header:hover {
+    background-color: #e9ecef;
+    color: #000;             
 }

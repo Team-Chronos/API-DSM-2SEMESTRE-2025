@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const token = localStorage.getItem('userToken');
     if (!token) {
         window.location.href = '/login.html';
         return;
     }
+
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         document.getElementById('colab-nome').textContent = payload.nome;
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const localidadeModalEl = document.getElementById('localidadeModal');
     const localidadeModal = new bootstrap.Modal(localidadeModalEl);
     const formLocalidade = document.getElementById('formLocalidade');
+    const sucessoModal = new bootstrap.Modal(document.getElementById('sucessoModal'));
 
     const verificarQuestionarioLocalidade = () => {
         const itemSalvoString = localStorage.getItem('localidadeRespondida');
@@ -36,30 +37,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    formLocalidade.addEventListener('submit', (e) => {
+    formLocalidade.addEventListener('submit', async (e) => {
         e.preventDefault();
         const resposta = formLocalidade.querySelector('input[name="local"]:checked');
         if (!resposta) {
             alert("Por favor, selecione uma opção de localidade.");
             return;
         }
-        const item = {
-            valor: resposta.value,
-            timestamp: new Date().getTime()
+        const token = localStorage.getItem('userToken');
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const colaboradorId = payload.id;
+        const dados = {
+            localidade: resposta.value,
+            colaboradorId: colaboradorId
         };
-        localStorage.setItem('localidadeRespondida', JSON.stringify(item));
-        localidadeModal.hide();
-        const sucessoModal = new bootstrap.Modal(document.getElementById('sucessoModal'));
-        document.getElementById('sucessoMensagem').innerText = 'Obrigado por informar sua localidade!';
-        sucessoModal.show();
+        try {
+            const response = await fetch('/api/colaboradores/localidade', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+            const result = await response.json();
+            if (response.ok) {
+                const item = {
+                    valor: resposta.value,
+                    timestamp: new Date().getTime()
+                };
+                localStorage.setItem('localidadeRespondida', JSON.stringify(item));
+                localidadeModal.hide();
+                document.getElementById('sucessoMensagem').innerText = result.mensagem;
+                sucessoModal.show();
+            } else {
+                alert(result.mensagem);
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+            alert("Falha na conexão com o servidor.");
+        }
     });
 
     localidadeModalEl.addEventListener('hide.bs.modal', () => {
-
         if (!localStorage.getItem('localidadeRespondida')) {
-            console.log("Modal de localidade fechado sem resposta. Reabrindo em 3 segundos...");
-
-
             setTimeout(() => {
                 localidadeModal.show();
             }, 3000);
@@ -67,48 +85,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     verificarQuestionarioLocalidade();
-});
-
-async function carregarConteudoPrincipal(setor) {
-    const mainContent = document.querySelector('main');
-    if (!mainContent) return;
-
-    switch (setor) {
-        case 1:
-
-            const response = await fetch('/adm/inicio.html');
-            mainContent.innerHTML = await response.text();
-
-
-            const scriptAdmin = document.createElement('script');
-            scriptAdmin.src = '/js/admin.js';
-            document.body.appendChild(scriptAdmin);
-            break;
-        default:
-            mainContent.innerHTML = `<div class="p-5"><h1>Bem-vindo!</h1></div>`;
-            break;
-    }
-}
-document.addEventListener('DOMContentLoaded', () => {
 
     const botaoLogout = document.getElementById('btn-logout');
-
     if (botaoLogout) {
-
         botaoLogout.addEventListener('click', (e) => {
             e.preventDefault();
-
-
             if (confirm('Tem certeza que deseja encerrar a sessão?')) {
-
-
                 localStorage.removeItem('userToken');
-
-
+                localStorage.removeItem('localidadeRespondida');
                 window.location.href = '/login.html';
             }
         });
     }
 });
 
-document.addEventListener('')
+async function carregarConteudoPrincipal(setor) {
+    const mainContent = document.querySelector('main');
+    if (!mainContent) return;
+    switch (setor) {
+        case 1:
+            const response = await fetch('/adm/inicio.html');
+            mainContent.innerHTML = await response.text();
+            const scriptAdmin = document.createElement('script');
+            scriptAdmin.src = '/js/admin.js';
+            document.body.appendChild(scriptAdmin);
+            break;
+        default:
+            mainContent.innerHTML = `<div class="p-5"><h1>Bem-vindo!</h1><p>Aproveite a plataforma.</p></div>`;
+            break;
+    }
+}

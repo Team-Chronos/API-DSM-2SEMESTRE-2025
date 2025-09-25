@@ -20,7 +20,7 @@ const Colaborador = {
     },
     
     findAll: () => {
-        const query = "SELECT ID_colaborador, Nome_Col, Telefone, Email, Setor FROM Colaboradores"; 
+        const query = "SELECT ID_colaborador, Nome_Col, Telefone, Email, Setor,  Localidade FROM Colaboradores"; 
         return db.promise().query(query);
     },
     
@@ -35,12 +35,12 @@ const Colaborador = {
         const query = "UPDATE Colaboradores SET Nome_Col = ?, Email = ?, Telefone = ?, CPF = ?, Setor = ? WHERE ID_colaborador = ?"; 
         return db.promise().query(query, [nome, email, telefone, cpf, setor, id]); 
     },
-    
-    
     deleteById: (id) => {
         const query = "DELETE FROM Colaboradores WHERE ID_colaborador = ?";
         return db.promise().query(query, [id]);
-    }
+    },
+    updateLocalidade: (colaboradorId, localidade) => {
+    const query = "UPDATE Colaboradores SET Localidade = ? WHERE ID_colaborador = ?";
+    return db.promise().query(query, [localidade, colaboradorId]);}
 };
-
 export default Colaborador;
