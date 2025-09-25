@@ -16,6 +16,7 @@ CREATE TABLE Colaboradores (
     Perfil VARCHAR(255),
     Telefone VARCHAR(11),
     Email VARCHAR(255),
+    Localidade VARCHAR(20) NULL,
     FOREIGN KEY (Setor) REFERENCES Setor(ID_Setor)
 );
 
