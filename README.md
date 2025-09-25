@@ -41,11 +41,11 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 |   4  |    Alta    | Como um vendedor, eu quero registrar o histórico completo de interações com os clientes (data, forma de contato, relatório detalhado) para acompanhar o relacionamento.                                         |       4      |    2   |        |
 |   5  |    Alta    | Como um gerente, eu quero gerar relatórios e gráficos quantitativos sobre interações, vendas, e clientes (por cidade, segmento), com filtros de período (dia, mês, ano), para tomar decisões baseadas em dados. |       6      |    2   |        |
 |   6  |    Alta    | Como um agregado, eu quero me cadastrar e que me seja enviada uma devolutiva automática, para saber se fui cadastrado corretamente.                                                                             |       4      |    1   |   ⏳   |
-|   7  |    Alta    | Como um gestor, eu quero ter uma visão centralizada de todos os checklists e cadastros para simplificar o acesso e padronizar as operações.                                                                     |       3      |    1   |   ⏳   |
-|   8  |    Média   | Como um organizador de eventos, eu quero que o sistema envie notificações automáticas sobre novos eventos, presenciais ou online (com link) para os colaboradores, para garantir que todos sejam informados.    |       4      |    1   |   ⏳   |
-|   9  |    Média   | Como um colaborador, eu quero poder confirmar ou recusar a participação de um evento e, caso recuse, informar o motivo, para que a organização tenha visibilidade.                                              |       2      |    1   |   ⏳   |
+|   7  |    Alta    | Como um gestor, eu quero ter uma visão centralizada de todos os checklists e cadastros para simplificar o acesso e padronizar as operações.                                                                     |       3      |    1   |   ✅   |
+|   8  |    Média   | Como um organizador de eventos, eu quero que o sistema envie notificações automáticas sobre novos eventos, presenciais ou online (com link) para os colaboradores, para garantir que todos sejam informados.    |       4      |    1   |   ✅   |
+|   9  |    Média   | Como um colaborador, eu quero poder confirmar ou recusar a participação de um evento e, caso recuse, informar o motivo, para que a organização tenha visibilidade.                                              |       2      |    1   |   ✅   |
 |  10  |    Média   | Como um colaborador, eu quero marcar um evento ou treinamento como "concluído" após sua realização, para manter meu histórico de participação atualizado.                                                       |       1      |    1   |   ⏳   |
-|  11  |    Média   | Como um colaborador, eu quero acessar um documento padrão gerado automaticamente após um evento, contendo data, duração e um campo para descrever o conhecimento adquirido, para registrar meu desenvolvimento. |       3      |    1   |   ⏳   |
+|  11  |    Média   | Como um colaborador, eu quero acessar um documento padrão gerado automaticamente após um evento, contendo data, duração e um campo para descrever o conhecimento adquirido, para registrar meu desenvolvimento. |       3      |    1   |   ✅   |
 |  12  |    Média   | Como um gerente de vendas, eu quero visualizar e classificar os clientes em um funil de vendas (Prospects, Inicial, Potencial, Manutenção, Em Negociação, Follow Up) para gerenciar o processo comercial.       |       2      |    2   |        |
 |  13  |    Média   | Como um vendedor, eu quero agendar tarefas e receber lembretes para próximos contatos com clientes, para não perder oportunidades de negócio.                                                                   |       8      |    2   |        |
 |  14  |    Média   | Como um operador, eu quero preencher o checklist de "Abertura e fechamento da empresa" (sim/não) para registrar o cumprimento dos procedimentos diários.                                                        |       5      |    3   |        |
@@ -78,8 +78,8 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | ------------------------------------------------ |
-| 🔖 **SPRINT 1** | 08/09 - 28/09 | [Sprint 1](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%201) |
-| 🔖 **SPRINT 2** | 06/10 - 26/10 |                                                  |
+| 🔖 **SPRINT 1** | 08/09 - 28/09 | [Documentos da Sprint 1](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%201) |
+| 🔖 **SPRINT 2** | 06/10 - 26/10 | [Documentos da Sprint 2](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%202) |
 | 🔖 **SPRINT 3** | 03/11 - 23/11 |                                                  |
 
 ## 💻 Tecnologias <a id="tecnologias"></a>
