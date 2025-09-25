@@ -88,7 +88,7 @@ app.post('/api/notificar-evento', async (req, res) => {
                 <h2>Nova Resposta de Evento</h2>
                 <p><strong>Colaborador:</strong> ${colaborador.Nome_Col}</p>
                 <p><strong>Evento:</strong> ${evento.titulo}</p>
-                <p><strong>Resposta:</strong> ${resposta === 'aceito' ? '✅ Confirmou presença' : '❌ Recusou presença'}</p>
+                <p><strong>Resposta:</strong> ${resposta === 'aceito' ? ' Confirmou presença' : ' Recusou presença'}</p>
                 ${motivo ? `<p><strong>Motivo:</strong> ${motivo}</p>` : ''}
                 <p><strong>Data da resposta:</strong> ${new Date().toLocaleString('pt-BR')}</p>
             `
