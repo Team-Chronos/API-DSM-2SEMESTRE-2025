@@ -1,4 +1,3 @@
-// js/confirmarEvento.js
 const formEvento = document.getElementById('form-evento');
 const resultado = document.getElementById('resultado');
 const campoJustificativa = document.getElementById('campo-justificativa');
