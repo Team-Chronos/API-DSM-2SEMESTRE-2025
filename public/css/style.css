@@ -97,3 +97,25 @@ input[type='search'].search-icon{
     background-size: 1rem;
     padding-right: 2rem;
 }
+
+/* OPERACIONAL */
+
+.bg-gray {
+    background-color: #d9d9d9;
+}
+
+.bg-dark-blue {
+    background-color: var(--dark-blue);
+}
+
+.border-dark-blue {
+    border-color: var(--dark-blue) !important;
+}
+
+.text-dark-blue {
+    color: var(--dark-blue);
+}
+
+.text-blue {
+    color: var(--blue);
+}
