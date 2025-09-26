@@ -92,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             if (confirm('Tem certeza que deseja encerrar a sessão?')) {
                 localStorage.removeItem('userToken');
-                localStorage.removeItem('localidadeRespondida');
                 window.location.href = '/login.html';
             }
         });

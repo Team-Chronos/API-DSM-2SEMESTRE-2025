@@ -12,7 +12,7 @@ const btnEventos = document.getElementById('btn-eventos');
 
 const cadColabMod = new bootstrap.Modal(document.getElementById('cadColabMod'));
 const edicaoModal = new bootstrap.Modal(document.getElementById('edicaoModal'));
-const sucessoModal = new bootstrap.Modal(document.getElementById('sucessoModal'));
+const sucessoModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('sucessoModal'));
 
 const cpfInputCadastro = document.getElementById('cpf');
 const telInputCadastro = document.getElementById('telefone');
