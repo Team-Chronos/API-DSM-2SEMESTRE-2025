@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
@@ -200,7 +200,7 @@ app.get('/api/sistema/confirmar/:token', async (req, res) => {
         res.status(400).send(`
             <html>
             <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                <h1 style="color: #dc2626;">❌ Link Inválido ou Expirado</h1>
+                <h1 style="color: #dc2626;"> Link Inválido ou Expirado</h1>
                 <p>Este link de confirmação não é válido.</p>
                 <a href="/">Voltar ao Login</a>
             </body>
