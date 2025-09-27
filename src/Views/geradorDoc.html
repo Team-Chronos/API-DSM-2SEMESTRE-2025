@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerador de Ata</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="geradorDoc.css">
+
+    <!-- Biblioteca para PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- JS -->
+    <script src="../BACKEND/geradorAta.js" defer></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ata de Reunião</h1>
+    <form id="form-ata">
+        <label for="titulo">Título da Reunião:</label>
+        <input type="text" id="titulo" placeholder="Ex: Reunião de Alinhamento Semanal" required>
+
+        <label for="data">Data:</label>
+        <input type="date" id="data" required>
+
+        <label for="hora_inicio">Hora de Início:</label>
+        <input type="time" id="hora_inicio" required>
+
+        <label for="local">Local/Plataforma:</label>
+        <input type="text" id="local" placeholder="Ex: Sala de Conferência 1 ou Google Meet" required>
+
+        <label for="pauta">Pauta / Tópicos Discutidos (um por linha):</label>
+        <textarea id="pauta" placeholder="Ex:- Revisão das metas do trimestre&#10;- Planejamento do novo projeto" required></textarea>
+
+        <label for="descricao">Descrição de Aprendizados:</label>
+        <textarea id="descricao" placeholder="Descreva os principais pontos discutidos durante a reunião." required></textarea>
+
+        <label for="responsavel_ata">Responsável pela Ata:</label>
+        <input type="text" id="responsavel_ata" placeholder="Seu nome completo" required>
+
+        <button type="button" id="btn-gerar">Gerar Ata na Página</button>
+        <button type="button" id="btn-download-pdf">Baixar Ata em PDF</button>
+    </form>
+
+    <h2>Ata Gerada</h2>
+    <div id="resultado">
+        <p>A ata gerada aparecerá aqui após preencher o formulário e clicar no botão.</p>
+    </div>
+</div>
+
+</body>
+</html>
