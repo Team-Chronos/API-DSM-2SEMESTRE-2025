@@ -253,3 +253,28 @@ input[type='search'].search-icon{
 .notification.rejected {
     border: 2px solid var(--red);
 }
+
+.notification .concluido {
+    margin-top: 10px;
+    padding: 6px 12px;
+    font-size: 13px;
+    background-color: #fff;
+    color: var(--green);
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.notification .concluido:hover {
+    background-color: #fff;
+}
+.notification.finished {
+    opacity: 0.6;
+    filter: grayscale(0.8);
+}
+.notification.finished strong {
+    text-decoration: line-through;
+}
+.notification .concluido:disabled {
+    cursor: default;
+}
