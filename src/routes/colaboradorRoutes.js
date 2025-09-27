@@ -9,10 +9,10 @@ import {
 
 const router = express.Router();
 
-router.post('/', criarColaborador);          
-router.get('/', listarColaboradores);         
-router.get('/:id', obterColaboradorPorId);    
-router.put('/:id', atualizarColaborador);     
-router.delete('/:id', excluirColaborador);    
+router.post('/', criarColaborador);
+router.get('/', listarColaboradores);
+router.get('/:id', obterColaboradorPorId);
+router.put('/:id', atualizarColaborador);
+router.delete('/:id', excluirColaborador);
 
 export default router;
