@@ -8,7 +8,8 @@ const formEdicaoEvento = document.getElementById('formEdicaoEvento');
 const campoPesquisa = document.getElementById('pesquisaAdm');
 const filtroSetor = document.getElementById('filtro-setor');
 const btnColaboradores = document.getElementById('btn-colaboradores');
-const btnEventos = document.getElementById('btn-eventos')
+const btnEventos = document.getElementById('btn-eventos');
+const btnAdicionar = document.getElementById('btn-modal-cad');
 
 const cadColabMod = new bootstrap.Modal(document.getElementById('cadColabMod'));
 const edicaoModal = new bootstrap.Modal(document.getElementById('edicaoModal'));
@@ -45,6 +46,7 @@ const formatarInputTelefone = (inputElement) => {
     value = value.replace(/(\d{5})(\d)/, '$1-$2');
     inputElement.value = value;
 };
+
 const filtrarTabela = () => {
     const textoPesquisa = campoPesquisa.value.toLowerCase();
     const setorSelecionado = filtroSetor.value;
@@ -58,14 +60,14 @@ const filtrarTabela = () => {
         const correspondeNome = nomeNaLinha.includes(textoPesquisa);
         const correspondeEmail = emailNaLinha.includes(textoPesquisa);
         const correspondeSetor = (setorSelecionado === "" || setorNaLinha === setorSelecionado);
-
-        if (  correspondeSetor && (correspondeNome || correspondeEmail) ){
-            linha.style.display = ""; 
+        if (correspondeSetor && (correspondeNome || correspondeEmail)) {
+            linha.style.display = "";
         } else {
             linha.style.display = "none";
         }
     }
 };
+
 cpfInputCadastro.addEventListener('input', () => {
     let value = cpfInputCadastro.value.replace(/\D/g, '');
     value = value.slice(0, 11);
@@ -83,8 +85,10 @@ const carregarColaboradores = async () => {
         const response = await fetch('/api/colaboradores');
         const colaboradores = await response.json();
         tabelaContainer.innerHTML = '';
-        if (colaboradores.length === 0) { /* ... */ return; }
-
+        if (colaboradores.length === 0) {
+            tabelaContainer.innerHTML = '<p class="text-center mt-3">Nenhum colaborador cadastrado.</p>';
+            return;
+        }
         const tabela = document.createElement('table');
         tabela.className = 'table table-hover align-middle';
         tabela.innerHTML = `
@@ -180,6 +184,23 @@ const abrirModalEdicao = async (id) => {
         alert('Não foi possível carregar os dados para edição.');
     }
 };
+const abrirModalEdicaoEvento = async (id) => {
+    try {
+        const response = await fetch(`/api/eventos/${id}`);
+        const evento = await response.json();
+        
+        // Formata a data para o formato que o input 'datetime-local' aceita (YYYY-MM-DDTHH:MM)
+        const dataParaInput = new Date(evento.Data_Evento).toISOString().slice(0, 16);
+
+        document.getElementById('edit-evento-id').value = evento.ID_Evento;
+        document.getElementById('edit-nome_evento').value = evento.Nome_Evento;
+        document.getElementById('edit-data_evento').value = dataParaInput;
+
+        edicaoEventoModal.show();
+    } catch (error) {
+        alert('Não foi possível carregar os dados do evento para edição.');
+    }
+};
 
 formCadastro.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -191,13 +212,11 @@ formCadastro.addEventListener('submit', async (e) => {
         cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
         setor: document.getElementById('setor').value,
     };
-    
     const response = await fetch('/api/colaboradores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
     });
-    
     const result = await response.json();
     if (response.ok) {
         cadColabMod.hide();
@@ -244,13 +263,11 @@ formEdicao.addEventListener('submit', async (e) => {
         cpf: document.getElementById('edit-cpf').value.replace(/\D/g, ''),
         setor: document.getElementById('edit-setor').value
     };
-    
     const response = await fetch(`/api/colaboradores/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
     });
-    
     const result = await response.json();
     if (response.ok) {
         edicaoModal.hide();
@@ -260,6 +277,34 @@ formEdicao.addEventListener('submit', async (e) => {
         recarregar()
     } else {
         alert(result.mensagem);
+    }
+});
+
+formEvento.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const dados = {
+        nome_evento: document.getElementById('nome_evento').value,
+        data_evento: document.getElementById('data_evento').value
+    };
+    try {
+        const response = await fetch('/api/eventos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+        const result = await response.json();
+        if (response.ok) {
+            cadEventMod.hide();
+            document.getElementById('sucessoMensagem').innerText = result.mensagem;
+            sucessoModal.show();
+            formEvento.reset();
+            carregarEventos();
+        } else {
+            alert(result.mensagem);
+        }
+    } catch (error) {
+        console.error("Erro ao cadastrar evento:", error);
+        alert("Falha na conexão com o servidor.");
     }
 });
 
@@ -296,18 +341,25 @@ tabelaContainer.addEventListener('click', (e) => {
         }
     }
 });
+
+
 btnColaboradores.addEventListener('click', () => {
-   
     btnColaboradores.classList.add('ativo');
     btnEventos.classList.remove('ativo');
     carregarColaboradores();
+    btnAdicionar.setAttribute('data-bs-target', '#cadColabMod');
+    btnAdicionar.innerText = 'Adicionar Colaborador';
 });
 
 btnEventos.addEventListener('click', () => {
     btnEventos.classList.add('ativo');
     btnColaboradores.classList.remove('ativo');
     tabelaContainer.innerHTML = '<h3 class="text-center mt-5">Área de Eventos em Construção!</h3>';
+    btnAdicionar.setAttribute('data-bs-target', '#cadEventMod');
+    btnAdicionar.innerText = 'Adicionar Evento';
+    carregarEventos();
 });
+
 campoPesquisa.addEventListener('input', filtrarTabela);
 filtroSetor.addEventListener('change', filtrarTabela);
 
