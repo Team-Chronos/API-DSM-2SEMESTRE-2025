@@ -189,12 +189,24 @@ const abrirModalEdicaoEvento = async (id) => {
         const response = await fetch(`/api/eventos/${id}`);
         const evento = await response.json();
         
-        // Formata a data para o formato que o input 'datetime-local' aceita (YYYY-MM-DDTHH:MM)
-        const dataParaInput = new Date(evento.Data_Evento).toISOString().slice(0, 16);
+        const eventoDate = new Date(evento.Data_Evento);
+
+        const year = eventoDate.getFullYear();
+        const month = String(eventoDate.getMonth() + 1).padStart(2, '0');
+        const day = String(eventoDate.getDate()).padStart(2, '0');
+        const hours = String(eventoDate.getHours()).padStart(2, '0');
+        const minutes = String(eventoDate.getMinutes()).padStart(2, '0');
+
+        const dataParaInput = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+        console.log(dataParaInput);
+
 
         document.getElementById('edit-evento-id').value = evento.ID_Evento;
         document.getElementById('edit-nome_evento').value = evento.Nome_Evento;
         document.getElementById('edit-data_evento').value = dataParaInput;
+        document.getElementById('edit-local_evento').value = evento.Local_Evento;
+        document.getElementById('edit-descricao_evento').value = evento.Descricao;
 
         edicaoEventoModal.show();
     } catch (error) {
@@ -234,7 +246,9 @@ formEdicaoEvento.addEventListener('submit', async (e) => {
     const id = document.getElementById('edit-evento-id').value;
     const dados = {
         nome_evento: document.getElementById('edit-nome_evento').value,
-        data_evento: document.getElementById('edit-data_evento').value
+        data_evento: document.getElementById('edit-data_evento').value,
+        local_evento: document.getElementById('edit-local_evento').value,
+        descricao_evento: document.getElementById('edit-descricao_evento').value
     };
 
     const response = await fetch(`/api/eventos/${id}`, {

@@ -187,11 +187,19 @@
                     <input type="hidden" id="edit-evento-id">
                     <div class="mb-3">
                         <label for="edit-nome_evento" class="form-label">Nome do Evento:</label>
-                        <input type="text" class="form-control" id="edit-nome_evento" required>
+                        <input type="text" class="form-control" name="edit-nome_evento" id="edit-nome_evento" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit-data_evento" class="form-label">Data e Hora do Evento:</label>
-                        <input type="datetime-local" class="form-control" id="edit-data_evento" required>
+                        <input type="datetime-local" class="form-control" name="edit-data_evento" id="edit-data_evento" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-local_evento" class="form-label">Local ou link do Evento:</label>
+                        <input class="form-control" type="text" name="edit-local_evento" id="edit-local_evento" placeholder="Link ou endereço do evento" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dedit-escricao_evento" class="form-label">Descrição do Evento:</label>
+                        <textarea class="form-control" name="edit-descricao_evento" id="edit-descricao_evento" rows="3" placeholder="Digite uma breve descrição do evento"></textarea>
                     </div>
                 </form>
             </div>

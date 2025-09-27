@@ -57,8 +57,8 @@ export const atualizarEvento = async (req, res) => {
         return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." });
     }
     try {
-        const query = "UPDATE Evento SET Nome_Evento = ?, Data_Evento = ?, local_evento = ?, descricao_evento = ?, participantes = ? WHERE ID_Evento = ?";
-        const [result] = await db.promise().query(query, [nome_evento, data_evento, local_evento, descricao_evento, participantes, id]);
+        const query = "UPDATE Evento SET Nome_Evento = ?, Data_Evento = ?, local_evento = ?, descricao = ? WHERE ID_Evento = ?";
+        const [result] = await db.promise().query(query, [nome_evento, data_evento, local_evento, descricao_evento, id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ mensagem: "Evento não encontrado." });
         }
