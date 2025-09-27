@@ -5,15 +5,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 
-dotenv.config();
+const app = express();
+const PORT = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors());
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -912,23 +912,17 @@ const iniciarSistemaAutomatico = async () => {
 };
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/login.html'));
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-app.get('/home.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/home.html'));
-});
+app.post('/confirmarEvento', (req, res) => {
+    const { resposta, justificativa } = req.body;
 
-app.get('/adm/inicio.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/adm/inicio.html'));
-});
+    console.log('Resposta recebida do cliente:');
+    console.log(`- Decisão: ${resposta}`); 
+    console.log(`- Justificativa: ${justificativa}`); 
 
-app.get('/confirmarEvento.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/confirmarEvento.html'));
-});
-
-app.get('/agregado.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/agregado.html'));
+    res.status(200).json({ mensagem: 'Resposta registrada com sucesso no servidor!' });
 });
 
 app.listen(PORT, async () => {
