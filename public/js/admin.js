@@ -284,7 +284,10 @@ formEvento.addEventListener('submit', async (e) => {
     e.preventDefault();
     const dados = {
         nome_evento: document.getElementById('nome_evento').value,
-        data_evento: document.getElementById('data_evento').value
+        data_evento: document.getElementById('data_evento').value,
+        local_evento: document.getElementById('local_evento').value,
+        descricao_evento: document.getElementById('descricao_evento').value,
+        participantes: Array.from(document.querySelectorAll('input[name="colaboradores[]"]:checked')).map(cb => cb.value)
     };
     try {
         const response = await fetch('/api/eventos', {

@@ -1,11 +1,12 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-
+import eventoRoutes from './src/routes/eventoRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
-import eventoRoutes from './src/routes/eventoRoutes.js';
+import db from './src/config/db.js';
+import transporter from './src/mailer.js';
+import jwt from 'jsonwebtoken';
 
 const app = express();
 const PORT = 3000;
@@ -19,17 +20,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-import authRoutes from './src/routes/authRoutes.js';
-import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
-import iniciarObservadorEventos from './src/observadorEventos.js';
+
 
 app.use('/api/auth', authRoutes);
 
 app.use('/api/colaboradores', colaboradorRoutes);
 
-import db from './src/config/db.js';
-import transporter from './src/mailer.js';
-import jwt from 'jsonwebtoken';
+app.use('/api/eventos', eventoRoutes);
+
 
 const criarTabelasAuxiliares = async () => {
     try {
@@ -237,6 +235,20 @@ app.post('/confirmarEvento', (req, res) => {
 
     res.status(200).json({ mensagem: 'Resposta registrada com sucesso no servidor!' });
 });
+
+// app.post('/api/eventos', async(req, res) => {
+//     const {nome_evento, data_evento, local_evento, descricao_evento, participantes} = req.body;
+//     try {
+//         const [result] = await db.promise().query('INSERT INTO Evento (Nome_Evento, Data_Evento, Local_Evento, Descricao) VALUES (?, ?, ?, ?)', [nome_evento, data_evento, local_evento, descricao_evento]);
+        // await participantes.forEach(async (id_colaborador) => {
+        //     await db.promise().query( 'INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES (?, ?, 0)', [result.insertId, id_colaborador]);
+        // });
+//         return res.status(201).json({mensagem: 'Evento criado com sucesso!'});
+//     }
+//     catch (error) {
+//         return res.status(500).json({error: 'Erro ao criar evento'});
+//     }
+// })
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);

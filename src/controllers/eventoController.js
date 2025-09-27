@@ -1,15 +1,19 @@
 import db from '../config/db.js';
 
 export const criarEvento = async (req, res) => {
-    const { nome_evento, data_evento } = req.body;
+    const {nome_evento, data_evento, local_evento, descricao_evento, participantes} = req.body;
 
     if (!nome_evento || !data_evento) {
         return res.status(400).json({ mensagem: "O nome e a data do evento são obrigatórios!" });
     }
 
     try {
-        const query = "INSERT INTO Evento (Nome_Evento, Data_Evento) VALUES (?, ?)";
-        await db.promise().query(query, [nome_evento, data_evento]);
+        const query = 'INSERT INTO Evento (Nome_Evento, Data_Evento, Local_Evento, Descricao) VALUES (?, ?, ?, ?)';
+        const [result] = await db.promise().query(query, [nome_evento, data_evento, local_evento, descricao_evento]);
+        await participantes.forEach(async (id_colaborador) => {
+            await db.promise().query( 'INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES ((SELECT ID_Evento FROM Evento WHERE ID_Evento = LAST_INSERT_ID()), ?, 1)', [id_colaborador]);
+        });
+        
 
         res.status(201).json({ mensagem: "Evento cadastrado com sucesso!" });
 
@@ -48,13 +52,13 @@ export const getEventoPorId = async (req, res) => {
 
 export const atualizarEvento = async (req, res) => {
     const { id } = req.params;
-    const { nome_evento, data_evento } = req.body;
+    const {nome_evento, data_evento, local_evento, descricao_evento, participantes} = req.body;
     if (!nome_evento || !data_evento) {
         return res.status(400).json({ mensagem: "Todos os campos são obrigatórios." });
     }
     try {
-        const query = "UPDATE Evento SET Nome_Evento = ?, Data_Evento = ? WHERE ID_Evento = ?";
-        const [result] = await db.promise().query(query, [nome_evento, data_evento, id]);
+        const query = "UPDATE Evento SET Nome_Evento = ?, Data_Evento = ?, local_evento = ?, descricao_evento = ?, participantes = ? WHERE ID_Evento = ?";
+        const [result] = await db.promise().query(query, [nome_evento, data_evento, local_evento, descricao_evento, participantes, id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ mensagem: "Evento não encontrado." });
         }
