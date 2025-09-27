@@ -1,18 +1,21 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cors from 'cors';
-import dotenv from 'dotenv';
 
-dotenv.config();
+
+import authRoutes from './src/routes/authRoutes.js';
+import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
+import eventoRoutes from './src/routes/eventoRoutes.js';
+
+const app = express();
+const PORT = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors());
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -21,6 +24,7 @@ import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import iniciarObservadorEventos from './src/observadorEventos.js';
 
 app.use('/api/auth', authRoutes);
+
 app.use('/api/colaboradores', colaboradorRoutes);
 
 import db from './src/config/db.js';
@@ -221,55 +225,19 @@ const iniciarSistemaAutomatico = async () => {
 
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/login.html'));
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-app.get('/home.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/home.html'));
+app.post('/confirmarEvento', (req, res) => {
+    const { resposta, justificativa } = req.body;
+
+    console.log('Resposta recebida do cliente:');
+    console.log(`- Decisão: ${resposta}`); 
+    console.log(`- Justificativa: ${justificativa}`); 
+
+    res.status(200).json({ mensagem: 'Resposta registrada com sucesso no servidor!' });
 });
 
-app.get('/adm/inicio.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/adm/inicio.html'));
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
-
-app.get('/confirmarEvento.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/confirmarEvento.html'));
-});
-
-app.get('/agregado.html', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/agregado.html'));
-});
-
-app.post('/api/confirmar-presenca', async (req, res) => {
-    try {
-        const { eventoId, resposta, justificativa } = req.body;
-        
-        await db.promise().query(`
-            INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status, justificativa) 
-            VALUES (?, ?, ?, ?) 
-            ON DUPLICATE KEY UPDATE ID_Status = ?, justificativa = ?
-        `, [eventoId, req.user.id, resposta, justificativa, resposta, justificativa]);
-
-        res.json({ 
-            success: true, 
-            message: 'Presença confirmada com sucesso!',
-            resposta: resposta 
-        });
-    } catch (error) {
-        console.error('Erro ao confirmar presença:', error);
-        res.status(500).json({ success: false, message: 'Erro ao confirmar presença' });
-    }
-});
-
-app.listen(PORT, async () => {
-    console.log(` Servidor rodando na porta ${PORT}`);
-    console.log(` Email: ${process.env.EMAIL_USER ? 'Configurado' : 'Não configurado'}`);
-    console.log(`  Banco: ${process.env.DB_HOST}`);
-    console.log(` Acesse: http://localhost:${PORT}`);
-    
-    await iniciarSistemaAutomatico();
-    await iniciarObservadorEventos();
-});
-
-
-export default app;

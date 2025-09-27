@@ -58,3 +58,26 @@
     width: auto; 
     min-width: 150px; 
 }
+
+#descricao_evento {
+  resize: vertical;
+}
+
+#colEventoDiv {
+    background-color: #eee;
+    border-radius: 15px;
+    border: 1px solid #bbb;
+}
+
+#pesquisaColEvento{
+    grid-column: 1 / span 2;
+    justify-self: center;
+}
+
+.text-large{
+    font-size: large;
+}
+
+#colEvento{
+    grid-template-columns: 1fr 1fr;
+}
