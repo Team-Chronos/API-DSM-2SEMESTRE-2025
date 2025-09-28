@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function carregarConteudo(conteudo) {
-    console.log(conteudo)
     if (!main) return;
 
     main.innerHTML = ''

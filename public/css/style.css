@@ -230,7 +230,7 @@ input[type='search'].search-icon{
 .notification.inactive .content{ 
     color: #999; 
 }
-.notification.inactive .content a{ 
+.notification.finished .content a{ 
     color: #999; 
     pointer-events: none; 
     text-decoration: none; 
