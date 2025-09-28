@@ -1,5 +1,3 @@
-// [file name]: servidor.js
-// [file content begin]
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -7,9 +5,10 @@ import eventoRoutes from './src/routes/eventoRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import agregadoRoutes from './src/routes/agregadoRoutes.js';
-import notificacaoObserver from './src/routes/notificacaoObserver.js'; 
+import NotificacaoObserver from './src/routes/notificacaoObserver.js'; 
 import db from './src/config/db.js';
 import cors from 'cors';
+
 
 const app = express();
 const PORT = 3000;
