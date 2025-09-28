@@ -24,6 +24,7 @@ CREATE TABLE Evento (
     ID_Evento INT PRIMARY KEY AUTO_INCREMENT,
     Nome_Evento VARCHAR(255) NOT NULL,
     Data_Evento DATETIME NOT NULL,
+    Duracao_Evento varchar(30),
     Local_Evento VARCHAR(255) NOT NULL,
     Descricao TEXT NOT NULL,
     data_registro DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -46,6 +47,17 @@ CREATE TABLE Participacao_Evento (
     FOREIGN KEY (ID_Evento) REFERENCES Evento (ID_Evento) ON DELETE CASCADE,
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_colaborador) ON DELETE CASCADE,
     FOREIGN KEY (ID_Status) REFERENCES Status_Participacao(ID_Status)
+);
+
+create table Certificado_Participacao (
+	ID_Colaborador int not null,
+    ID_Evento int not null,
+    Data_Part datetime not null,
+    Duracao_Part varchar(30) not null,
+    Descricao_Part text not null,
+    PRIMARY KEY (ID_Evento, ID_Colaborador),
+    FOREIGN KEY (ID_Evento) REFERENCES Evento (ID_Evento) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_colaborador) ON DELETE CASCADE
 );
 
 CREATE TABLE colaboradores_emails_enviados (
