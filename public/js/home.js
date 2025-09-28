@@ -1,58 +1,96 @@
+var token;
+var payload;
+
+const main = document.querySelector('main');
+
+function decodeJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+        atob(base64)
+            .split('')
+            .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+    );
+    return JSON.parse(jsonPayload);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('userToken');
+    token = localStorage.getItem('userToken');
     if (!token) {
         window.location.href = '/login.html';
         return;
     }
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        payload = decodeJwt(token);
         document.getElementById('colab-nome').textContent = payload.nome;
         const nomesSetores = { 1: 'Administrativo', 2: 'Comercial', 3: 'Operacional' };
         document.getElementById('modulo').textContent = nomesSetores[payload.setor] || 'Setor';
 
-        carregarConteudoPrincipal(payload.setor);
+        carregarConteudoSetor(payload.setor);
 
     } catch (e) {
 
     }
+
+    document.querySelectorAll('#barra-lateral > nav > ul > li').forEach((li) => {
+        if (li.id !== 'btn-logout'){
+            li.addEventListener('click', () => {
+                carregarConteudo(li.id)
+            })
+        }
+    })
 });
 
-async function carregarConteudoPrincipal(setor) {
-    const mainContent = document.querySelector('main');
-    if (!mainContent) return;
+async function carregarConteudo(conteudo) {
+    console.log(conteudo)
+    if (!main) return;
+    
+    main.innerHTML = ''
+    removerScript('script-dinamico')
+
+    switch (conteudo) {
+        case 'inicio':
+        case 'notificacoes':
+    }
+}
+
+function removerScript(id) {
+    const old = document.getElementById(id);
+    if (old) old.remove();
+}
+
+function adicionarScript(src, id) {
+    if (!document.getElementById(id)) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.id = id;
+        document.body.appendChild(script);
+    }
+}
+
+async function carregarConteudoSetor(setor) {
+    if (!main) return;
 
     switch (setor) {
         case 1:
-
             const response = await fetch('/adm/inicio.html');
-            mainContent.innerHTML = await response.text();
+            main.innerHTML = await response.text();
 
-
-            const scriptAdmin = document.createElement('script');
-            scriptAdmin.src = '/js/admin.js';
-            document.body.appendChild(scriptAdmin);
+            adicionarScript('/js/admin.js', 'script-dinamico');
             break;
         default:
-            mainContent.innerHTML = `<div class="p-5"><h1>Bem-vindo!</h1></div>`;
+            main.innerHTML = `<div class="p-5"><h1>Bem-vindo!</h1></div>`;
             break;
     }
 }
 document.addEventListener('DOMContentLoaded', () => {
-
     const botaoLogout = document.getElementById('btn-logout');
-
     if (botaoLogout) {
-
         botaoLogout.addEventListener('click', (e) => {
             e.preventDefault();
-
-
             if (confirm('Tem certeza que deseja encerrar a sessão?')) {
-
-
                 localStorage.removeItem('userToken');
-
-
                 window.location.href = '/login.html';
             }
         });
