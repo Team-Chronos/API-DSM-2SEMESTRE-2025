@@ -306,7 +306,7 @@ function inicarNotificacao()
 
                 participacaoModal.hide();
             } else {
-                alert("Erro ao salvar os dados do evento: " + (result.message || "Erro desconhecido"));
+                alert("Erro ao salvar os dados do evento: " + (result.mensagem || "Erro desconhecido"));
             }
         } catch (error) {
             console.error(error);
