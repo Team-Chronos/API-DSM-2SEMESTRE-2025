@@ -1,85 +1,16 @@
-function inicarNotificacao() {
-    // Declarar funções auxiliares primeiro
-    const criarConcluir = (notification) => {
-        const details = notification.querySelector(".details");
-        const concluidoBtn = document.createElement("button");
-        concluidoBtn.className = "concluido";
-        concluidoBtn.innerHTML = 'CONCLUIR EVENTO  <i class="bi bi-check-circle"></i>';
-        details.appendChild(concluidoBtn);
-        concluidoBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            notification.classList.add("finished");
-            concluidoBtn.disabled = true;
-            concluidoBtn.innerHTML = 'CONCLUÍDO <i class="bi bi-check-circle"></i>';
+function inicarNotificacao()
+{
+    const participacaoModal = new bootstrap.Modal(document.querySelector("#participacaoModal"))
 
-            concluirEvento(notification.dataset.id);
-
-            const concluidosDiv = document.querySelector("#concluidos");
-            if (concluidosDiv) {
-                concluidosDiv.appendChild(notification);
-            }
-        });
-    };
-
-    const recusa = async function(eventoid, justificativaValue) {
-        const dados = {
-            status: 3,
-            justificativa_notificacao: justificativaValue
-        };
-        await atualizaPE(dados, eventoid);
-    };
-
-    const confirmarPresenca = async function(eventoid) {
-        const dados = {
-            status: 2,
-            justificativa_notificacao: null
-        };
-        await atualizaPE(dados, eventoid);
-    };
-
-    const concluirEvento = async function(eventoid) {
-        const dados = {
-            status: 4,
-            justificativa_notificacao: null
-        };
-        await atualizaPE(dados, eventoid);
-    };
-
-    const atualizaPE = async function(dados, eventoid) {
-        try {
-            const response = await fetch(`/api/participacaoEventos/${payload.id}/${eventoid}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dados)
-            });
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            console.error("Erro ao atualizar participação:", error);
-        }
-    };
-
-    // Função principal
     const carregarNotificacoes = async () => {
-        // Verificar se main existe
-        const main = document.querySelector('main'); // ou o seletor correto do seu container
-        if (!main) {
-            console.error("Elemento main não encontrado");
-            return;
-        }
-
         let searchNotificacao = document.querySelector('#searchNotificacao');
-        if (!searchNotificacao) {
+        if (!searchNotificacao){
             searchNotificacao = document.createElement('div');
             searchNotificacao.className = 'search-bar';
             searchNotificacao.innerHTML = `
                 <input id="searchNotificacao" type="text" placeholder="Pesquisar...">
                 <i class="bi bi-search"></i>
             `;
-            
-            // Adicionar ao main
-            main.appendChild(searchNotificacao);
-
             setTimeout(() => {
                 const input = document.querySelector('#searchNotificacao');
                 if (input) {
@@ -94,10 +25,11 @@ function inicarNotificacao() {
                     });
                 }
             }, 0);
+            main.appendChild(searchNotificacao);
         }
 
         let notificacoesDiv = document.querySelector('#notificacoesDiv');
-        if (!notificacoesDiv) {
+        if (!notificacoesDiv){
             notificacoesDiv = document.createElement('div');
             notificacoesDiv.id = 'notificacoesDiv';
             main.appendChild(notificacoesDiv);
@@ -106,26 +38,24 @@ function inicarNotificacao() {
         try {
             const response = await fetch(`/api/participacaoEventos/${payload.id}`);
             const notificacoes = await response.json();
-           
+        
             notificacoesDiv.innerHTML = `
-                <h3>Pendentes</h3>
+                <h3 class="text-center">Pendentes</h3>
                 <div id="pendentes"></div>
 
-                <h3>Confirmadas</h3>
+                <h3 class="text-center">Confirmadas</h3>
                 <div id="confirmadas"></div>
 
-                <h3>Recusadas</h3>
+                <h3 class="text-center">Recusadas</h3>
                 <div id="recusadas"></div>
 
-                <h3>Concluídos</h3>
+                <h3 class="text-center">Concluídos</h3>
                 <div id="concluidos"></div>
             `;
-
-            if (!notificacoes || notificacoes.length === 0) {
-                notificacoesDiv.innerHTML = '<p class="text-center mt-3">Nenhuma notificação encontrada.</p>';
+            if (notificacoes.length === 0) {
+                notificacoesDiv.innerHTML = '<p class="text-center mt-3">Nenhuma notificação encontrado.</p>';
                 return;
             }
-
             notificacoes.forEach(not => {            
                 const notDate = new Date(not.Data_Evento);
 
@@ -139,23 +69,20 @@ function inicarNotificacao() {
 
                 let notificacao = document.createElement('div');
                 notificacao.className = 'notification flex-row';
-                notificacao.dataset.id = not.ID_Evento;
+                notificacao.dataset.id =  not.ID_Evento
 
                 let texto = `
                 <i class="bi bi-bell"></i>
                 <div class="content">
-                    <strong>${not.Nome_Evento} <br> Data: ${dataFormatada}</strong>
-                    <div class="details flex-column">`;
-
-                // Verificar se Local_Evento existe antes de usar includes
-                if (not.Local_Evento && (not.Local_Evento.includes('https://') || not.Local_Evento.includes('http://'))) {
+                    <strong>${not.Nome_Evento} <br> Data: ${dataFormatada} Duração: ${not.Duracao_Evento}</strong>
+                    <div class="details flex-column">`
+                if (not.Local_Evento.includes('https://') || not.Local_Evento.includes('http://')){
                     texto += `<a href="${not.Local_Evento}" target="_blank">${not.Local_Evento}</a>`;
                 } else {
-                    texto += `<div>${not.Local_Evento || 'Local não informado'}</div>`;
+                    texto += `<div>${not.Local_Evento}</div>`;
                 }
-
                 texto += `
-                        <p>${not.Descricao || ''}</p>
+                        <p>${not.Descricao}</p>
                         <p>PARTICIPAR:</p>
                         <div class="buttons">
                             <button class="accept">ACEITAR <i class="bi bi-check-circle"></i></button>
@@ -170,68 +97,57 @@ function inicarNotificacao() {
                         </div>
                     </div>
                 </div>`;
-
                 notificacao.innerHTML = texto;
                 
-                // Lógica de status
                 if (not.ID_Status === 2) {
                     notificacao.classList.add("inactive", "accepted");
-                    criarConcluir(notificacao);
-                    
-                    const details = notificacao.querySelector(".details");
-                    if (details) details.style.maxHeight = 'none';
-                    
-                    const participar = notificacao.querySelector("p:nth-of-type(2)");
-                    if (participar) participar.style.display = 'none';
-                    
-                    const buttons = notificacao.querySelector('.buttons');
-                    if (buttons) buttons.style.display = 'none';
 
-                    const confirmadasDiv = document.querySelector("#confirmadas");
-                    if (confirmadasDiv) confirmadasDiv.appendChild(notificacao);
+                    criarConcluir(notificacao)
+                    const details = notificacao.querySelector(".details");
+                    details.style.maxHeight = 'none'
+                    const participar = details.querySelector("p:nth-of-type(2)");
+                    participar.style.display = 'none'
+                    const buttons = notificacao.querySelector('.buttons')
+                    buttons.style.display = 'none'
+
+                    document.querySelector("#confirmadas").appendChild(notificacao);
                 } else if (not.ID_Status === 3) {
                     notificacao.classList.add("inactive", "rejected");
-                    const recusadasDiv = document.querySelector("#recusadas");
-                    if (recusadasDiv) recusadasDiv.appendChild(notificacao);
+                    document.querySelector("#recusadas").appendChild(notificacao);
                 } else if (not.ID_Status === 4) {
                     notificacao.classList.add("inactive", "concluido", "accepted");
 
                     const details = notificacao.querySelector(".details");
-                    if (details) details.style.maxHeight = 'none';
-                    
-                    const participar = notificacao.querySelector("p:nth-of-type(2)");
-                    if (participar) participar.style.display = 'none';
-                    
-                    const buttons = notificacao.querySelector('.buttons');
-                    if (buttons) buttons.style.display = 'none';
+                    details.style.maxHeight = 'none'
+                    const participar = details.querySelector("p:nth-of-type(2)");
+                    participar.style.display = 'none'
+                    const buttons = notificacao.querySelector('.buttons')
+                    buttons.style.display = 'none'
 
                     const concluidoBtn = document.createElement("button");
                     concluidoBtn.className = "concluido";
                     concluidoBtn.innerHTML = 'CONCLUIR EVENTO  <i class="bi bi-check-circle"></i>';
-                    if (details) details.appendChild(concluidoBtn);
+                    details.appendChild(concluidoBtn);
 
                     notificacao.classList.add("finished");
                     concluidoBtn.disabled = true;
                     concluidoBtn.innerHTML = 'CONCLUÍDO <i class="bi bi-check-circle"></i>';
 
-                    const concluidosDiv = document.querySelector("#concluidos");
-                    if (concluidosDiv) concluidosDiv.appendChild(notificacao);
+                    document.querySelector("#concluidos").appendChild(notificacao);
                 } else {
-                    const pendentesDiv = document.querySelector("#pendentes");
-                    if (pendentesDiv) pendentesDiv.appendChild(notificacao);
+                    document.querySelector("#pendentes").appendChild(notificacao);
                 }
             });
 
-            // Configurar event listeners para as notificações
             document.querySelectorAll(".notification").forEach(notification => {
                 const details = notification.querySelector(".details");
                 const justificativa = notification.querySelector(".justificativa");
-                if (details && !notification.classList.contains("inactive")) details.style.maxHeight = "0";
-                if (justificativa) justificativa.style.display = "none";
+                if(details && !notification.classList.contains("inactive")) details.style.maxHeight = "0";
+                if(justificativa) justificativa.style.display = "none";
             });
 
             document.querySelectorAll(".notification").forEach(notification => {
-                const eventoid = notification.dataset.id;
+                const eventoid = notification.dataset.id
                 const rejectBtn = notification.querySelector(".reject");
                 const acceptBtn = notification.querySelector(".accept");
                 const sendBtn = notification.querySelector(".justificativa .send");
@@ -240,85 +156,71 @@ function inicarNotificacao() {
                 const details = notification.querySelector(".details");
 
                 notification.addEventListener("click", () => {
-                    if (notification.classList.contains("inactive")) return;
-                    
+                    if(notification.classList.contains("inactive")) return;
                     document.querySelectorAll(".notification").forEach(n => {
-                        if (n !== notification && !n.classList.contains("inactive")) {
+                        if(n !== notification && !n.classList.contains("inactive")){
                             n.classList.remove("active");
                             const d = n.querySelector(".details");
-                            if (d) d.style.maxHeight = "0";
+                            if(d) d.style.maxHeight = "0";
                             const j = n.querySelector(".justificativa");
-                            if (j) j.style.display = "none";
+                            if(j) j.style.display = "none";
                         }
                     });
-                    
                     notification.classList.toggle("active");
-                    if (details) {
-                        details.style.maxHeight = details.style.maxHeight === "0px" || !details.style.maxHeight ? 
-                            details.scrollHeight + "px" : "0";
-                    }
+                    if(details) details.style.maxHeight = details.style.maxHeight === "0px" || !details.style.maxHeight ? details.scrollHeight + "px" : "0";
                 });
 
-                if (rejectBtn && justificativa) {
-                    rejectBtn.addEventListener("click", (event) => {
-                        event.stopPropagation();
-                        justificativa.style.display = justificativa.style.display === "block" ? "none" : "block";
+                if(rejectBtn && justificativa){
+                    rejectBtn.addEventListener("click",(event)=>{
+                        event.stopPropagation(); // impedir que feche
+                        justificativa.style.display = justificativa.style.display==="block" ? "none" : "block";
                         if (details && justificativa.style.display === "block") {
                             details.style.maxHeight = details.scrollHeight + "px";
                         }
                     });
-                    
-                    justificativa.addEventListener("click", (event) => {
-                        event.stopPropagation();
+                    justificativa.addEventListener("click",(event)=>{
+                        event.stopPropagation(); // impedir que feche
                     });
                 }
 
-                if (sendBtn) {
-                    sendBtn.addEventListener("click", (event) => {
+                if (sendBtn){
+                    sendBtn.addEventListener("click",(event)=>{
                         event.stopPropagation();
                         notification.classList.remove("active");
-                        notification.classList.add("inactive", "rejected");
+                        notification.classList.add("inactive","rejected");
                         justificativa.style.display = "none";
-                        
-                        if (acceptBtn && acceptBtn.parentElement) {
-                            acceptBtn.parentElement.style.display = "none";
-                        }
-                        
-                        if (details) {
+                        if(acceptBtn && acceptBtn.parentElement) acceptBtn.parentElement.style.display="none";
+                        if(details){
                             const participar = details.querySelector("p:nth-of-type(2)");
-                            if (participar) participar.style.display = "none";
+                            if(participar) participar.style.display="none";
                         }
 
                         recusa(eventoid, justificativaInput.value);
 
-                        const recusadasDiv = document.querySelector("#recusadas");
-                        if (recusadasDiv) recusadasDiv.appendChild(notification);
+                        document.querySelector("#recusadas").appendChild(notification);
                     });
                 }
 
-                if (acceptBtn) {
-                    acceptBtn.addEventListener("click", (event) => {
+                if(acceptBtn){
+                    acceptBtn.addEventListener("click",(event)=>{
                         event.stopPropagation();
                         notification.classList.remove("active");
-                        notification.classList.add("inactive", "accepted");
-                        
-                        if (details) {
-                            details.style.maxHeight = "none";
+                        notification.classList.add("inactive","accepted");
+                        if(details){
+                            details.style.maxHeight="none";
                             const participar = details.querySelector("p:nth-of-type(2)");
-                            if (participar) participar.style.display = "none";
+                            if(participar) participar.style.display="none";
                         }
-                        
-                        if (justificativa) justificativa.style.display = "none";
-                        if (acceptBtn.parentElement) acceptBtn.parentElement.style.display = "none";
+                        if(justificativa) justificativa.style.display="none";
+                        if(acceptBtn.parentElement) acceptBtn.parentElement.style.display="none";
 
-                        if (details && !details.querySelector(".concluido")) {
-                            criarConcluir(notification);
+                        if (!details.querySelector(".concluido")) {
+                            criarConcluir(notification)
                         }
 
                         confirmarPresenca(eventoid);
 
-                        const confirmadasDiv = document.querySelector("#confirmadas");
-                        if (confirmadasDiv) confirmadasDiv.appendChild(notification);
+                        document.querySelector("#confirmadas").appendChild(notification);
                     });
                 }
             });
@@ -329,7 +231,121 @@ function inicarNotificacao() {
         }
     };
 
-    carregarNotificacoes();
+    const criarConcluir = (notification) => {
+        const concluidoBtn = document.createElement("button");
+        concluidoBtn.className = "concluido";
+        concluidoBtn.innerHTML = 'CONCLUIR EVENTO  <i class="bi bi-check-circle"></i>';
+        
+        notification.querySelector(".details").appendChild(concluidoBtn);
+
+        concluidoBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+
+            const response = await fetch(`/api/participacaoEventos/${payload.id}/${notification.dataset.id}`);
+            const notificacao = await response.json();
+            
+            const eventoDate = new Date(notificacao.Data_Evento);
+
+            const year = eventoDate.getFullYear();
+            const month = String(eventoDate.getMonth() + 1).padStart(2, '0');
+            const day = String(eventoDate.getDate()).padStart(2, '0');
+            const hours = String(eventoDate.getHours()).padStart(2, '0');
+            const minutes = String(eventoDate.getMinutes()).padStart(2, '0');
+
+            const dataParaInput = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+            document.querySelector("#evento-title").innerHTML = notificacao.Nome_Evento
+            document.querySelector("#dataPart").value = dataParaInput;
+            document.querySelector("#duracaoPart").value = notificacao.Duracao_Evento;
+            document.querySelector("#conhecimentoAdqPart").value = '';
+
+            participacaoModal.currentNotification = notification;
+
+            participacaoModal.show();
+        });
+        
+    };
+
+    document.querySelector("#formParticipacao").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const notification = participacaoModal.currentNotification;
+        if (!notification) return;
+
+        const eventoid = notification.dataset.id;
+        const dataPart = document.querySelector("#dataPart").value;
+        const duracaoPart = document.querySelector("#duracaoPart").value;
+        const conhecimentoAdqPart = document.querySelector("#conhecimentoAdqPart").value;
+
+        const dados = {
+            id_colab: payload.id,
+            id_evento: eventoid,
+            data_part: dataPart,
+            duracao_part: duracaoPart,
+            descricao_part: conhecimentoAdqPart
+        };
+
+        try {
+            const response = await fetch(`/api/certificadoParticipacao/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                await concluirEvento(eventoid);
+
+                notification.classList.add("inactive", "finished");
+                const btn = notification.querySelector(".concluido");
+                btn.disabled = true;
+                btn.innerHTML = 'CONCLUÍDO <i class="bi bi-check-circle"></i>';
+
+                document.querySelector("#concluidos").appendChild(notification);
+
+                participacaoModal.hide();
+            } else {
+                alert("Erro ao salvar os dados do evento: " + (result.mensagem || "Erro desconhecido"));
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao enviar os dados. Tente novamente.");
+        }
+    });
+
+
+    const recusa = async function(eventoid, justificativaValue){
+        const dados = {
+            status: 3,
+            justificativa_notificacao: justificativaValue
+        }
+        atualizaPE(dados, eventoid)
+    }
+    const confirmarPresenca = async function(eventoid){
+        const dados = {
+            status: 2,
+            justificativa_notificacao: null
+        }
+        atualizaPE(dados, eventoid)
+    }
+    const concluirEvento = async function(eventoid){
+        const dados = {
+            status: 4,
+            justificativa_notificacao: null
+        }
+        atualizaPE(dados, eventoid)
+    }
+    const atualizaPE = async function(dados, eventoid){
+        const response = await fetch(`/api/participacaoEventos/${payload.id}/${eventoid}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+        const result = await response.json();
+    }
+
+    carregarNotificacoes()
 }
 
 inicarNotificacao();

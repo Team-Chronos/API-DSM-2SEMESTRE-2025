@@ -259,6 +259,7 @@ function inicializarAdmin() {
         const dados = {
             nome_evento: document.getElementById('edit-nome_evento').value,
             data_evento: document.getElementById('edit-data_evento').value,
+            duracao_evento: document.getElementById('edit-duracao_evento').value,
             local_evento: document.getElementById('edit-local_evento').value,
             descricao_evento: document.getElementById('edit-descricao_evento').value
         };
@@ -311,6 +312,7 @@ function inicializarAdmin() {
         const dados = {
             nome_evento: document.getElementById('nome_evento').value,
             data_evento: document.getElementById('data_evento').value,
+            duracao_evento: document.getElementById('duracao_evento').value,
             local_evento: document.getElementById('local_evento').value,
             descricao_evento: document.getElementById('descricao_evento').value,
             participantes: Array.from(document.querySelectorAll('input[name="colaboradores[]"]:checked')).map(cb => cb.value)
