@@ -42,8 +42,8 @@ CREATE TABLE Participacao_Evento (
     ID_Status INT NOT NULL,
     justificativa VARCHAR(255),
     PRIMARY KEY (ID_Evento, ID_Colaborador),
-    FOREIGN KEY (ID_Evento) REFERENCES Evento (ID_Evento),
-    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_colaborador),
+    FOREIGN KEY (ID_Evento) REFERENCES Evento (ID_Evento) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_colaborador) ON DELETE CASCADE,
     FOREIGN KEY (ID_Status) REFERENCES Status_Participacao(ID_Status)
 );
 
@@ -52,13 +52,13 @@ CREATE TABLE colaboradores_emails_enviados (
     email_enviado BOOLEAN DEFAULT FALSE,
     data_envio DATETIME,
     tentativas INT DEFAULT 0,
-    FOREIGN KEY (ID_colaborador) REFERENCES Colaboradores(ID_colaborador)
+    FOREIGN KEY (ID_colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE
 );
 
 CREATE TABLE colaboradores_confirmados (
     ID_colaborador INT PRIMARY KEY,
     data_confirmacao DATETIME,
-    FOREIGN KEY (ID_colaborador) REFERENCES Colaboradores(ID_colaborador)
+    FOREIGN KEY (ID_colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE
 );
 
 INSERT INTO Setor (Nome_Setor, Descricao)
