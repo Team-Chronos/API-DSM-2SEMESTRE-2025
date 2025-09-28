@@ -329,9 +329,7 @@ function inicarNotificacao() {
         }
     };
 
-    // Executar a função
     carregarNotificacoes();
 }
 
-// Chamar a função
 inicarNotificacao();

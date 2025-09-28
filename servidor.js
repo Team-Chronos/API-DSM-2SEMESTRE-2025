@@ -5,9 +5,12 @@ import eventoRoutes from './src/routes/eventoRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import agregadoRoutes from './src/routes/agregadoRoutes.js';
-import NotificacaoObserver from './src/routes/notificacaoObserver.js'; 
+import './src/routes/notificacaoObserver.js'; 
 import db from './src/config/db.js';
 import cors from 'cors';
+import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
+
+
 
 
 const app = express();
@@ -28,6 +31,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
 app.use('/api/agregados', agregadoRoutes);
+app.use('/api/participacaoEventos', participacaoEventoRoutes);
 
 app.get('/api/setores', async (req, res) => {
     try {

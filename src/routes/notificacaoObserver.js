@@ -53,6 +53,9 @@ class NotificacaoObserver {
             for (const evento of eventos) {
                 console.log(` Novo evento detectado: ${evento.Nome_Evento}`);
                 
+                // ENVIAR EMAIL DE CONFIRMAÇÃO PARA O CRIADOR DO EVENTO
+                await this.enviarEmailConfirmacaoCriador(evento);
+                
                 const [participantes] = await db.promise().query(
                     'SELECT c.* FROM Colaboradores c INNER JOIN Participacao_Evento p ON c.ID_colaborador = p.ID_Colaborador WHERE p.ID_Evento = ?',
                     [evento.ID_Evento]
@@ -83,6 +86,70 @@ class NotificacaoObserver {
             }
         } catch (error) {
             console.error(' Erro ao verificar novos colaboradores:', error);
+        }
+    }
+
+    // NOVO MÉTODO: Enviar email de confirmação para o criador do evento
+    async enviarEmailConfirmacaoCriador(evento) {
+        try {
+            // Buscar informações do criador do evento
+            // Assumindo que há um campo Criado_Por ou similar na tabela Evento
+            const [criadores] = await db.promise().query(
+                'SELECT c.* FROM Colaboradores c WHERE c.ID_colaborador = ?',
+                [evento.Criado_Por] // Ajuste este campo conforme sua estrutura
+            );
+
+            if (criadores.length === 0) {
+                console.log(' Criador do evento não encontrado');
+                return;
+            }
+
+            const criador = criadores[0];
+
+            const mailOptions = {
+                from: process.env.EMAIL_USER || 'eventos@newelog.com',
+                to: criador.Email,
+                subject: ` Confirmação de Criação de Evento - ${evento.Nome_Evento}`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #059669;">Evento Criado com Sucesso! </h2>
+                        <p>Olá <strong>${criador.Nome_Col}</strong>,</p>
+                        <p>Seu evento foi criado com sucesso no sistema. Aqui estão os detalhes:</p>
+                        
+                        <div style="background: #f0f9ff; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #059669;">
+                            <h3 style="margin: 0; color: #059669;">${evento.Nome_Evento}</h3>
+                            <p><strong> Data:</strong> ${new Date(evento.Data_Evento).toLocaleString('pt-BR')}</p>
+                            <p><strong> Local:</strong> ${evento.Local_Evento}</p>
+                            <p><strong> Descrição:</strong> ${evento.Descricao}</p>
+                            <p><strong> ID do Evento:</strong> ${evento.ID_Evento}</p>
+                        </div>
+                        
+                        <p style="color: #059669; font-weight: bold;">
+                            As notificações foram enviadas para todos os participantes convidados.
+                        </p>
+                        
+                        <p>Você pode gerenciar seu evento acessando o sistema:</p>
+                        <div style="text-align: center; margin: 25px 0;">
+                            <a href="http://localhost:3000" 
+                               style="background: #059669; color: white; padding: 12px 24px; 
+                                      text-decoration: none; border-radius: 5px; display: inline-block;">
+                                 Acessar Sistema
+                            </a>
+                        </div>
+                        
+                        <p style="color: #6b7280; font-size: 14px;">
+                            Este é um email de confirmação automática.<br>
+                            Equipe Newe Log
+                        </p>
+                    </div>
+                `
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(` Email de confirmação enviado para o criador: ${criador.Email}`);
+            
+        } catch (error) {
+            console.error(` Erro ao enviar email de confirmação para o criador:`, error);
         }
     }
 
