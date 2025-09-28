@@ -1,4 +1,6 @@
-console.log("admin.js carregado e inicializando...");
+function inicializarAdmin() 
+{
+    console.log("admin.js carregado e inicializando...");
 
 const tabelaContainer = document.getElementById('lista-colaboradores');
 const formCadastro = document.getElementById('formCadastro');
@@ -419,4 +421,6 @@ function recarregar(){
 }
 
 carregarColaboradores();
-setTimeout(colEventos, 1000)
+setTimeout(colEventos, 1000)}
+
+inicializarAdmin();

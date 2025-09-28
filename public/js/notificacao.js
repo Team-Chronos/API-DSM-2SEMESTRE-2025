@@ -1,4 +1,6 @@
-const carregarNotificacoes = async () => {
+function inicarNotificacao()
+{
+    const carregarNotificacoes = async () => {
     let searchNotificacao = document.querySelector('#searchNotificacao');
     if (!searchNotificacao){
         searchNotificacao = document.createElement('div');
@@ -185,4 +187,6 @@ const carregarNotificacoes = async () => {
     }
 };
 
-carregarNotificacoes()
+carregarNotificacoes()}
+
+inicarNotificacao();

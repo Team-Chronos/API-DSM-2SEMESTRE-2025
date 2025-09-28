@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelectorAll('#barra-lateral > nav > ul > li').forEach((li) => {
-        if (li.id !== 'btn-logout'){
+        if (li.id !== 'btn-logout') {
             li.addEventListener('click', () => {
                 carregarConteudo(li.id)
             })
@@ -45,13 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
 async function carregarConteudo(conteudo) {
     console.log(conteudo)
     if (!main) return;
-    
+
     main.innerHTML = ''
     removerScript('script-dinamico')
 
     switch (conteudo) {
         case 'inicio':
+            response = await fetch('/adm/inicio.html');
+            main.innerHTML = await response.text();
+            adicionarScript('/js/admin.js', 'script-dinamico');
+            break;
+
         case 'notificacoes':
+           
+            main.innerHTML ='';
+            adicionarScript('/js/notificacao.js', 'script-dinamico');
+            break;
     }
 }
 
@@ -61,14 +70,14 @@ function removerScript(id) {
 }
 
 function adicionarScript(src, id) {
-    if (!document.getElementById(id)) {
-        const script = document.createElement('script');
-        script.src = src;
-        script.id = id;
-        document.body.appendChild(script);
-    }
-}
+    // Se já existe um script com esse id, não adiciona de novo
+    if (document.getElementById(id)) return;
 
+    const script = document.createElement('script');
+    script.src = src;
+    script.id = id;
+    document.body.appendChild(script);
+}
 async function carregarConteudoSetor(setor) {
     if (!main) return;
 
