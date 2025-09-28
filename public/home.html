@@ -104,22 +104,22 @@
     </div>
 
     <div id="sucessoModal" class="modal fade" tabindex="-1" aria-labelledby="sucessoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sucessoModalLabel">Sucesso!</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p id="sucessoMensagem" class="fs-5"></p>
-                <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sucessoModalLabel">Sucesso!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="sucessoMensagem" class="fs-5"></p>
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <div id="erroModal" class="modal fade" tabindex="-1" aria-labelledby="erroModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -138,6 +138,39 @@
             </div>
         </div>
     </div>
+
+    <div id="participacaoModal" class="modal fade" tabindex="-1" aria-labelledby="participacaoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="participacaoModalLabel">Formulário de conclusão de evento.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formParticipacao" novalidate>
+                        <div class="mb-3">
+                            <label for="dataPart" class="form-label d-block">Data do Evento:</label>
+                            <input type="datetime-local" class="form-control" name="dataPart" id="dataPart">
+                        </div>
+                        <div class="mb-3">
+                            <label for="duracaoPart" class="form-label d-block">Duração do Evento:</label>
+                            <input type="text" class="form-control" name="duracaoPart" id="duracaoPart">
+                        </div>
+                        <div class="mb-3">
+                            <label for="conhecimentoAdqPart" class="form-label d-block">Conhecimentos Adquiridos no Evento:</label>
+                            <textarea name="conhecimentoAdqPart" class="form-control" id="conhecimentoAdqPart"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button class="btn btn-primary" form="formParticipacao" type="submit">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

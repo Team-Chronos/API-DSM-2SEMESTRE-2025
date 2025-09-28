@@ -1,5 +1,7 @@
 function inicarNotificacao()
 {
+    const participacaoModal = new bootstrap.Modal(document.querySelector("#participacaoModal"))
+
     const carregarNotificacoes = async () => {
     let searchNotificacao = document.querySelector('#searchNotificacao');
     if (!searchNotificacao){
@@ -230,22 +232,85 @@ function inicarNotificacao()
 };
 
 const criarConcluir = (notification) => {
-    const details = notification.querySelector(".details");
     const concluidoBtn = document.createElement("button");
     concluidoBtn.className = "concluido";
     concluidoBtn.innerHTML = 'CONCLUIR EVENTO  <i class="bi bi-check-circle"></i>';
-    details.appendChild(concluidoBtn);
-    concluidoBtn.addEventListener("click",(e)=>{
+    
+    notification.querySelector(".details").appendChild(concluidoBtn);
+
+    concluidoBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
-        notification.classList.add("finished");
-        concluidoBtn.disabled = true;
-        concluidoBtn.innerHTML = 'CONCLUÍDO <i class="bi bi-check-circle"></i>';
 
-        concluirEvento(notification.dataset.id)
+        const response = await fetch(`/api/participacaoEventos/${payload.id}/${notification.dataset.id}`);
+        const notificacao = await response.json();
+        
+        const eventoDate = new Date(notificacao.Data_Evento);
 
-        document.querySelector("#concluidos").appendChild(notification);
+        const year = eventoDate.getFullYear();
+        const month = String(eventoDate.getMonth() + 1).padStart(2, '0');
+        const day = String(eventoDate.getDate()).padStart(2, '0');
+        const hours = String(eventoDate.getHours()).padStart(2, '0');
+        const minutes = String(eventoDate.getMinutes()).padStart(2, '0');
+
+        const dataParaInput = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+        document.querySelector("#dataPart").value = dataParaInput;
+        document.querySelector("#duracaoPart").value = notificacao.Duracao_Evento;
+        document.querySelector("#conhecimentoAdqPart").value = '';
+
+        participacaoModal.currentNotification = notification;
+
+        participacaoModal.show();
     });
-}
+    
+};
+
+document.querySelector("#formParticipacao").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const notification = participacaoModal.currentNotification;
+    if (!notification) return;
+
+    const eventoid = notification.dataset.id;
+    const dataPart = document.querySelector("#dataPart").value;
+    const duracaoPart = document.querySelector("#duracaoPart").value;
+    const conhecimentoAdqPart = document.querySelector("#conhecimentoAdqPart").value;
+
+    const dados = {
+        data_evento: dataPart,
+        duracao: duracaoPart,
+        conhecimentos: conhecimentoAdqPart
+    };
+
+    try {
+        const response = await fetch(`/api/certificadoParticipacao/${payload.id}/${eventoid}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            await concluirEvento(eventoid);
+
+            notification.classList.add("inactive", "finished");
+            const btn = notification.querySelector(".concluido");
+            btn.disabled = true;
+            btn.innerHTML = 'CONCLUÍDO <i class="bi bi-check-circle"></i>';
+
+            document.querySelector("#concluidos").appendChild(notification);
+
+            participacaoModal.hide();
+        } else {
+            alert("Erro ao salvar os dados do evento: " + (result.message || "Erro desconhecido"));
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Erro ao enviar os dados. Tente novamente.");
+    }
+});
+
 
 const recusa = async function(eventoid, justificativaValue){
     const dados = {

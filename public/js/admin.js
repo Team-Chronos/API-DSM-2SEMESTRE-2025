@@ -215,6 +215,7 @@ function inicializarAdmin() {
 
             document.getElementById('edit-evento-id').value = evento.ID_Evento;
             document.getElementById('edit-nome_evento').value = evento.Nome_Evento;
+            document.getElementById('edit-duracao_evento').value = evento.Duracao_Evento;
             document.getElementById('edit-data_evento').value = dataParaInput;
             document.getElementById('edit-local_evento').value = evento.Local_Evento;
             document.getElementById('edit-descricao_evento').value = evento.Descricao;
