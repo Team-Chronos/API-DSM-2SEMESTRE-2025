@@ -81,3 +81,18 @@ export const excluirEvento = async (req, res) => {
         res.status(500).json({ mensagem: "Erro interno ao excluir evento." });
     }
 };
+export const salvarLocalidade = async (req, res) => {
+    const { colaboradorId, localidade } = req.body;
+
+    if (!colaboradorId || !localidade) {
+        return res.status(400).json({ mensagem: "Dados incompletos." });
+    }
+
+    try {
+        await Colaborador.updateLocalidade(colaboradorId, localidade);
+        res.status(200).json({ mensagem: "Localidade salva com sucesso!" });
+    } catch (err) {
+        console.error("Erro ao salvar localidade:", err);
+        res.status(500).json({ mensagem: "Erro interno ao salvar localidade." });
+    }
+};
