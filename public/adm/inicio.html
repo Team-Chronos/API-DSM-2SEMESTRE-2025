@@ -1,30 +1,51 @@
-<header class="d-flex align-items-center justify-content-between mb-4">
-    <div>
-        <div class="inicio-content-selection d-flex">
-            <div id="btn-colaboradores" class="btn ativo">Colaboradores</div>
-            <div id="btn-eventos" class="btn">Eventos</div>
-        </div>
+<header class="page-header d-flex align-items-center justify-content-between mb-4">
+    
+    <div class="header-tabs d-flex">
+        <div id="btn-colaboradores" class="btn ativo">Colaboradores</div>
+        <div id="btn-eventos" class="btn">Eventos</div>
     </div>
-    <div class="d-flex align-items-center gap-3 mx-4 flex-grow-1 justify-content-center">
-        <div class="pesquisa-principal">
-            <input class="form-control" type="search" id="pesquisaAdm" placeholder="Pesquisar por Nome ou Email...">
+
+    <div class="header-controls d-flex align-items-center flex-grow-1 justify-content-center gap-3 mx-4">
+        
+        <div class="search-wrapper">
+            <i class="bi bi-search"></i>
+            <input class="form-control" type="search" id="pesquisaAdm" placeholder="Pesquisar...">
         </div>
-        <div class="d-flex align-items-center">
-            <label for="filtro-setor" class="form-label mb-0 me-2 flex-shrink-0">Filtrar por Setor:</label>
-            <select id="filtro-setor" class="form-select filtro-select">
+
+        <div class="filter-wrapper d-flex align-items-center">
+            <label for="filtro-setor" class="form-label mb-0 me-2">Setor:</label>
+            <select id="filtro-setor" class="form-select">
                 <option value="">Todos</option>
                 <option value="Administrativo">Administrativo</option>
                 <option value="Comercial">Comercial</option>
                 <option value="Operacional">Operacional</option>
             </select>
         </div>
+
+        <div class="filter-wrapper d-flex align-items-center">
+            <label for="filtro-modalidade" class="form-label mb-0 me-2">Modalidade:</label>
+            <select id="filtro-modalidade" class="form-select">
+                <option value="">Todas</option>
+                <option value="Presencial">Presencial</option>
+                <option value="Remoto">Remoto</option>
+                <option value="Outro">Outro</option>
+                <option value="Não informado">Não informado</option>
+            </select>
+        </div>
     </div>
+
     <div>
-        <button id="btn-modal-cad" class="btn btn-primary" data-bs-toggle="modal"
-            data-bs-target="#cadColabMod">Adicionar</button>
+        <button id="btn-modal-cad" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cadColabMod">
+             <i class="bi bi-plus-lg"></i> Adicionar Colaborador
+        </button>
     </div>
 </header>
+
 <div id="lista-colaboradores"></div>
+
+<div id="form-edicao-colaborador-container"></div>
+</div>
+
 <div id="cadColabMod" class="modal fade" tabindex="-1" aria-labelledby="cadColabModLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -73,6 +94,7 @@
         </div>
     </div>
 </div>
+
 <div id="edicaoModal" class="modal fade" tabindex="-1" aria-labelledby="edicaoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -116,23 +138,7 @@
         </div>
     </div>
 </div>
-<div id="sucessoModal" class="modal fade" tabindex="-1" aria-labelledby="sucessoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sucessoModalLabel">Sucesso!</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p id="sucessoMensagem" class="fs-5"></p>
-                <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div id="cadEventMod" class="modal fade" tabindex="-1" aria-labelledby="cadEventModLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -152,20 +158,23 @@
                     </div>
                     <div class="mb-3" id="campo_local">
                         <label for="local_evento" class="form-label">Local ou link do Evento:</label>
-                        <input class="form-control" type="text" name="local_evento" id="local_evento" placeholder="Link ou endereço do evento" required>
+                        <input class="form-control" type="text" name="local_evento" id="local_evento"
+                            placeholder="Link ou endereço do evento" required>
                     </div>
                     <div class="mb-3">
                         <label for="descricao_evento" class="form-label">Descrição do Evento:</label>
-                        <textarea class="form-control" name="descricao_evento" id="descricao_evento" rows="3" placeholder="Digite uma breve descrição do evento"></textarea>
+                        <textarea class="form-control" name="descricao_evento" id="descricao_evento" rows="3"
+                            placeholder="Digite uma breve descrição do evento"></textarea>
                     </div>
                     <label class="form-label">Participantes:</label>
                     <div id="colEventoDiv" class="mb-3 py-2 px-3">
-                        <input class="form-control mb-4 w-75 mt-2" type="search" id="pesquisaColEvento" placeholder="Pesquisar por Nome de colaborador">
+                        <input class="form-control mb-4 w-75 mt-2" type="search" id="pesquisaColEvento"
+                            placeholder="Pesquisar por Nome de colaborador">
                         <div id="colEvento" class="d-grid">
 
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -175,7 +184,9 @@
         </div>
     </div>
 </div>
-<div id="edicaoEventoModal" class="modal fade" tabindex="-1" aria-labelledby="edicaoEventoModalLabel" aria-hidden="true">
+
+<div id="edicaoEventoModal" class="modal fade" tabindex="-1" aria-labelledby="edicaoEventoModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -191,15 +202,18 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit-data_evento" class="form-label">Data e Hora do Evento:</label>
-                        <input type="datetime-local" class="form-control" name="edit-data_evento" id="edit-data_evento" required>
+                        <input type="datetime-local" class="form-control" name="edit-data_evento" id="edit-data_evento"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="edit-local_evento" class="form-label">Local ou link do Evento:</label>
-                        <input class="form-control" type="text" name="edit-local_evento" id="edit-local_evento" placeholder="Link ou endereço do evento" required>
+                        <input class="form-control" type="text" name="edit-local_evento" id="edit-local_evento"
+                            placeholder="Link ou endereço do evento" required>
                     </div>
                     <div class="mb-3">
                         <label for="dedit-escricao_evento" class="form-label">Descrição do Evento:</label>
-                        <textarea class="form-control" name="edit-descricao_evento" id="edit-descricao_evento" rows="3" placeholder="Digite uma breve descrição do evento"></textarea>
+                        <textarea class="form-control" name="edit-descricao_evento" id="edit-descricao_evento" rows="3"
+                            placeholder="Digite uma breve descrição do evento"></textarea>
                     </div>
                 </form>
             </div>
@@ -209,4 +223,3 @@
             </div>
         </div>
     </div>
-</div>

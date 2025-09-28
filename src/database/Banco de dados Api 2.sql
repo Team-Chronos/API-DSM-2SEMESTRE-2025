@@ -15,6 +15,7 @@ CREATE TABLE Colaboradores (
     Senha VARCHAR(255) NOT NULL,
     Telefone VARCHAR(11),
     Email VARCHAR(255) NOT NULL,
+    Localidade VARCHAR(20) NULL,
     Nivel_Acesso ENUM('Gestor','Peão') NOT NULL,
     FOREIGN KEY (Setor) REFERENCES Setor(ID_Setor)
 );
