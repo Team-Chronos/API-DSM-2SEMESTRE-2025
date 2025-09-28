@@ -6,7 +6,6 @@ import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import agregadoRoutes from './src/routes/agregadoRoutes.js';
 import NotificacaoObserver from './src/routes/notificacaoObserver.js'; 
-import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
 import db from './src/config/db.js';
 import cors from 'cors';
 
@@ -28,7 +27,6 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
-
 app.use('/api/agregados', agregadoRoutes);
 
 app.get('/api/setores', async (req, res) => {
