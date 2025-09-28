@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import eventoRoutes from './src/routes/eventoRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
+import agregadoRoutes from './src/routes/agregadoRoutes.js';
 import db from './src/config/db.js';
 import transporter from './src/mailer.js';
 import jwt from 'jsonwebtoken';
@@ -28,6 +29,7 @@ app.use('/api/colaboradores', colaboradorRoutes);
 
 app.use('/api/eventos', eventoRoutes);
 
+app.use('/api/agregados', agregadoRoutes);
 
 const criarTabelasAuxiliares = async () => {
     try {
