@@ -34,31 +34,53 @@ function inicarNotificacao()
     }
 
     try {
-        const notificacoes = [
-            { Title: 'Calabreso damasco', data: '21/03/2025 16:43', Local: 'https://google.com' },
-            { Title: 'Mista fria', data: '31/03/2023 13:37', Local: 'https://google.com' },
-            { Title: 'macaco doce', data: '22/02/2022 12:43', Local: 'bom dia' }
-        ];
-        notificacoesDiv.innerHTML = '';
+        const response = await fetch(`/api/participacaoEventos/${payload.id}`);
+        const notificacoes = await response.json();
+       
+        notificacoesDiv.innerHTML = `
+            <h3>Pendentes</h3>
+            <div id="pendentes"></div>
+
+            <h3>Confirmadas</h3>
+            <div id="confirmadas"></div>
+
+            <h3>Recusadas</h3>
+            <div id="recusadas"></div>
+
+            <h3>Concluídos</h3>
+            <div id="concluidos"></div>
+        `;
         if (notificacoes.length === 0) {
             notificacoesDiv.innerHTML = '<p class="text-center mt-3">Nenhuma notificação encontrado.</p>';
             return;
         }
-        notificacoes.forEach(not => {
+        notificacoes.forEach(not => {            
+            const notDate = new Date(not.Data_Evento);
+
+            const year = notDate.getFullYear();
+            const month = String(notDate.getMonth() + 1).padStart(2, '0');
+            const day = String(notDate.getDate()).padStart(2, '0');
+            const hours = String(notDate.getHours()).padStart(2, '0');
+            const minutes = String(notDate.getMinutes()).padStart(2, '0');
+
+            const dataFormatada = `${day}/${month}/${year} ${hours}:${minutes}`;
+
             let notificacao = document.createElement('div');
             notificacao.className = 'notification flex-row';
+            notificacao.dataset.id =  not.ID_Evento
+
             let texto = `
             <i class="bi bi-bell"></i>
             <div class="content">
-                <strong>${not.Title} ${not.data}</strong>
+                <strong>${not.Nome_Evento} <br> Data: ${dataFormatada}</strong>
                 <div class="details flex-column">`
-            if (not.Local.includes('https://') || not.Local.includes('http://')){
-                texto += `<a href="${not.Local}" target="_blank">${not.Local}</a>`;
+            if (not.Local_Evento.includes('https://') || not.Local_Evento.includes('http://')){
+                texto += `<a href="${not.Local_Evento}" target="_blank">${not.Local_Evento}</a>`;
             } else {
-                texto += `<div>${not.Local}</div>`;
+                texto += `<div>${not.Local_Evento}</div>`;
             }
             texto += `
-                    <p>REUNIÃO DE DEBATE SOBRE NOVA REGULAMENTAÇÃO.</p>
+                    <p>${not.Descricao}</p>
                     <p>PARTICIPAR:</p>
                     <div class="buttons">
                         <button class="accept">ACEITAR <i class="bi bi-check-circle"></i></button>
@@ -74,7 +96,45 @@ function inicarNotificacao()
                 </div>
             </div>`;
             notificacao.innerHTML = texto;
-            notificacoesDiv.appendChild(notificacao);
+            
+            if (not.ID_Status === 2) {
+                notificacao.classList.add("inactive", "accepted");
+
+                criarConcluir(notificacao)
+                const details = notificacao.querySelector(".details");
+                details.style.maxHeight = 'none'
+                const participar = details.querySelector("p:nth-of-type(2)");
+                participar.style.display = 'none'
+                const buttons = notificacao.querySelector('.buttons')
+                buttons.style.display = 'none'
+
+                document.querySelector("#confirmadas").appendChild(notificacao);
+            } else if (not.ID_Status === 3) {
+                notificacao.classList.add("inactive", "rejected");
+                document.querySelector("#recusadas").appendChild(notificacao);
+            } else if (not.ID_Status === 4) {
+                notificacao.classList.add("inactive", "concluido", "accepted");
+
+                const details = notificacao.querySelector(".details");
+                details.style.maxHeight = 'none'
+                const participar = details.querySelector("p:nth-of-type(2)");
+                participar.style.display = 'none'
+                const buttons = notificacao.querySelector('.buttons')
+                buttons.style.display = 'none'
+
+                const concluidoBtn = document.createElement("button");
+                concluidoBtn.className = "concluido";
+                concluidoBtn.innerHTML = 'CONCLUIR EVENTO  <i class="bi bi-check-circle"></i>';
+                details.appendChild(concluidoBtn);
+
+                notificacao.classList.add("finished");
+                concluidoBtn.disabled = true;
+                concluidoBtn.innerHTML = 'CONCLUÍDO <i class="bi bi-check-circle"></i>';
+
+                document.querySelector("#concluidos").appendChild(notificacao);
+            } else {
+                document.querySelector("#pendentes").appendChild(notificacao);
+            }
         });
 
         document.querySelectorAll(".notification").forEach(notification => {
@@ -85,27 +145,13 @@ function inicarNotificacao()
         });
 
         document.querySelectorAll(".notification").forEach(notification => {
+            const eventoid = notification.dataset.id
             const rejectBtn = notification.querySelector(".reject");
             const acceptBtn = notification.querySelector(".accept");
             const sendBtn = notification.querySelector(".justificativa .send");
             const justificativa = notification.querySelector(".justificativa");
+            const justificativaInput = notification.querySelector(".justificativa #just-input");
             const details = notification.querySelector(".details");
-
-            const moverTopoRespondidas = () => {
-                const container = notification.parentElement;
-                notification.style.transition = "transform 0.5s ease";
-                notification.style.transform = "translateY(20px)";
-                setTimeout(() => {
-                    notification.style.transform = "translateY(0)";
-                    const primeiroRespondido = Array.from(container.querySelectorAll('.notification.accepted, .notification.rejected'))
-                                                   .find(n => n !== notification);
-                    if(primeiroRespondido){
-                        container.insertBefore(notification, primeiroRespondido);
-                    } else {
-                        container.appendChild(notification);
-                    }
-                }, 10);
-            };
 
             notification.addEventListener("click", () => {
                 if(notification.classList.contains("inactive")) return;
@@ -135,7 +181,7 @@ function inicarNotificacao()
                 });
             }
 
-            if(sendBtn){
+            if (sendBtn){
                 sendBtn.addEventListener("click",(event)=>{
                     event.stopPropagation();
                     notification.classList.remove("active");
@@ -146,7 +192,10 @@ function inicarNotificacao()
                         const participar = details.querySelector("p:nth-of-type(2)");
                         if(participar) participar.style.display="none";
                     }
-                    moverTopoRespondidas();
+
+                    recusa(eventoid, justificativaInput.value);
+
+                    document.querySelector("#recusadas").appendChild(notification);
                 });
             }
 
@@ -164,19 +213,12 @@ function inicarNotificacao()
                     if(acceptBtn.parentElement) acceptBtn.parentElement.style.display="none";
 
                     if (!details.querySelector(".concluido")) {
-                        const concluidoBtn = document.createElement("button");
-                        concluidoBtn.className = "concluido";
-                        concluidoBtn.innerHTML = 'CONCLUIR EVENTO  <i class="bi bi-check-circle"></i>';
-                        details.appendChild(concluidoBtn);
-                        concluidoBtn.addEventListener("click",(e)=>{
-                            e.stopPropagation();
-                            notification.classList.add("finished");
-                            concluidoBtn.disabled = true;
-                            concluidoBtn.innerHTML = 'CONCLUÍDO <i class="bi bi-check-circle"></i>';
-                        });
+                        criarConcluir(notification)
                     }
 
-                    moverTopoRespondidas();
+                    confirmarPresenca(eventoid);
+
+                    document.querySelector("#confirmadas").appendChild(notification);
                 });
             }
         });
@@ -186,6 +228,54 @@ function inicarNotificacao()
         notificacoesDiv.innerHTML = '<p class="text-center text-danger mt-3">Falha ao carregar dados das notificações.</p>';
     }
 };
+
+const criarConcluir = (notification) => {
+    const details = notification.querySelector(".details");
+    const concluidoBtn = document.createElement("button");
+    concluidoBtn.className = "concluido";
+    concluidoBtn.innerHTML = 'CONCLUIR EVENTO  <i class="bi bi-check-circle"></i>';
+    details.appendChild(concluidoBtn);
+    concluidoBtn.addEventListener("click",(e)=>{
+        e.stopPropagation();
+        notification.classList.add("finished");
+        concluidoBtn.disabled = true;
+        concluidoBtn.innerHTML = 'CONCLUÍDO <i class="bi bi-check-circle"></i>';
+
+        concluirEvento(notification.dataset.id)
+
+        document.querySelector("#concluidos").appendChild(notification);
+    });
+}
+
+const recusa = async function(eventoid, justificativaValue){
+    const dados = {
+        status: 3,
+        justificativa_notificacao: justificativaValue
+    }
+    atualizaPE(dados, eventoid)
+}
+const confirmarPresenca = async function(eventoid){
+    const dados = {
+        status: 2,
+        justificativa_notificacao: null
+    }
+    atualizaPE(dados, eventoid)
+}
+const concluirEvento = async function(eventoid){
+    const dados = {
+        status: 4,
+        justificativa_notificacao: null
+    }
+    atualizaPE(dados, eventoid)
+}
+const atualizaPE = async function(dados, eventoid){
+    const response = await fetch(`/api/participacaoEventos/${payload.id}/${eventoid}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+    });
+    const result = await response.json();
+}
 
 carregarNotificacoes()}
 

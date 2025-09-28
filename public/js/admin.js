@@ -213,9 +213,6 @@ function inicializarAdmin() {
 
             const dataParaInput = `${year}-${month}-${day}T${hours}:${minutes}`;
 
-            console.log(dataParaInput);
-
-
             document.getElementById('edit-evento-id').value = evento.ID_Evento;
             document.getElementById('edit-nome_evento').value = evento.Nome_Evento;
             document.getElementById('edit-data_evento').value = dataParaInput;

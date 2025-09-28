@@ -31,11 +31,11 @@ CREATE TABLE Evento (
 
 CREATE TABLE Status_Participacao (
     ID_Status INT PRIMARY KEY AUTO_INCREMENT,
-    Nome_Status ENUM('Pendente','Confirmado','Recusado') NOT NULL
+    Nome_Status ENUM('Pendente','Confirmado','Recusado', 'Concluído') NOT NULL
 );
 
 INSERT INTO Status_Participacao (Nome_Status)
-VALUES ('Pendente'), ('Confirmado'), ('Recusado');
+VALUES ('Pendente'), ('Confirmado'), ('Recusado'), ('Concluído');
 
 CREATE TABLE Participacao_Evento (
     ID_Evento INT NOT NULL,
