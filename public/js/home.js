@@ -118,14 +118,18 @@ async function carregarConteudo(conteudo) {
 
     switch (conteudo) {
         case 'inicio':
-             carregarConteudoSetor(payload.setor);
-            break;
+            carregarConteudoSetor(payload.setor);
+        break;
 
         case 'notificacoes':
-           
-            main.innerHTML ='';
+            main.innerHTML = '';
             adicionarScript('/js/notificacao.js', 'script-dinamico');
-            break;
+        break;
+
+        case 'certificados':
+            main.innerHTML = '';
+            adicionarScript('/js/certificado.js', 'script-dinamico');
+        break;
     }
 }
 

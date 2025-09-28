@@ -6,6 +6,7 @@ import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import agregadoRoutes from './src/routes/agregadoRoutes.js';
 import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
+import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
 import db from './src/config/db.js';
 import transporter from './src/mailer.js';
 import jwt from 'jsonwebtoken';
@@ -18,11 +19,8 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
 
 app.use('/api/auth', authRoutes);
 
@@ -31,6 +29,8 @@ app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
 
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
+
+app.use('/api/certificadoParticipacao', certificadoPartRoutes)
 
 app.use('/api/agregados', agregadoRoutes);
 
