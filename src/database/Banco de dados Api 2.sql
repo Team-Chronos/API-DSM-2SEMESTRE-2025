@@ -74,6 +74,42 @@ CREATE TABLE colaboradores_confirmados (
     FOREIGN KEY (ID_colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE
 );
 
+CREATE TABLE Agregados (
+    id_agregado INT AUTO_INCREMENT PRIMARY KEY,
+    genero ENUM('Masculino', 'Feminino', 'Outro') NOT NULL,
+    nome VARCHAR(150) NOT NULL,
+    cnpj CHAR(14) NULL,
+    cpf CHAR(11) NULL,
+    nascimento DATE NULL,
+    cidadeNascimento VARCHAR(100) NULL,
+    telefone VARCHAR(20) NULL,
+    email VARCHAR(150) NULL,
+    rg VARCHAR(20) NULL,
+    emissaoRG DATE NULL,
+    orgaoExp VARCHAR(20) NULL,
+    pai VARCHAR(150) NULL,
+    mae VARCHAR(150) NULL,
+    pis VARCHAR(15) NULL,
+    cep CHAR(8) NULL,
+    endereco VARCHAR(255) NULL,
+    nomeProprietario VARCHAR(150) NULL,
+    placa VARCHAR(10) NULL,
+    marca VARCHAR(50) NULL,
+    modelo VARCHAR(100) NULL,
+    cor VARCHAR(30) NULL,
+    anoFabricacao YEAR NULL,
+    cilindrada INT NULL,
+    bauSuporte BOOLEAN DEFAULT FALSE,
+    seguro BOOLEAN DEFAULT FALSE,
+    valorMinSaida DECIMAL(10,2) NULL,
+    valorKmRodado DECIMAL(10,2) NULL,
+    cursoMotoFrete BOOLEAN DEFAULT FALSE,
+    
+    CONSTRAINT uc_cpf UNIQUE (cpf),
+    CONSTRAINT uc_cnpj UNIQUE (cnpj),
+    CONSTRAINT uc_rg UNIQUE (rg)
+);
+
 INSERT INTO Setor (Nome_Setor, Descricao)
 VALUES 
 ('Administrativo', 'Setor responsável pelas operações administrativas da empresa.'),

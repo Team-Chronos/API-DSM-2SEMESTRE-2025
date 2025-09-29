@@ -5,6 +5,7 @@ class NotificacaoObserver {
     constructor() {
         this.ultimoEventoId = 0;
         this.ultimoColaboradorId = 0;
+        this.ultimoAgregadoId = 0
         this.intervalId = null;
     }
 
@@ -15,9 +16,9 @@ class NotificacaoObserver {
         
         this.intervalId = setInterval(async () => {
             await this.verificarNovosRegistros();
-        }, 30000);
+        }, 10000);
         
-        console.log(' Observador rodando (verifica a cada 30 segundos)');
+        console.log(' Observador rodando (verifica a cada 10 segundos)');
     }
 
     async buscarIdsAtuais() {
@@ -27,8 +28,11 @@ class NotificacaoObserver {
 
             const [colaboradores] = await db.promise().query('SELECT MAX(ID_colaborador) as maxId FROM Colaboradores');
             this.ultimoColaboradorId = colaboradores[0].maxId || 0;
+            
+            const [agregados] = await db.promise().query('SELECT MAX(ID_agregado) as maxId FROM Agregados');
+            this.ultimoAgregadoId = 0;
 
-            console.log(`IDs atuais - Eventos: ${this.ultimoEventoId}, Colaboradores: ${this.ultimoColaboradorId}`);
+            console.log(`IDs atuais - Eventos: ${this.ultimoEventoId}, Colaboradores: ${this.ultimoColaboradorId}, Agregados: ${this.ultimoAgregadoId}`);
         } catch (error) {
             console.error(' Erro ao buscar IDs atuais:', error);
         }
@@ -38,6 +42,7 @@ class NotificacaoObserver {
         try {
             await this.verificarNovosEventos();
             await this.verificarNovosColaboradores();
+            await this.verificarNovosAgregados();
         } catch (error) {
             console.error(' Erro no observador:', error);
         }
@@ -86,6 +91,23 @@ class NotificacaoObserver {
             }
         } catch (error) {
             console.error(' Erro ao verificar novos colaboradores:', error);
+        }
+    }
+
+    async verificarNovosAgregados() {
+        try {
+            const [agregados] = await db.promise().query(
+                'SELECT * FROM Agregados WHERE id_agregado > ? ORDER BY id_agregado ASC',
+                [this.ultimoAgregadoId]
+            );
+
+            for (const agregado of agregados) {
+                console.log(`👤 Novo agregado detectado: ${agregado.nome}`);
+                await this.enviarEmailBoasVindasAg(agregado);
+                this.ultimoAgregadoId = agregado.id_agregado;
+            }
+        } catch (error) {
+            console.error(' Erro ao verificar novos Agregados:', error);
         }
     }
 
@@ -189,6 +211,42 @@ class NotificacaoObserver {
             
         } catch (error) {
             console.error(` Erro ao enviar notificação para ${colaborador.Email}:`, error);
+        }
+    }
+
+    async enviarEmailBoasVindasAg(agregado) {
+        console.log(agregado.email)
+        try {
+            const mailOptions = {
+                from: process.env.EMAIL_USER || 'sistema@newelog.com',
+                to: agregado.email,
+                subject: 'Bem-vindo à Newe Log! ',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #2563eb;">Bem-vindo à Newe Log!</h2>
+                        <p>Olá <strong>${agregado.nome}</strong>,</p>
+                        <p>Seu cadastro foi realizado com sucesso no nosso sistema.</p>
+                        
+                        <div style="background: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                            <p><strong>Seus dados de acesso:</strong></p>
+                            <p><strong>Nome:</strong> ${agregado.nome}</p>
+                            <p><strong>Email:</strong> ${agregado.email}</p>
+                            <p><strong>ID:</strong> ${agregado.id_agregado}</p>
+                        </div>
+                        
+                        <p style="color: #6b7280; font-size: 14px;">
+                            Atenciosamente,<br>
+                            Equipe Newe Log
+                        </p>
+                    </div>
+                `
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(` Email de boas-vindas enviado para: ${agregado.email}`);
+            
+        } catch (error) {
+            console.error(` Erro ao enviar email para ${agregado.email}:`, error);
         }
     }
 

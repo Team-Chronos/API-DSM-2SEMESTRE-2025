@@ -10,7 +10,6 @@ import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
 import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
 import db from './src/config/db.js';
 import cors from 'cors';
-import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
 
 const app = express();
 const PORT = 3000;
