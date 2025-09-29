@@ -1,0 +1,35 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+textarea, input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+button {
+    padding: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#resultado {
+    white-space: pre-wrap;
+    overflow: visible;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-top: 15px;
+    background: #f9f9f9;
+}
+
+/* Forçar quebra de página no PDF quando necessário */
+.page-break {
+    page-break-before: always;
+}
