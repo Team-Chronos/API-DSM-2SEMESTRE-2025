@@ -60,26 +60,54 @@ function inicializarAdmin() {
     const filtrarTabela = () => {
         const textoPesquisa = campoPesquisa.value.toLowerCase();
         const setorSelecionado = filtroSetor.value;
-        const corpoTabela = document.querySelector("#lista-colaboradores tbody");
-        const modalidadeSelecionada = filtroModalidade.value
-        if (!corpoTabela) return;
-        const linhas = corpoTabela.getElementsByTagName('tr');
-        for (const linha of linhas) {
-            const nomeNaLinha = linha.cells[1].textContent.toLowerCase();
-            const emailNaLinha = linha.cells[2].textContent.toLowerCase();
-            const setorNaLinha = linha.cells[3].textContent;
-            const modalidadeNaLinha = linha.cells[4].textContent;
-            const correspondeNome = nomeNaLinha.includes(textoPesquisa);
-            const correspondeEmail = emailNaLinha.includes(textoPesquisa);
-            const correspondeSetor = (setorSelecionado === "" || setorNaLinha === setorSelecionado);
-            const correspondeModalidade = (modalidadeSelecionada === "" || modalidadeNaLinha === modalidadeSelecionada);
-            if (correspondeSetor && correspondeModalidade && (correspondeNome || correspondeEmail)) {
-                linha.style.display = ""; // Mostra a linha se TODAS as condições forem verdadeiras
-            } else {
-                linha.style.display = "none"; // Esconde a linha caso contrário
+        const modalidadeSelecionada = filtroModalidade.value;
+
+        if (btnColaboradores.classList.contains('ativo')) {
+            const corpoTabela = document.querySelector("#colabs");
+            if (!corpoTabela) return;
+
+            const linhas = corpoTabela.getElementsByTagName('tr');
+            for (const linha of linhas) {
+                const nomeNaLinha = linha.cells[1].textContent.toLowerCase();
+                const emailNaLinha = linha.cells[2].textContent.toLowerCase();
+                const setorNaLinha = linha.cells[3].textContent;
+                const modalidadeNaLinha = linha.cells[4].textContent;
+
+                const correspondeNome = nomeNaLinha.includes(textoPesquisa);
+                const correspondeEmail = emailNaLinha.includes(textoPesquisa);
+                const correspondeSetor = (setorSelecionado === "" || setorNaLinha === setorSelecionado);
+                const correspondeModalidade = (modalidadeSelecionada === "" || modalidadeNaLinha === modalidadeSelecionada);
+
+                if (correspondeSetor && correspondeModalidade && (correspondeNome || correspondeEmail)) {
+                    linha.style.display = "";
+                } else {
+                    linha.style.display = "none";
+                }
             }
         }
-    };
+
+        if (btnEventos.classList.contains('ativo')) {
+            const corpoTabela = document.querySelector("#evento");
+
+            if (!corpoTabela) return;
+
+            const linhas = corpoTabela.getElementsByTagName('tr');
+            for (const linha of linhas) {
+                const nomeEvento = linha.cells[1].textContent.toLowerCase();
+                const dataEvento = linha.cells[2].textContent.toLowerCase();
+
+                const correspondeNome = nomeEvento.includes(textoPesquisa);
+                const correspondeData = dataEvento.includes(textoPesquisa);
+
+                if (correspondeNome || correspondeData) {
+                    linha.style.display = "";
+                } else {
+                    linha.style.display = "none";
+                }
+            }
+        }
+};
+
 
     cpfInputCadastro.addEventListener('input', () => {
         let value = cpfInputCadastro.value.replace(/\D/g, '');
@@ -108,7 +136,7 @@ function inicializarAdmin() {
             <thead class="table-light">
                 <tr><th>ID</th><th>Nome</th><th>Email</th><th>Setor</th><th>Modalidade</th><th>Telefone</th><th>Ações <button id="btn-refresh" class="ms-3 btn-refresh-header" title="Atualizar Lista"><i class="bi bi-arrow-clockwise"></i></button></th></tr>
             </thead>
-            <tbody>
+            <tbody id="colabs">
                 ${colaboradores.map(colab => `
                     <tr>
                         <td>${colab.ID_colaborador}</td>
@@ -154,7 +182,7 @@ function inicializarAdmin() {
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="evento">
                 ${eventos.map(evento => {
                 const dataFormatada = new Date(evento.Data_Evento).toLocaleString('pt-BR', {
                     day: '2-digit', month: '2-digit', year: 'numeric',
@@ -343,8 +371,16 @@ function inicializarAdmin() {
         if (e.target.closest('#btn-refresh')) {
             console.log("Botão de atualizar clicado.");
             if (btnColaboradores.classList.contains('ativo')) {
+                
+                document.querySelectorAll(".filter-wrapper").forEach((filt) => {
+                    filt.style.setProperty("display", "flex", "important");
+                });
                 carregarColaboradores();
             } else if (btnEventos.classList.contains('ativo')) {
+                
+                document.querySelectorAll(".filter-wrapper").forEach((filt) => {
+                    filt.style.setProperty("display", "none", "important");
+                });
                 carregarEventos?.();
             }
             return;
@@ -384,6 +420,9 @@ function inicializarAdmin() {
 
 
     btnColaboradores.addEventListener('click', () => {
+        document.querySelectorAll(".filter-wrapper").forEach((filt) => {
+            filt.style.setProperty("display", "flex", "important");
+        });
         btnColaboradores.classList.add('ativo');
         btnEventos.classList.remove('ativo');
         carregarColaboradores();
@@ -392,9 +431,12 @@ function inicializarAdmin() {
     });
 
     btnEventos.addEventListener('click', () => {
+        
+        document.querySelectorAll(".filter-wrapper").forEach((filt) => {
+            filt.style.setProperty("display", "none", "important");
+        });
         btnEventos.classList.add('ativo');
         btnColaboradores.classList.remove('ativo');
-        tabelaContainer.innerHTML = '<h3 class="text-center mt-5">Área de Eventos em Construção!</h3>';
         btnAdicionar.setAttribute('data-bs-target', '#cadEventMod');
         btnAdicionar.innerText = 'Adicionar Evento';
         carregarEventos();

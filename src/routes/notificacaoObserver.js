@@ -227,13 +227,6 @@ class NotificacaoObserver {
                         <p>Olá <strong>${agregado.nome}</strong>,</p>
                         <p>Seu cadastro foi realizado com sucesso no nosso sistema.</p>
                         
-                        <div style="background: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                            <p><strong>Seus dados de acesso:</strong></p>
-                            <p><strong>Nome:</strong> ${agregado.nome}</p>
-                            <p><strong>Email:</strong> ${agregado.email}</p>
-                            <p><strong>ID:</strong> ${agregado.id_agregado}</p>
-                        </div>
-                        
                         <p style="color: #6b7280; font-size: 14px;">
                             Atenciosamente,<br>
                             Equipe Newe Log
