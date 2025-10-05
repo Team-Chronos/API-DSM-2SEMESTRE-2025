@@ -1,0 +1,38 @@
+#barra-lateral {
+    background-image: linear-gradient(var(--azul) 40%, black);
+    color: white;
+    height: 100vh; 
+    padding: 1rem;
+    width: 15%;
+    min-width: 250px;
+}
+
+#barra-lateral #colab-info {
+    font-weight: 500;
+}
+
+#barra-lateral #colab-img {
+    width: 100%;
+    height: auto;
+    max-width: 80px;
+}
+
+#barra-lateral #colab-nome {
+    text-align: center;
+}
+
+#barra-lateral nav > ul {
+    row-gap: 15px;
+}
+
+#barra-lateral nav > ul > li {
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    column-gap: 22px;
+    align-items: center;
+}
+
+#barra-lateral nav > ul > li > .bi::before {
+    font-size: 28px;
+}

@@ -1,8 +1,16 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+interface User {
+  id: number;
+  nome: string;
+  setor: number;
+  nivel: number;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean
+  user?: User
   login: (username: string, password: string) => void
   logout: () => void
 }
@@ -29,8 +37,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const logout = () => {
-    setIsAuthenticated(false)
-    navigate('/login')
+    if (confirm("Deseja sair?")){
+      setIsAuthenticated(false)
+      navigate('/login')
+    }
   }
 
   return (
