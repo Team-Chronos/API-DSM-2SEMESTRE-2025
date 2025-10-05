@@ -15,7 +15,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:5173',
     credentials: true
 }));
 
@@ -44,10 +44,6 @@ app.get('/api/setores', async (req, res) => {
         console.error('Erro ao buscar setores:', error);
         res.status(500).json({ mensagem: 'Erro ao buscar setores' });
     }
-});
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 app.post('/confirmarEvento', (req, res) => {

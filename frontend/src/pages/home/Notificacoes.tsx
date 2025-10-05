@@ -1,5 +1,5 @@
 export const Notificacoes = () => {
     return (
-        <div>Teste</div>
+        <div>Teste Notificações</div>
     )
 }

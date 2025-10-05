@@ -1,3 +1,4 @@
+import { jwtDecode } from 'jwt-decode';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,42 +10,50 @@ interface User {
 }
 
 interface AuthContextType {
-  isAuthenticated: boolean
   user?: User
-  login: (username: string, password: string) => void
+  loading: boolean
+  login: (token: string) => void
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const storedAuth = localStorage.getItem('isAuthenticated') === 'true'
-  const [isAuthenticated, setIsAuthenticated] = useState(storedAuth)
-
   const navigate = useNavigate()
+  const [user, setUser] = useState<User | undefined>()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    localStorage.setItem('isAuthenticated', String(isAuthenticated))
-  }, [isAuthenticated])
-
-  const login = (email: string, senha: string) => {
-    if (email === 'admin@a' && senha === '123') {
-      setIsAuthenticated(true)
-      navigate('/')
-    } else {
-      alert('Usuário ou senha inválidos!')
+    const token = localStorage.getItem("token")
+    if (token) {
+      try {
+        const decoded: User = jwtDecode(token)
+        setUser(decoded)
+      } catch (err) {
+        console.error("Token inválido")
+        localStorage.removeItem("token")
+        setUser(undefined)
+      }
     }
+    setLoading(false)
+  }, [])
+
+  const login = (token: string) => {
+    localStorage.setItem("token", token)
+    const decoded = jwtDecode<User>(token)
+    setUser(decoded)
   }
 
   const logout = () => {
-    if (confirm("Deseja sair?")){
-      setIsAuthenticated(false)
-      navigate('/login')
+    if (confirm("Deseja sair?")) {
+      localStorage.removeItem("token")
+      setUser(undefined)
+      navigate("/login")
     }
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import axios from "axios";
 import { useAuth } from '../context/AuthContext'
 import { Logo } from '../components/Logo'
 
 import "../css/login.css"
+import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {
   useEffect(() => {
@@ -13,13 +15,21 @@ export const Login = () => {
       document.body.classList.remove("login-page");
     };
   }, []);
+  
   const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    login(email, senha)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:3000/api/auth/login", { email, senha });
+      login(res.data.token);
+      navigate("/home");
+    } catch (err: any) {
+      alert("Erro no login: " + (err.response?.data?.mensagem || err.message));
+    }
   }
 
   return (
@@ -28,7 +38,7 @@ export const Login = () => {
         <Logo></Logo>
         <div id="rowForm" className="col-lg-8 my-auto my-lg-5 pb-4 pe-3 ps-3 row">
           <form onSubmit={handleSubmit} className="d-flex flex-column">
-            <h2 className="mb-4">Entrar <br /> email: admin@a senha: 123</h2>
+            <h2 className="mb-4">Entrar</h2>
             <div className="mb-3">
               <input
                 type="email"
