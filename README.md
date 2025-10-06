@@ -10,6 +10,7 @@
   <a href ="#backlog"> Backlog do Produto</a>  |
   <a href ="#dor">DoR</a>  |
   <a href ="#dod">DoD</a>  |
+  <a href ="#branch">Estratégia de Branch</a>
   <a href ="#sprint"> Cronograma de Sprints</a>  |
   <a href ="#tecnologias">Tecnologias</a> |
   <a href ="#equipe"> Equipe</a> |
@@ -73,6 +74,10 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 * Vídeos de cada etapa de entrega
 
 ---
+
+## 🚀 Estratégia de Branch <a id="branch"></a>
+
+Nesta estratégia, cada nova funcionalidade do projeto é desenvolvida em uma branch própria. Isso garante isolamento entre as alterações, evitando conflitos e facilitando o controle de versões. O fluxo funciona da seguinte forma: ao iniciar o desenvolvimento de uma nova funcionalidade, cria-se uma branch específica a partir da main. Após o término e os testes, as alterações são revisadas e, se aprovadas, integradas novamente à main. Essa abordagem mantém o código principal estável e organiza melhor o trabalho em equipe.
 
 ## 📅 Cronograma de Sprints <a id="sprint"></a>
 
