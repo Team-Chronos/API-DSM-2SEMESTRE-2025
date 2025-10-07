@@ -1,0 +1,28 @@
+{
+  "name": "api-dsm-2semestre-2025",
+  "version": "1.0.0",
+  "description": "<h2 align=\"center\"> Chronos </h2>",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "install:all": "concurrently \"npm install --prefix backend\" \"npm install --prefix frontend\"",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend && npm run preview --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/issues"
+  },
+  "homepage": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

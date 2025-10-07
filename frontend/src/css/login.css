@@ -1,69 +1,65 @@
-body.login-page {
+.login-page {
     color: white;
     background: url('/images/backgroundLogin.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 
-main {
+.login-page main {
     background-color: transparent;
     width: initial;
 }
 
 @media (min-width: 576px) {
-    #rowForm {
+    .login-page #rowForm {
         padding-left: 5rem !important;
         padding-right: 5rem !important;
     }
 }
 
 @media (min-width: 768px) {
-    #rowForm {
+    .login-page #rowForm {
         padding-left: 9rem !important;
         padding-right: 9rem !important;
     }
 }
 
 @media (min-width: 992px) {
-    #rowForm {
+    .login-page #rowForm {
         padding-left: 1rem !important;
         padding-right: 1rem !important;
     }
 
-    .fundo-sombra {
+    .login-page .fundo-sombra {
         background-color: transparent !important;
     }
 
-    .fundo-sombra::before {
+    .login-page .fundo-sombra::before {
         content: "";
         position: absolute;
         inset: 0;
         background-color: rgba(0, 0, 0, .7);
         z-index: -1;
         height: 100vh;
-
-        clip-path: polygon(0% 0%,
-                100% 0%,
-                60% 100%,
-                0% 100%);
+        clip-path: polygon(0% 0%, 100% 0%, 60% 100%, 0% 100%);
     }
 
-    button[type="submit"] {
+    .login-page button[type="submit"] {
         width: 50% !important;
     }
 }
 
-.fundo-sombra {
+.login-page .fundo-sombra {
     min-height: 100vh;
     backdrop-filter: blur(2px);
     background-color: rgba(0, 0, 0, .7);
 }
 
-input.form-control::placeholder {
+.login-page input.form-control::placeholder {
     color: white;
     opacity: 1;
 }
 
-input.form-control:focus {
+.login-page input.form-control:focus {
     color: white;
     background-color: rgba(0, 0, 0, .5);
     border-color: rgb(40, 40, 255);
@@ -71,14 +67,14 @@ input.form-control:focus {
     box-shadow: 0 0 0 2px rgba(13, 110, 253, .25);
 }
 
-input.form-control,
-button[type="submit"] {
+.login-page input.form-control,
+.login-page button[type="submit"] {
     color: white;
     background: rgba(0, 0, 0, .3);
     border: 1.5px solid var(--azul);
 }
 
-button[type="submit"] {
+.login-page button[type="submit"] {
     width: 40%;
     border-radius: 30px;
     display: grid;
@@ -91,31 +87,32 @@ button[type="submit"] {
     box-sizing: border-box;
 }
 
-button[type="submit"]:hover {
+.login-page button[type="submit"]:hover {
     background: var(--azul);
     border: 1.5px solid var(--azul);
     cursor: pointer;
-
-    #setaLogin {
-        color: var(--azul-muito-escuro);
-    }
 }
 
-button[type="submit"]:active {
+.login-page button[type="submit"]:hover #setaLogin {
+    color: var(--azul-muito-escuro);
+}
+
+.login-page button[type="submit"]:active {
     background: var(--azul-muito-escuro) !important;
     border: 1.5px solid var(--azul-muito-escuro) !important;
     cursor: pointer;
 }
-button[type="submit"]:active #setaLogin {
+
+.login-page button[type="submit"]:active #setaLogin {
     color: var(--azul);
 }
 
-#entrar-btn-text {
+.login-page #entrar-btn-text {
     text-align: center;
     font-weight: bold;
 }
 
-#setaLogin {
+.login-page #setaLogin {
     justify-self: end;
     color: var(--azul);
 }

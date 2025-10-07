@@ -1,5 +1,7 @@
+import { Administrativo } from "./inicio/Administrativo"
+
 export const Inicio = () => {
     return (
-        <div>Teste inicio</div>
+        <Administrativo />
     )
 }

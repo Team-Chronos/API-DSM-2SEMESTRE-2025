@@ -19,3 +19,7 @@
     --verde: #28a745;
     --vermelho: #dc3545;
 }
+
+html{
+    overflow-y: hidden;
+}
