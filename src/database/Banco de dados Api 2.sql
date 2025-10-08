@@ -57,6 +57,7 @@ CREATE TABLE Historico_Interacao (
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE SET NULL
 );
 
+
 CREATE TABLE Relatorio (
     ID_Relatorio INT PRIMARY KEY AUTO_INCREMENT,
     ID_Colaborador INT NOT NULL,
