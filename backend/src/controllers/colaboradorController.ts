@@ -1,17 +1,20 @@
+import type { Request, Response } from 'express';
+import type { RowDataPacket } from 'mysql2';
 import Colaborador from '../models/colaborador.js';
 import bcrypt from 'bcrypt';
+import type { OkPacket } from 'mysql2';
 
 
-export const criarColaborador = async (req, res) => {
+export const criarColaborador = async (req: Request, res: Response) => {
     const { nome, email, senha, telefone, cpf, setor} = req.body;
     if (!nome || !email || !senha || !telefone || !cpf || !setor) {
         return res.status(400).json({ mensagem: "Preencha todos os campos!" });
     }
     try {
-        const [emailResults] = await Colaborador.findByEmail(email);
+        const [emailResults] = (await Colaborador.findByEmail(email)) as [RowDataPacket[], any];
         if (emailResults.length > 0) return res.status(400).json({ mensagem: "Email já cadastrado!" });
 
-        const [cpfResults] = await Colaborador.findByCpf(cpf);
+        const [cpfResults] = (await Colaborador.findByCpf(cpf)) as [RowDataPacket[], any];
         if (cpfResults.length > 0) return res.status(400).json({ mensagem: "CPF já cadastrado!" });
 
         const senhaHash = await bcrypt.hash(senha, 10);
@@ -24,19 +27,19 @@ export const criarColaborador = async (req, res) => {
 };
 
 
-export const listarColaboradores = async (req, res) => {
+export const listarColaboradores = async (req: Request, res: Response) => {
     try {
-        const [results] = await Colaborador.findAll();
+        const [results] = (await Colaborador.findAll()) as [RowDataPacket[], any];
         res.json(results);
     } catch (err) {
-        res.status(500).json({ mensagem: "Erro ao buscar colaboradores." });
+        res.status(500).json({ mensagem: "Erro ao listar colaboradores" });
     }
 };
 
 
-export const obterColaboradorPorId = async (req, res) => {
+export const obterColaboradorPorId = async (req: Request, res: Response) => {
     try {
-        const [results] = await Colaborador.findById(req.params.id);
+        const [results] = (await Colaborador.findById(req.params.id)) as [RowDataPacket[], any];
         if (results.length === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
         res.json(results[0]);
     } catch (err) {
@@ -45,9 +48,9 @@ export const obterColaboradorPorId = async (req, res) => {
 };
 
 
-export const atualizarColaborador = async (req, res) => {
+export const atualizarColaborador = async (req: Request, res: Response) => {
     try {
-        const [result] = await Colaborador.updateById(req.params.id, req.body);
+        const [result] = (await Colaborador.updateById(req.params.id, req.body)) as [OkPacket, any];
         if (result.affectedRows === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
         res.json({ mensagem: "Colaborador atualizado com sucesso!" });
     } catch (err) {
@@ -56,9 +59,9 @@ export const atualizarColaborador = async (req, res) => {
 };
 
 
-export const excluirColaborador = async (req, res) => {
+export const excluirColaborador = async (req: Request, res: Response) => {
     try {
-        const [result] = await Colaborador.deleteById(req.params.id);
+        const [result] = (await Colaborador.deleteById(req.params.id)) as [OkPacket, any];
         if (result.affectedRows === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
         res.json({ mensagem: "Colaborador excluído com sucesso!" });
     } catch (err) {
@@ -66,7 +69,7 @@ export const excluirColaborador = async (req, res) => {
     }
 };
 
-export const salvarLocalidade = async (req, res) => {
+export const salvarLocalidade = async (req: any, res: any) => {
     const { colaboradorId, localidade } = req.body;
 
     if (!colaboradorId || !localidade) {

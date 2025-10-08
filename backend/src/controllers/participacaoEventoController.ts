@@ -1,6 +1,8 @@
+import type { Request, Response } from 'express';
+import type { RowDataPacket } from 'mysql2';
 import db from '../config/db.js';
 
-export const listarParticipacaoEvento = async (req, res) => {
+export const listarParticipacaoEvento = async (req: any, res: any) => {
     const { id } = req.params;
     try {
         const query = "select pe.ID_Status, e.* from participacao_evento pe left join Evento e on e.id_evento = pe.id_evento where pe.ID_Colaborador = ?;";
@@ -14,7 +16,7 @@ export const listarParticipacaoEvento = async (req, res) => {
     }
 };
 
-export const atualizarParticipacaoEvento = async (req, res) => {
+export const atualizarParticipacaoEvento = async (req: any, res: any) => {
     const { id_col, id_evento } = req.params;
     const { status, justificativa_notificacao } = req.body
 
@@ -36,14 +38,19 @@ export const atualizarParticipacaoEvento = async (req, res) => {
     }
 }
 
-export const obterParticipacaoEventoPorID = async (req, res) => {
-    const { id_col, id_evento } = req.params;
+export const obterParticipacaoEventoPorID = async (req: Request, res: Response) => {
+    const id_col = Number(req.params.id_col);
+    const id_evento = Number(req.params.id_evento);
 
     try {
         const query = "select pe.ID_Status, e.* from participacao_evento pe left join Evento e on e.id_evento = pe.id_evento where pe.ID_Colaborador = ? and pe.ID_Evento = ?;";
-        const [pEventos] = await db.promise().query(query, [id_col, id_evento]);
+        const [pEventos] = await db.promise().query(query, [id_col, id_evento]) as [RowDataPacket[], any];
 
-        res.status(200).json(pEventos[0]); 
+        if (pEventos.length === 0) {
+            return res.status(404).json({ mensagem: "Participação não encontrada." });
+        }
+
+        res.status(200).json(pEventos[0]);
 
     } catch (err) {
         console.error("Erro ao listar Participacao Evento:", err);
