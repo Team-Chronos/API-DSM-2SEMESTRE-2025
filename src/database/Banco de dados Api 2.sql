@@ -45,7 +45,6 @@ CREATE TABLE Cliente (
     Data_Cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-
 CREATE TABLE Historico_Interacao (
     ID_Interacao INT PRIMARY KEY AUTO_INCREMENT,
     ID_Cliente INT NOT NULL,
