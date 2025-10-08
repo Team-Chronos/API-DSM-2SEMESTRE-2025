@@ -2,7 +2,7 @@ import Colaborador from '../models/colaborador.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-export const login = async (req, res) => {
+export const login = async (req: any, res: any) => {
     const { email, senha } = req.body;
 
     try {

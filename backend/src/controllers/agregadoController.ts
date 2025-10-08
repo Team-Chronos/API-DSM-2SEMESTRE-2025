@@ -1,6 +1,6 @@
 import Agregado from '../models/agregado.js';
 
-export const criarAgregado = async (req, res) => {
+export const criarAgregado = async (req: any, res: any) => {
     try {
         const dados = { ...req.body };
         if (dados.cpf) dados.cpf = dados.cpf.replace(/\D/g, '');

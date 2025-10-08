@@ -1,14 +1,14 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import eventoRoutes from './src/routes/eventoRoutes.js';
-import authRoutes from './src/routes/authRoutes.js';
-import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
-import agregadoRoutes from './src/routes/agregadoRoutes.js';
-import './src/routes/notificacaoObserver.js'; 
-import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
-import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
-import db from './src/config/db.js';
+import eventoRoutes from './routes/eventoRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import colaboradorRoutes from './routes/colaboradorRoutes.js';
+import agregadoRoutes from './routes/agregadoRoutes.js';
+import './routes/notificacaoObserver.js'; 
+import participacaoEventoRoutes from './routes/participacaoEventoRoutes.js';
+import certificadoPartRoutes from './routes/certificadoPartRoutes.js';
+import db from './config/db.js';
 import cors from 'cors';
 
 const app = express();
