@@ -35,6 +35,59 @@ CREATE TABLE Status_Participacao (
     Nome_Status ENUM('Pendente','Confirmado','Recusado', 'Concluído') NOT NULL
 );
 
+CREATE TABLE Cliente (
+    ID_Cliente INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Cliente VARCHAR(255) NOT NULL,
+    Email_Cliente VARCHAR(255) NOT NULL UNIQUE,
+    Telefone_Cliente VARCHAR(15),
+    CPF_CNPJ VARCHAR(20) UNIQUE,
+    Endereco VARCHAR(255),
+    Data_Cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Historico_Interacao (
+    ID_Interacao INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Cliente INT NOT NULL,
+    ID_Colaborador INT NOT NULL,
+    Data_Interacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Tipo_Interacao ENUM('Ligação', 'Email', 'Reunião', 'Mensagem', 'Outro') NOT NULL,
+    Descricao TEXT NOT NULL,
+    Resultado VARCHAR(255),
+    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE SET NULL
+);
+
+CREATE TABLE Relatorio (
+    ID_Relatorio INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Colaborador INT NOT NULL,
+    Tipo_Relatorio ENUM('Cliente', 'Interacao', 'Evento', 'Outro') NOT NULL,
+    Descricao TEXT NOT NULL,
+    Data_Criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE
+);
+
+CREATE TABLE Agenda (
+    ID_Agenda INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Colaborador INT NOT NULL,
+    Titulo VARCHAR(255) NOT NULL,
+    Descricao TEXT,
+    Data_Hora_Inicio DATETIME NOT NULL,
+    Data_Hora_Fim DATETIME,
+    Local_Evento VARCHAR(255),
+    Status ENUM('Pendente', 'Em andamento', 'Concluído', 'Cancelado') DEFAULT 'Pendente',
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE
+);
+
+CREATE TABLE Cliente_Evento (
+    ID_Cliente INT NOT NULL,
+    ID_Evento INT NOT NULL,
+    Participou BOOLEAN DEFAULT FALSE,
+    Feedback TEXT,
+    PRIMARY KEY (ID_Cliente, ID_Evento),
+    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Evento) REFERENCES Evento(ID_Evento) ON DELETE CASCADE
+);
+
 INSERT INTO Status_Participacao (Nome_Status)
 VALUES ('Pendente'), ('Confirmado'), ('Recusado'), ('Concluído');
 
