@@ -38,8 +38,11 @@ export const listarColaboradores = async (req: Request, res: Response) => {
 
 
 export const obterColaboradorPorId = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (Number.isNaN(id)) return res.status(400).json({ mensagem: "ID inválido." });
+
     try {
-        const [results] = (await Colaborador.findById(req.params.id)) as [RowDataPacket[], any];
+        const [results] = (await Colaborador.findById(id)) as [RowDataPacket[], any];
         if (results.length === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
         res.json(results[0]);
     } catch (err) {
@@ -49,8 +52,11 @@ export const obterColaboradorPorId = async (req: Request, res: Response) => {
 
 
 export const atualizarColaborador = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (Number.isNaN(id)) return res.status(400).json({ mensagem: "ID inválido." });
+
     try {
-        const [result] = (await Colaborador.updateById(req.params.id, req.body)) as [OkPacket, any];
+        const [result] = (await Colaborador.updateById(id, req.body)) as [OkPacket, any];
         if (result.affectedRows === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
         res.json({ mensagem: "Colaborador atualizado com sucesso!" });
     } catch (err) {
@@ -60,8 +66,11 @@ export const atualizarColaborador = async (req: Request, res: Response) => {
 
 
 export const excluirColaborador = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (Number.isNaN(id)) return res.status(400).json({ mensagem: "ID inválido." });
+
     try {
-        const [result] = (await Colaborador.deleteById(req.params.id)) as [OkPacket, any];
+        const [result] = (await Colaborador.deleteById(id)) as [OkPacket, any];
         if (result.affectedRows === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
         res.json({ mensagem: "Colaborador excluído com sucesso!" });
     } catch (err) {

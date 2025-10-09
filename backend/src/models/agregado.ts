@@ -1,19 +1,22 @@
 import db from '../config/db.js';
 
+type AgregadoData = Record<string, string | null | undefined>;
+
 class Agregado {
-    static sanitize(dados) {
-        const result = {};
+    static sanitize(dados: AgregadoData): Record<string, string | null> {
+        const result: Record<string, string | null> = {};
         for (const key in dados) {
             if (dados[key] === '') {
                 result[key] = null;
             } else {
-                result[key] = dados[key];
+                // força string | null — mantém null se for undefined também
+                result[key] = (dados[key] as string) ?? null;
             }
         }
         return result;
     }
 
-    static create(dadosAgregado) {
+    static create(dadosAgregado: AgregadoData) {
         const dados = Agregado.sanitize(dadosAgregado);
 
         const query = `
