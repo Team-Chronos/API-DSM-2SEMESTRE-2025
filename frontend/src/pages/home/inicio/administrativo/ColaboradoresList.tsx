@@ -3,6 +3,7 @@ import { formatarTelefone } from "../../../../utils/formatacoes";
 import axios from "axios";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 import { ModalConfirmacao } from "../../../../components/modals/ModalConfirmacao";
+import { ModalEditarColaborador } from "../../../../components/modals/ModalEditarColaborador";
 
 interface Colaborador {
   ID_colaborador: number;
@@ -21,11 +22,11 @@ interface ColaboradoresListProps {
 
 export const ColaboradoresList = ({ colaboradores, loading, refetch }: ColaboradoresListProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
-  const [acaoConfirmacao, setAcaoConfirmacao] = useState<"editar" | "excluir" | null>(null);
   const [showMessage, setShowMessage] = useState(false);
   const [tituloMessage, setTituloMessage] = useState<"Sucesso" | "Erro" | "Aviso">("Aviso");
   const [mensagem, setMensagem] = useState("");
-  const [idSelecionado, setIdSelecionado] = useState<number | null>(null);
+  const [showEdit, setShowEdit] = useState(false);
+  const [colaboradorSelecionado, setColaboradorSelecionado] = useState<Colaborador | null>(null);
 
   if (loading) return <p>Carregando...</p>;
 
@@ -33,9 +34,9 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
     return <p className="text-center mt-3">Nenhum colaborador cadastrado.</p>;
 
   const excluirColaborador = async () => {
-    if (!idSelecionado) return;
+    if (!colaboradorSelecionado) return
     try {
-      await axios.delete(`http://localhost:3000/api/colaboradores/${idSelecionado}`);
+      await axios.delete(`http://localhost:3000/api/colaboradores/${colaboradorSelecionado.ID_colaborador}`);
       setTituloMessage("Sucesso");
       setMensagem("Colaborador excluído com sucesso!");
       setShowMessage(true);
@@ -43,23 +44,6 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
     } catch (err) {
       setTituloMessage("Erro");
       setMensagem("Erro ao excluir colaborador.");
-      setShowMessage(true);
-    } finally {
-      setShowConfirm(false);
-    }
-  };
-
-  const editarColaborador = async () => {
-    if (!idSelecionado) return;
-    try {
-      await axios.put(`http://localhost:3000/api/colaboradores/${idSelecionado}`);
-      setTituloMessage("Sucesso");
-      setMensagem("Colaborador editado com sucesso!");
-      setShowMessage(true);
-      refetch();
-    } catch (err) {
-      setTituloMessage("Erro");
-      setMensagem("Erro ao editar colaborador.");
       setShowMessage(true);
     } finally {
       setShowConfirm(false);
@@ -80,12 +64,6 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
       default:
         return "Não informado";
     }
-  };
-
-  // --- ESCOLHE AÇÃO CORRETA ---
-  const confirmarAcao = () => {
-    if (acaoConfirmacao === "editar") editarColaborador();
-    if (acaoConfirmacao === "excluir") excluirColaborador();
   };
 
   return (
@@ -115,9 +93,8 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
                 <button
                   className="btn btn-sm btn-primary me-2"
                   onClick={() => {
-                    setIdSelecionado(colab.ID_colaborador);
-                    setAcaoConfirmacao("editar");
-                    setShowConfirm(true);
+                    setColaboradorSelecionado(colab);
+                    setShowEdit(true);
                   }}
                 >
                   Editar
@@ -125,8 +102,7 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
                 <button
                   className="btn btn-sm btn-danger"
                   onClick={() => {
-                    setIdSelecionado(colab.ID_colaborador);
-                    setAcaoConfirmacao("excluir");
+                    setColaboradorSelecionado(colab);
                     setShowConfirm(true);
                   }}
                 >
@@ -138,14 +114,22 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
         </tbody>
       </table>
 
+      <ModalEditarColaborador
+        show={showEdit}
+        colaborador={colaboradorSelecionado}
+        onClose={() => setShowEdit(false)}
+        onSuccess={() => {
+          refetch();
+          setTituloMessage("Sucesso");
+          setMensagem("Colaborador editado com sucesso!");
+          setShowMessage(true);
+        }}
+      />
+
       <ModalConfirmacao
         show={showConfirm}
-        mensagem={
-          acaoConfirmacao === "editar"
-            ? "Tem certeza que deseja editar este colaborador?"
-            : "Tem certeza que deseja excluir este colaborador?"
-        }
-        onConfirm={confirmarAcao}
+        mensagem="Tem certeza que deseja excluir este colaborador?"
+        onConfirm={excluirColaborador}
         onClose={() => setShowConfirm(false)}
       />
 

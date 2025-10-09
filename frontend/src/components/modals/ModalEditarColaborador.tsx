@@ -1,45 +1,61 @@
-import { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { Modal, Button, Form } from "react-bootstrap";
 import { formatarCpf, formatarTelefone } from "../../utils/formatacoes";
 
-interface ModalCadastroColaboradorProps {
+interface ModalEditarColaboradorProps {
   show: boolean;
+  colaborador: any | null;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadastroColaboradorProps) => {
+export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }: ModalEditarColaboradorProps) => {
   const [form, setForm] = useState({
     nome: "",
     email: "",
-    senha: "",
     telefone: "",
     cpf: "",
     setor: "1",
   });
 
-  function limparForm(){
-    setForm({
-      nome: "",
-      email: "",
-      senha: "",
-      telefone: "",
-      cpf: "",
-      setor: "1",
-    });
-  }
+	function limparForm(){
+		setForm({
+			nome: "",
+			email: "",
+			telefone: "",
+			cpf: "",
+			setor: "1",
+		});
+	}
 
-  const handleChange = (e: React.ChangeEvent<React.ChangeEvent<HTMLInputElement>["target"] | React.ChangeEvent<HTMLSelectElement>["target"] | React.ChangeEvent<HTMLTextAreaElement>["target"]> & { target: { name: string; value: string } }) => {
-		switch (e.target.name){
+  useEffect(() => {
+		if (colaborador) {
+			setForm({
+				nome: colaborador.Nome_Col || "",
+				email: colaborador.Email || "",
+				telefone: formatarTelefone(colaborador.Telefone || "") || "",
+				cpf: formatarCpf(colaborador.CPF || "") || "",
+				setor: colaborador.Setor || 1,
+			});
+		} else {
+			limparForm();
+		}
+	}, [colaborador]);
+
+  if (!show) return null;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    let { name, value } = e.target;
+		switch (name){
 			case "telefone":
-				e.target.value = formatarTelefone(e.target.value)
+				value = formatarTelefone(value)
 				break
 			case "cpf":
-				e.target.value = formatarCpf(e.target.value)
-        break
+				value = formatarCpf(value)
+				break
 		}
-		setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,23 +63,26 @@ export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadast
     try {
 			form.telefone = form.telefone.replace(/\D/g, '')
 			form.cpf = form.cpf.replace(/\D/g, '')
-      await axios.post("http://localhost:3000/api/colaboradores", form);
+      await axios.put(`http://localhost:3000/api/colaboradores/${colaborador.ID_colaborador}`, form);
       onSuccess();
       onClose();
-			limparForm()
-    } catch (err: any) {
-      alert(err.response?.data?.message || "Erro ao cadastrar colaborador");
+    } catch (error) {
+      console.error("Erro ao editar colaborador:", error);
     }
   };
 
   return (
-    <Modal show={show} centered onHide={() => {
-      limparForm();
-      onClose();
-    }}>
+    <Modal
+      show={show}
+      centered
+      onHide={() => {
+        limparForm();
+        onClose();
+      }}
+    >
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>Cadastro de Colaborador</Modal.Title>
+          <Modal.Title>Editar Colaborador</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -72,10 +91,9 @@ export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadast
             <Form.Control
               type="text"
               name="nome"
-							placeholder="Nome"
+              placeholder="Nome"
               value={form.nome}
               onChange={handleChange}
-							autoComplete="none"
               required
             />
           </Form.Group>
@@ -85,21 +103,8 @@ export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadast
             <Form.Control
               type="email"
               name="email"
-							placeholder="Email"
+              placeholder="Email"
               value={form.email}
-              onChange={handleChange}
-							autoComplete="none"
-              required
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Senha</Form.Label>
-            <Form.Control
-              type="password"
-              name="senha"
-							placeholder="Senha"
-              value={form.senha}
               onChange={handleChange}
               required
             />
@@ -110,10 +115,10 @@ export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadast
             <Form.Control
               type="tel"
               name="telefone"
+              placeholder="(99) 99999-9999"
               value={form.telefone}
               onChange={handleChange}
-              placeholder="(99) 99999-9999"
-							maxLength={15}
+              maxLength={15}
               required
             />
           </Form.Group>
@@ -123,9 +128,9 @@ export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadast
             <Form.Control
               type="text"
               name="cpf"
+              placeholder="000.000.000-00"
               value={form.cpf}
               onChange={handleChange}
-              placeholder="000.000.000-00"
 							maxLength={14}
               required
             />
@@ -142,14 +147,17 @@ export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadast
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => {
-            limparForm();
-            onClose();
-          }}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              limparForm();
+              onClose();
+            }}
+          >
             Cancelar
           </Button>
           <Button variant="primary" type="submit">
-            Cadastrar
+            Salvar
           </Button>
         </Modal.Footer>
       </Form>

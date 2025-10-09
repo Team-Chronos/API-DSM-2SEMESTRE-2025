@@ -1,4 +1,4 @@
-export const formatarTelefone = (numero: string): string => {
+export const formatarTelefone = (numero: string = ""): string => {
     numero = numero.replace(/\D/g, "");
 
     numero = numero.slice(0, 11);
@@ -21,7 +21,7 @@ export const formatarDataHora = (dataIso: string) => {
   return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
 }
 
-export function FormatarCpf(cpf: string){
+export function formatarCpf(cpf: string = ""){
     cpf = cpf.replace(/\D/g, '');
     cpf = cpf.slice(0, 11);
     cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');

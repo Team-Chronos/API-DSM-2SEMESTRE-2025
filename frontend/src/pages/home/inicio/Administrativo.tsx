@@ -11,8 +11,8 @@ export const Administrativo = () => {
   const [colaboradores, setColaboradores] = useState([]);
   const [eventos, setEventos] = useState([]);
 
-  const [loadingColaboradores, setLoadingColaboradores] = useState(true);
-  const [loadingEventos, setLoadingEventos] = useState(true);
+  const [loadingColaboradores, setLoadingColaboradores] = useState(false);
+  const [loadingEventos, setLoadingEventos] = useState(false);
 
   const carregarColaboradores = async () => {
     setLoadingColaboradores(true);
