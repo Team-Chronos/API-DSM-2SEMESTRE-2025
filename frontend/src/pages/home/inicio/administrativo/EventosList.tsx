@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { formatarDataHora } from "../../../../utils/formatacoes";
 
 interface Evento {
@@ -11,25 +10,13 @@ interface Evento {
   data_registro: string;
 }
 
-export const EventosList = () => {
-  const [eventos, setEventos] = useState<Evento[]>([]);
-  const [loading, setLoading] = useState(true);
+interface EventosListProps {
+  eventos: Evento[];
+  loading: boolean;
+  refetch: () => void;
+}
 
-  useEffect(() => {
-    const carregarEventos = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/eventos");
-        const data = await response.json();
-        setEventos(data);
-      } catch (error) {
-        console.error("Erro ao carregar eventos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    carregarEventos();
-  }, []);
-
+export const EventosList = ({eventos, loading, refetch}: EventosListProps) => {
   if (loading) return <p>Carregando...</p>;
 
   if (eventos.length === 0)

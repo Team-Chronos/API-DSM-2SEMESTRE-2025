@@ -1,11 +1,9 @@
-export const formatarTelefone = (numero: string | number) => {
-    const num = numero.toString().replace(/\D/g, "");
+export const formatarTelefone = (numero: string): string => {
+    numero = numero.replace(/\D/g, "");
 
-    if (num.length === 11) {
-        return num.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-    } else if (num.length === 10) {
-        return num.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
-    }
+    numero = numero.slice(0, 11);
+    numero = numero.replace(/^(\d{2})(\d)/g, '($1) $2');
+    numero = numero.replace(/(\d{5})(\d)/, '$1-$2');
 
     return numero;
 }
@@ -21,4 +19,13 @@ export const formatarDataHora = (dataIso: string) => {
   const minutos = String(data.getMinutes()).padStart(2, "0");
 
   return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+}
+
+export function FormatarCpf(cpf: string){
+    cpf = cpf.replace(/\D/g, '');
+    cpf = cpf.slice(0, 11);
+    cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+    cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+    cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    return cpf;
 }
