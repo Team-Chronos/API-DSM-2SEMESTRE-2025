@@ -43,7 +43,7 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
 		}
 	}, [colaborador]);
 
-  if (!show) return null;
+  if (!colaborador) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     let { name, value } = e.target;

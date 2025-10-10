@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ModalCadastroColaborador } from "../../../../components/modals/ModalCadastroColaborador";
 import { ModalCadastroEvento } from "../../../../components/modals/ModalCadastroEvento";
+import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 
 interface HeaderProps {
   activeTab: string;
@@ -11,6 +12,9 @@ interface HeaderProps {
 export const Header = ({ activeTab, setActiveTab, onSuccess }: HeaderProps) => {
 	const isColaboradores = activeTab === "colaboradores";
   const [showModal, setShowModal] = useState(false);
+  const [tituloMessage, setTituloMessage] = useState<"Sucesso" | "Erro" | "Aviso">("Aviso");
+  const [mensagem, setMensagem] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
 
 	return (
 		<>
@@ -80,6 +84,9 @@ export const Header = ({ activeTab, setActiveTab, onSuccess }: HeaderProps) => {
 						onClose={() => setShowModal(false)}
 						onSuccess={() => {
 								onSuccess();
+								setTituloMessage("Sucesso");
+								setMensagem("Colaborador cadastrado com sucesso!");
+          			setShowMessage(true);
 								setShowModal(false);
 							}
 						}
@@ -90,12 +97,21 @@ export const Header = ({ activeTab, setActiveTab, onSuccess }: HeaderProps) => {
 						onClose={() => setShowModal(false)}
 						onSuccess={() => {
 								onSuccess();
+								setTituloMessage("Sucesso");
+								setMensagem("Evento cadastrado com sucesso!");
+          			setShowMessage(true);
 								setShowModal(false);
 							}
 						}
 					/>
 				)
 			}
+			<ModalMensagem
+				show={showMessage}
+				titulo={tituloMessage}
+				mensagem={mensagem}
+				onClose={() => setShowMessage(false)}
+			/>
 		</>
 	)
 }
