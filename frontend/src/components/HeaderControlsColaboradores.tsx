@@ -66,7 +66,7 @@ export const HeaderControlsColaboradores = ({
             <option value="P">Presencial</option>
             <option value="R">Remoto</option>
             <option value="O">Outro</option>
-            <option value="Não informado">Não informado</option>
+            <option value="N">Não informado</option>
           </select>
         </div>
 

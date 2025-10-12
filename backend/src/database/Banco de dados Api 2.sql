@@ -23,7 +23,7 @@ CREATE TABLE Colaboradores (
     Senha VARCHAR(255) NOT NULL,
     Telefone VARCHAR(11),
     Email VARCHAR(255) NOT NULL,
-    Localidade VARCHAR(20) NULL,
+    Localidade VARCHAR(20) default "N",
     ID_Cargo int not null,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

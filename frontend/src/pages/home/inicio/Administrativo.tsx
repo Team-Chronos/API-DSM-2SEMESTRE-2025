@@ -35,6 +35,12 @@ export const Administrativo = () => {
     return matchesSearch && matchesSetor && matchesModalidade;
   });
 
+  const eventosFiltrados = eventos?.filter((evento) => {
+    const matchesSearch =
+      normalizarTexto(evento.Nome_Evento.toLowerCase()).includes(normalizarTexto(searchText.toLowerCase()))
+      return matchesSearch
+  })
+
   const carregarColaboradores = async () => {
     setLoadingColaboradores(true);
     try {
@@ -100,7 +106,7 @@ export const Administrativo = () => {
           />
         ) : (
           <EventosList
-            eventos={eventos}
+            eventos={eventosFiltrados}
             loading={loadingEventos}
             refetch={carregarEventos}
           />
