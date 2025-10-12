@@ -4,16 +4,7 @@ import { formatarDataHora } from "../../../../utils/formatacoes";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 import { ModalConfirmacao } from "../../../../components/modals/ModalConfirmacao";
 import { ModalEditarEvento } from "../../../../components/modals/ModalEditarEvento";
-
-interface Evento {
-  ID_Evento: number;
-  Nome_Evento: string;
-  Data_Evento: string;
-  Duracao_Evento: number;
-  Local_Evento: string;
-  Descricao: string;
-  data_registro: string;
-}
+import type { Evento } from "../../../../utils/tipos";
 
 interface EventosListProps {
   eventos: Evento[];
@@ -135,7 +126,8 @@ export const EventosList = ({ eventos, loading, refetch }: EventosListProps) => 
 //   Duracao_Evento: number;
 //   Local_Evento: string;
 //   Descricao: string;
-//   data_registro: string;
+//   criado_em: string;
+//   atualizado_em: string;
 // }
 
 // interface EventosListProps {

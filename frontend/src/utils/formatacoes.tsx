@@ -22,10 +22,17 @@ export const formatarDataHora = (dataIso: string) => {
 }
 
 export function formatarCpf(cpf: string = ""){
-    cpf = cpf.replace(/\D/g, '');
-    cpf = cpf.slice(0, 11);
-    cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-    cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-    cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    return cpf;
+  cpf = cpf.replace(/\D/g, '');
+  cpf = cpf.slice(0, 11);
+  cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+  cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+  cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  return cpf;
+}
+
+export function normalizarTexto(texto: string) {
+  return texto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
 }

@@ -2,11 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { dataHora } from "../../utils/facilidades";
-
-interface Colaborador {
-  ID_colaborador: number;
-  Nome_Col: string;
-}
+import type { Colaborador } from "../../utils/tipos";
+import { normalizarTexto } from "../../utils/formatacoes";
 
 interface ModalCadastroEventoProps {
   show: boolean;
@@ -98,13 +95,6 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
       console.error("Erro ao cadastrar evento:", error);
     }
   }
-
-  function normalizarTexto(texto: string) {
-		return texto
-			.normalize("NFD")
-			.replace(/[\u0300-\u036f]/g, "")
-			.toLowerCase();
-	}
 
 	const colaboradoresFiltrados = colaboradores.filter((c) =>
 		normalizarTexto(c.Nome_Col).includes(normalizarTexto(filtro))

@@ -20,7 +20,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ mensagem: "Email ou senha incorretos!" });
         }
 
-        const payload = { id: usuario.ID_colaborador, nome: usuario.Nome_Col, setor: usuario.Setor };
+        const payload = { id: usuario.ID_colaborador, nome: usuario.Nome_Col, setor: usuario.Setor, id_cargo: usuario.ID_Cargo, nivel_acesso: usuario.Nivel_Acesso};
         const token = jwt.sign(payload, 'SEU_SEGREDO_SUPER_SECRETO', { expiresIn: '8h' });
 
         res.json({ mensagem: "Login realizado com sucesso!", token: token });

@@ -4,15 +4,7 @@ import axios from "axios";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 import { ModalConfirmacao } from "../../../../components/modals/ModalConfirmacao";
 import { ModalEditarColaborador } from "../../../../components/modals/ModalEditarColaborador";
-
-interface Colaborador {
-  ID_colaborador: number;
-  Nome_Col: string;
-  Email: string;
-  Setor: number;
-  Localidade: string;
-  Telefone: string;
-}
+import type { Colaborador } from "../../../../utils/tipos";
 
 interface ColaboradoresListProps {
   colaboradores: Colaborador[];

@@ -3,7 +3,7 @@ import db from '../config/db.js';
 export const listarParticipacaoEvento = async (req, res) => {
     const { id } = req.params;
     try {
-        const query = "select pe.ID_Status, e.* from participacao_evento pe left join Evento e on e.id_evento = pe.id_evento where pe.ID_Colaborador = ?;";
+        const query = "select pe.ID_Status, pe.justificativa, e.* from participacao_evento pe left join Evento e on e.id_evento = pe.id_evento where pe.ID_Colaborador = ?;";
         const [pEventos] = await db.promise().query(query, [id]);
 
         res.status(200).json(pEventos); 
@@ -40,7 +40,7 @@ export const obterParticipacaoEventoPorID = async (req, res) => {
     const { id_col, id_evento } = req.params;
 
     try {
-        const query = "select pe.ID_Status, e.* from participacao_evento pe left join Evento e on e.id_evento = pe.id_evento where pe.ID_Colaborador = ? and pe.ID_Evento = ?;";
+        const query = "select pe.ID_Status, pe.justificativa, e.* from participacao_evento pe left join Evento e on e.id_evento = pe.id_evento where pe.ID_Colaborador = ? and pe.ID_Evento = ?;";
         const [pEventos] = await db.promise().query(query, [id_col, id_evento]);
 
         res.status(200).json(pEventos[0]); 

@@ -3,15 +3,7 @@ import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
-interface Evento {
-  ID_Evento: number;
-  Nome_Evento: string;
-  Data_Evento: string;
-  Duracao_Evento: number;
-  Local_Evento: string;
-  Descricao: string;
-}
+import type { Evento } from "../utils/tipos";
 
 interface EventosCalendarProps {
   eventos: Evento[];

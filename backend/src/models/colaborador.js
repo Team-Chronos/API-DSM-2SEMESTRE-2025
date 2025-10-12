@@ -4,7 +4,7 @@ import db from '../config/db.js';
 const Colaborador = {
     
     findByEmail: (email) => {
-        const query = "SELECT * FROM Colaboradores WHERE Email = ?";
+        const query = "SELECT col.*, car.Nivel_Acesso FROM Colaboradores col inner join cargo car on car.ID_Cargo = col.ID_Cargo WHERE Email = ?";
         return db.promise().query(query, [email]);
     },
     

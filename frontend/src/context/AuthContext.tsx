@@ -1,13 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-interface User {
-  id: number;
-  nome: string;
-  setor: number;
-  nivel: number;
-}
+import type { User } from '../utils/tipos';
 
 interface AuthContextType {
   user?: User

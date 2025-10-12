@@ -2,16 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Modal, Button, Form } from "react-bootstrap";
 import { dataHora } from "../../utils/facilidades";
-
-interface Evento {
-  ID_Evento: number;
-  Nome_Evento: string;
-  Data_Evento: string;
-  Duracao_Evento: number;
-  Local_Evento: string;
-  Descricao: string;
-  participantes?: number[];
-}
+import type { Evento } from "../../utils/tipos";
 
 interface ModalEditarEventoProps {
   show: boolean;

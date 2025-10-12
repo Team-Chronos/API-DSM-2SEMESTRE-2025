@@ -4,15 +4,36 @@ import { useEffect, useState } from "react";
 import { ColaboradoresList } from "./administrativo/ColaboradoresList";
 import { EventosList } from "./administrativo/EventosList";
 import axios from "axios";
+import { HeaderControlsColaboradores } from "../../../components/HeaderControlsColaboradores";
+import { HeaderControlsEventos } from "../../../components/HeaderControlsEventos";
+import { type Colaborador, type Evento, type Tab } from "../../../utils/tipos";
+import { normalizarTexto } from "../../../utils/formatacoes";
 
 export const Administrativo = () => {
-  const [activeTab, setActiveTab] = useState<"colaboradores" | "eventos">("colaboradores");
+  const [activeTab, setActiveTab] = useState<Tab>("colaboradores");
 
-  const [colaboradores, setColaboradores] = useState([]);
-  const [eventos, setEventos] = useState([]);
+  const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
+  const [eventos, setEventos] = useState<Evento[]>([]);
 
   const [loadingColaboradores, setLoadingColaboradores] = useState(false);
   const [loadingEventos, setLoadingEventos] = useState(false);
+
+  const [searchText, setSearchText] = useState("");
+  const [filtroSetor, setFiltroSetor] = useState("");
+  const [filtroModalidade, setFiltroModalidade] = useState("");
+
+  const colaboradoresFiltrados = colaboradores?.filter((colab) => {
+    const matchesSearch =
+      normalizarTexto(colab.Nome_Col.toLowerCase()).includes(normalizarTexto(searchText.toLowerCase())) ||
+      colab.Email.toLowerCase().includes(searchText.toLowerCase());
+
+    const matchesSetor = filtroSetor ? colab.Setor.toString() === filtroSetor : true;
+    const matchesModalidade = filtroModalidade
+      ? colab.Localidade === filtroModalidade
+      : true;
+
+    return matchesSearch && matchesSetor && matchesModalidade;
+  });
 
   const carregarColaboradores = async () => {
     setLoadingColaboradores(true);
@@ -51,13 +72,29 @@ export const Administrativo = () => {
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onSuccess={activeTab === "colaboradores" ? carregarColaboradores : carregarEventos}
       />
 
+      {activeTab === "colaboradores" ? (
+        <HeaderControlsColaboradores
+          onSuccess={carregarColaboradores}
+          filtroSetor={filtroSetor}
+          setFiltroSetor={setFiltroSetor}
+          filtroModalidade={filtroModalidade}
+          setFiltroModalidade={setFiltroModalidade}
+        searchText={searchText}
+        setSearchText={setSearchText}
+        />
+      ) : (
+        <HeaderControlsEventos
+          onSuccess={carregarEventos}
+          searchText={searchText}
+          setSearchText={setSearchText}
+        />
+      )}
       <div id="lista-colaboradores-eventos">
         {activeTab === "colaboradores" ? (
           <ColaboradoresList
-            colaboradores={colaboradores}
+            colaboradores={colaboradoresFiltrados}
             loading={loadingColaboradores}
             refetch={carregarColaboradores}
           />

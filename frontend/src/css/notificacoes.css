@@ -1,0 +1,105 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+.notificacoes-wrapper {
+  padding: 20px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #e0e0e0;
+  border-radius: 20px;
+  padding: 6px 15px;
+  width: 400px;
+  margin: 0 auto 20px auto;
+}
+.search-bar input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+}
+
+.notification {
+  display: flex;
+  gap: 10px;
+  width: 60%;
+  border: 2px solid var(--blue, #1c1cff);
+  border-radius: 8px;
+  background: #f7f7f7;
+  padding: 10px;
+  margin: 0 auto 15px auto;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.notification.inactive {
+  opacity: 0.6;
+  border: 1px solid #aaa;
+  cursor: default;
+}
+
+.notification .icon {
+  font-size: 22px;
+  color: var(--blue, #1c1cff);
+}
+.notification .content strong {
+  color: var(--blue, #1c1cff);
+}
+.notification .details {
+  margin-top: 8px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.accept {
+  border: 2px solid #28a745;
+  color: #28a745;
+  background: #fff;
+  padding: 5px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.reject {
+  border: 2px solid #dc3545;
+  color: #dc3545;
+  background: #fff;
+  padding: 5px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.justificativa {
+  margin-top: 8px;
+  display: flex;
+  gap: 5px;
+}
+.justificativa textarea {
+  flex: 1;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 4px;
+}
+.send {
+  background-color: var(--blue, #1c1cff);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.concluido {
+  border: 2px solid #28a745;
+  color: #28a745;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 600;
+}
+.concluido:hover {
+  background-color: #f0fff0;
+}
