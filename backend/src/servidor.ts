@@ -10,6 +10,8 @@ import historicoInteracaoRoutes from './routes/historicoInteracaoRoutes.js';
 import clienteRoutes from './routes/clienteRoutes.js';
 import participacaoEventoRoutes from './routes/participacaoEventoRoutes.js';
 import certificadoPartRoutes from './routes/certificadoPartRoutes.js';
+import agendaRoutes from './routes/agendaRoutes.js';
+import LembreteObserver from './observer/lembreteObserver.js';
 import db from './config/db.js';
 import cors from 'cors';
 
@@ -31,6 +33,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
 
+app.use('/api/agenda', agendaRoutes);
+
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
 
 app.use('/api/certificadoParticipacao', certificadoPartRoutes)
@@ -50,6 +54,9 @@ app.get('/api/setores', async (req, res) => {
         res.status(500).json({ mensagem: 'Erro ao buscar setores' });
     }
 });
+
+const lembreteObserver = new LembreteObserver();
+lembreteObserver.iniciar();
 
 app.post('/confirmarEvento', (req, res) => {
     const { resposta, justificativa } = req.body;
