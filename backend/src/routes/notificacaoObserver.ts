@@ -2,10 +2,15 @@ import db from '../config/db.js';
 import transporter from '../mailer.js';
 
 class NotificacaoObserver {
+    private ultimoEventoId: number;
+    private ultimoColaboradorId: number;
+    private ultimoAgregadoId: number;
+    private intervalId: NodeJS.Timeout | null;
+
     constructor() {
         this.ultimoEventoId = 0;
         this.ultimoColaboradorId = 0;
-        this.ultimoAgregadoId = 0
+        this.ultimoAgregadoId = 0;
         this.intervalId = null;
     }
 
@@ -23,14 +28,14 @@ class NotificacaoObserver {
 
     async buscarIdsAtuais() {
         try {
-            const [eventos] = await db.promise().query('SELECT MAX(ID_Evento) as maxId FROM Evento');
-            this.ultimoEventoId = eventos[0].maxId || 0;
+            const [eventos]: [any[], any] = await db.promise().query('SELECT MAX(ID_Evento) as maxId FROM Evento');
+            this.ultimoEventoId = eventos[0]?.maxId || 0;
 
-            const [colaboradores] = await db.promise().query('SELECT MAX(ID_colaborador) as maxId FROM Colaboradores');
-            this.ultimoColaboradorId = colaboradores[0].maxId || 0;
+            const [colaboradores]: [any[], any] = await db.promise().query('SELECT MAX(ID_colaborador) as maxId FROM Colaboradores');
+            this.ultimoColaboradorId = colaboradores[0]?.maxId || 0;
             
-            const [agregados] = await db.promise().query('SELECT MAX(ID_agregado) as maxId FROM Agregados');
-            this.ultimoAgregadoId = 0;
+            const [agregados]: [any[], any] = await db.promise().query('SELECT MAX(ID_agregado) as maxId FROM Agregados');
+            this.ultimoAgregadoId = agregados[0]?.maxId || 0;
 
             console.log(`IDs atuais - Eventos: ${this.ultimoEventoId}, Colaboradores: ${this.ultimoColaboradorId}, Agregados: ${this.ultimoAgregadoId}`);
         } catch (error) {
@@ -50,7 +55,7 @@ class NotificacaoObserver {
 
     async verificarNovosEventos() {
         try {
-            const [eventos] = await db.promise().query(
+            const [eventos]: [any[], any] = await db.promise().query(
                 'SELECT * FROM Evento WHERE ID_Evento > ? ORDER BY ID_Evento ASC',
                 [this.ultimoEventoId]
             );
@@ -58,10 +63,9 @@ class NotificacaoObserver {
             for (const evento of eventos) {
                 console.log(` Novo evento detectado: ${evento.Nome_Evento}`);
                 
-                // ENVIAR EMAIL DE CONFIRMAÇÃO PARA O CRIADOR DO EVENTO
                 await this.enviarEmailConfirmacaoCriador(evento);
                 
-                const [participantes] = await db.promise().query(
+                const [participantes]: [any[], any] = await db.promise().query(
                     'SELECT c.* FROM Colaboradores c INNER JOIN Participacao_Evento p ON c.ID_colaborador = p.ID_Colaborador WHERE p.ID_Evento = ?',
                     [evento.ID_Evento]
                 );
@@ -79,13 +83,13 @@ class NotificacaoObserver {
 
     async verificarNovosColaboradores() {
         try {
-            const [colaboradores] = await db.promise().query(
+            const [colaboradores]: [any[], any] = await db.promise().query(
                 'SELECT * FROM Colaboradores WHERE ID_colaborador > ? ORDER BY ID_colaborador ASC',
                 [this.ultimoColaboradorId]
             );
 
             for (const colaborador of colaboradores) {
-                console.log(`👤 Novo colaborador detectado: ${colaborador.Nome_Col}`);
+                console.log(` Novo colaborador detectado: ${colaborador.Nome_Col}`);
                 await this.enviarEmailBoasVindas(colaborador);
                 this.ultimoColaboradorId = colaborador.ID_colaborador;
             }
@@ -96,13 +100,13 @@ class NotificacaoObserver {
 
     async verificarNovosAgregados() {
         try {
-            const [agregados] = await db.promise().query(
+            const [agregados]: [any[], any] = await db.promise().query(
                 'SELECT * FROM Agregados WHERE id_agregado > ? ORDER BY id_agregado ASC',
                 [this.ultimoAgregadoId]
             );
 
             for (const agregado of agregados) {
-                console.log(`👤 Novo agregado detectado: ${agregado.nome}`);
+                console.log(` Novo agregado detectado: ${agregado.nome}`);
                 await this.enviarEmailBoasVindasAg(agregado);
                 this.ultimoAgregadoId = agregado.id_agregado;
             }
@@ -111,14 +115,11 @@ class NotificacaoObserver {
         }
     }
 
-    // NOVO MÉTODO: Enviar email de confirmação para o criador do evento
-    async enviarEmailConfirmacaoCriador(evento) {
+    async enviarEmailConfirmacaoCriador(evento: any) {
         try {
-            // Buscar informações do criador do evento
-            // Assumindo que há um campo Criado_Por ou similar na tabela Evento
-            const [criadores] = await db.promise().query(
+            const [criadores]: [any[], any] = await db.promise().query(
                 'SELECT c.* FROM Colaboradores c WHERE c.ID_colaborador = ?',
-                [evento.Criado_Por] // Ajuste este campo conforme sua estrutura
+                [evento.Criado_Por]
             );
 
             if (criadores.length === 0) {
@@ -175,7 +176,7 @@ class NotificacaoObserver {
         }
     }
 
-    async enviarNotificacaoEvento(evento, colaborador) {
+    async enviarNotificacaoEvento(evento: any, colaborador: any) {
         try {
             const mailOptions = {
                 from: process.env.EMAIL_USER || 'eventos@newelog.com',
@@ -202,101 +203,74 @@ class NotificacaoObserver {
                                  Acessar Sistema
                             </a>
                         </div>
+                        
+                        <p style="color: #6b7280; font-size: 14px;">
+                            Este é um email automático.<br>
+                            Equipe Newe Log
+                        </p>
                     </div>
                 `
             };
 
             await transporter.sendMail(mailOptions);
             console.log(` Notificação enviada para: ${colaborador.Email}`);
-            
+
         } catch (error) {
-            console.error(` Erro ao enviar notificação para ${colaborador.Email}:`, error);
+            console.error(` Erro ao enviar notificação para colaborador:`, error);
         }
     }
 
-    async enviarEmailBoasVindasAg(agregado) {
-        console.log(agregado.email)
+    async enviarEmailBoasVindasAg(agregado: any) {
         try {
             const mailOptions = {
-                from: process.env.EMAIL_USER || 'sistema@newelog.com',
+                from: process.env.EMAIL_USER || 'eventos@newelog.com',
                 to: agregado.email,
-                subject: 'Bem-vindo à Newe Log! ',
+                subject: ` Bem-vindo ao sistema - Agregado`,
                 html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <h2 style="color: #2563eb;">Bem-vindo à Newe Log!</h2>
-                        <p>Olá <strong>${agregado.nome}</strong>,</p>
-                        <p>Seu cadastro foi realizado com sucesso no nosso sistema.</p>
-                        
-                        <p style="color: #6b7280; font-size: 14px;">
-                            Atenciosamente,<br>
-                            Equipe Newe Log
-                        </p>
+                    <div>
+                        <h2>Olá ${agregado.nome}, seja bem-vindo(a)!</h2>
+                        <p>Você foi cadastrado(a) como agregado no nosso sistema.</p>
                     </div>
                 `
             };
 
             await transporter.sendMail(mailOptions);
-            console.log(` Email de boas-vindas enviado para: ${agregado.email}`);
-            
+            console.log(` Email de boas-vindas enviado para agregado: ${agregado.email}`);
+
         } catch (error) {
-            console.error(` Erro ao enviar email para ${agregado.email}:`, error);
+            console.error(` Erro ao enviar email de boas-vindas para agregado:`, error);
         }
     }
 
-    async enviarEmailBoasVindas(colaborador) {
+    async enviarEmailBoasVindas(colaborador: any) {
         try {
             const mailOptions = {
-                from: process.env.EMAIL_USER || 'sistema@newelog.com',
+                from: process.env.EMAIL_USER || 'eventos@newelog.com',
                 to: colaborador.Email,
-                subject: 'Bem-vindo à Newe Log! ',
+                subject: ` Bem-vindo ao sistema - Colaborador`,
                 html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <h2 style="color: #2563eb;">Bem-vindo à Newe Log!</h2>
-                        <p>Olá <strong>${colaborador.Nome_Col}</strong>,</p>
-                        <p>Seu cadastro foi realizado com sucesso no nosso sistema.</p>
-                        
-                        <div style="background: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                            <p><strong>Seus dados de acesso:</strong></p>
-                            <p><strong>Nome:</strong> ${colaborador.Nome_Col}</p>
-                            <p><strong>Email:</strong> ${colaborador.Email}</p>
-                            <p><strong>ID:</strong> ${colaborador.ID_colaborador}</p>
-                        </div>
-                        
-                        <p>Você já pode fazer login no sistema usando suas credenciais.</p>
-                        <div style="text-align: center; margin: 25px 0;">
-                            <a href="http://localhost:3000" 
-                               style="background: #059669; color: white; padding: 12px 24px; 
-                                      text-decoration: none; border-radius: 5px; display: inline-block;">
-                                 Fazer Login
-                            </a>
-                        </div>
-                        
-                        <p style="color: #6b7280; font-size: 14px;">
-                            Atenciosamente,<br>
-                            Equipe Newe Log
-                        </p>
+                    <div>
+                        <h2>Olá ${colaborador.Nome_Col}, seja bem-vindo(a)!</h2>
+                        <p>Você foi cadastrado(a) como colaborador no nosso sistema.</p>
                     </div>
                 `
             };
 
             await transporter.sendMail(mailOptions);
-            console.log(` Email de boas-vindas enviado para: ${colaborador.Email}`);
-            
+            console.log(` Email de boas-vindas enviado para colaborador: ${colaborador.Email}`);
+
         } catch (error) {
-            console.error(` Erro ao enviar email para ${colaborador.Email}:`, error);
+            console.error(` Erro ao enviar email de boas-vindas para colaborador:`, error);
         }
     }
 
     parar() {
         if (this.intervalId) {
             clearInterval(this.intervalId);
-            console.log(' Observador de notificações parado');
+            this.intervalId = null;
+            console.log(' Observador de notificações parado.');
         }
     }
 }
 
-const notificacaoObserver = new NotificacaoObserver();
-
-notificacaoObserver.iniciar();
-
-export default notificacaoObserver;
+export default NotificacaoObserver;
