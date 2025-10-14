@@ -8,6 +8,7 @@ import agregadoRoutes from './src/routes/agregadoRoutes.js';
 import './src/routes/notificacaoObserver.js'; 
 import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
 import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
+import clienteRoutes from './src/routes/clienteRoutes.js'
 import db from './src/config/db.js';
 import cors from 'cors';
 
@@ -29,12 +30,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
 
-app.use('/api/participacaoEventos', participacaoEventoRoutes);
-
 app.use('/api/certificadoParticipacao', certificadoPartRoutes)
 
 app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
+
+app.use('/api/clientes', clienteRoutes)
 
 app.get('/api/setores', async (req, res) => {
     try {
