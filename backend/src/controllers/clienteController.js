@@ -53,3 +53,13 @@ export async function listarClientes(req, res){
     res.status(500).json({ mensagem: "Erro interno ao listar clientes." });
   }
 }
+
+export async function listarClientePorId(req, res) {
+	try{
+		const [result] = await Cliente.findById(req.params.id)
+		if (result.length === 0) return res.status(404).json({ mensagem: "Cliente não encontrado." });
+			res.json(result[0]);
+	} catch (err) {
+		res.status(500).json({ mensagem: "Erro ao buscar cliente." });
+	}
+}

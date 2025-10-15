@@ -35,6 +35,11 @@ class Cliente {
         const sql = "SELECT * FROM Cliente WHERE Email_Cliente = ?";
         return db.promise().query(sql, [email]);
     }
+    
+    static async findById(id) {
+        const sql = "SELECT * FROM Cliente WHERE ID_Cliente = ?";
+        return db.promise().query(sql, [id]);
+    }
 
 }
 

@@ -38,4 +38,16 @@ export interface Notificacao {
   justificativa_notificacao?: string;
 }
 
+export interface Cliente {
+  ID_Cliente: number;
+  Nome_Cliente: string;
+  Email_Cliente: string;
+  Telefone_Cliente: string;
+  Endereco: string;
+  atividade: string;
+  segmento_atuacao: string;
+  depart_responsavel: string;
+  Data_Cadastro: string;
+}
+
 export type Tab = "colaboradores" | "eventos" | "cargos";

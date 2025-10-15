@@ -1,11 +1,26 @@
-import { Header } from "./comercial/Header"
+import { useState } from "react";
+import { Tabs, Tab as BSTabs } from "react-bootstrap";
+import { ComercialDashboard } from "./comercial/ComercialDashboard";
+import { ClientesList } from "./comercial/ClientesList";
 
-export function Comercial(){
+export const Comercial = () => {
+  const [key, setKey] = useState("dashboard");
 
-  return(
-    <div id="crm-module">
-      <h1>Setor Comercial</h1>
-      <Header />
+  return (
+    <div>
+      <Tabs
+        id="comercial-tabs"
+        activeKey={key}
+        onSelect={(k) => setKey(k || "dashboard")}
+        className="mb-3"
+      >
+        <BSTabs eventKey="dashboard" title="Dashboard">
+          <ComercialDashboard />
+        </BSTabs>
+        <BSTabs eventKey="clientes" title="Clientes">
+          <ClientesList />
+        </BSTabs>
+      </Tabs>
     </div>
-  )
-}
+  );
+};

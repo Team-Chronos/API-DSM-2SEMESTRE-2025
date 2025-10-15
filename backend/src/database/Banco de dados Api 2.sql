@@ -126,6 +126,31 @@ CREATE TABLE Agregados (
     CONSTRAINT uc_rg UNIQUE (rg)
 );
 
+CREATE TABLE Cliente (
+    ID_Cliente INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Cliente VARCHAR(255) NOT NULL,
+    Email_Cliente VARCHAR(255) NOT NULL UNIQUE,
+    Telefone_Cliente VARCHAR(15),
+    Endereco VARCHAR(255) not null,
+    atividade varchar(255) not null,
+    segmento_atuacao varchar(255) not null,
+    depart_responsavel varchar(100) not null,
+    Data_Cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Historico_Interacao (
+    ID_Interacao INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Cliente INT NOT NULL,
+    ID_Colaborador INT NULL,
+    Data_Interacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Tipo_Interacao ENUM('Ligação', 'Email', 'Reunião', 'Mensagem', 'Outro') NOT NULL,
+    Descricao TEXT NOT NULL,
+    Resultado VARCHAR(255),
+    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE SET NULL
+);
+
+
 INSERT INTO Setor (Nome_Setor, Descricao) VALUES 
 ('Administrativo', 'Setor responsável pelas operações administrativas da empresa.'),
 ('Comercial', 'Setor de vendas e relacionamento com clientes.'),
