@@ -3,8 +3,14 @@ export interface Colaborador {
   Nome_Col: string;
   Email: string;
   Setor: number;
+  ID_cargo: number;
   Localidade: string;
   Telefone: string;
+}
+export interface Cargos {
+  ID_Cargo: number;
+  Nome_Cargo: string;
+  Nivel_Acesso: string;
 }
 
 export interface Evento {
@@ -37,5 +43,14 @@ export interface Notificacao {
   ID_Status: number;
   justificativa_notificacao?: string;
 }
-
-export type Tab = "colaboradores" | "eventos" | "cargos";
+export type Certificado = {
+  id: number
+  ID_colaborador: number
+  Nome_Evento: string
+  Url_Pdf: string
+  Data_Part: string
+  Duracao_Evento: string
+  Descricao?: string
+  Local_Evento: string
+};
+export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado";

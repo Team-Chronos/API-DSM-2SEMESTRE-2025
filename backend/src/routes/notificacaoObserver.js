@@ -111,14 +111,11 @@ class NotificacaoObserver {
         }
     }
 
-    // NOVO MÉTODO: Enviar email de confirmação para o criador do evento
     async enviarEmailConfirmacaoCriador(evento) {
         try {
-            // Buscar informações do criador do evento
-            // Assumindo que há um campo Criado_Por ou similar na tabela Evento
             const [criadores] = await db.promise().query(
                 'SELECT c.* FROM Colaboradores c WHERE c.ID_colaborador = ?',
-                [evento.Criado_Por] // Ajuste este campo conforme sua estrutura
+                [evento.Criado_Por] 
             );
 
             if (criadores.length === 0) {

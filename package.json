@@ -24,5 +24,9 @@
   "homepage": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025#readme",
   "devDependencies": {
     "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "multer": "^2.0.2",
+    "react-pdf": "^10.2.0"
   }
 }

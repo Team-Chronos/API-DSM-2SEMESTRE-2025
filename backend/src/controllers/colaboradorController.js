@@ -3,8 +3,8 @@ import bcrypt from 'bcrypt';
 
 
 export const criarColaborador = async (req, res) => {
-    const { nome, email, senha, telefone, cpf, setor} = req.body;
-    if (!nome || !email || !senha || !telefone || !cpf || !setor) {
+    const { nome, email, senha, telefone, cpf, setor, id_cargo: ID_Cargo } = req.body;
+    if (!nome || !email || !senha || !telefone || !cpf || !setor || !ID_Cargo) {
         return res.status(400).json({ mensagem: "Preencha todos os campos!" });
     }
     try {
@@ -15,7 +15,7 @@ export const criarColaborador = async (req, res) => {
         if (cpfResults.length > 0) return res.status(400).json({ mensagem: "CPF já cadastrado!" });
 
         const senhaHash = await bcrypt.hash(senha, 10);
-        await Colaborador.create({ nome, email, senhaHash, telefone, cpf, setor });
+        await Colaborador.create({ nome, email, senhaHash, telefone, cpf, setor, ID_Cargo });
 
         res.status(201).json({ mensagem: "Usuário cadastrado com sucesso!" });
     } catch (err) {
@@ -23,6 +23,15 @@ export const criarColaborador = async (req, res) => {
     }
 };
 
+export const listarCargosDisponiveis = async (req, res) => {
+    try {
+        const [results] = await Colaborador.findAllCargos();
+        res.json(results);
+    } catch (err) {
+        console.error("Erro ao buscar cargos:", err);
+        res.status(500).json({ mensagem: "Erro ao buscar cargos." });
+    }
+};
 
 export const listarColaboradores = async (req, res) => {
     try {

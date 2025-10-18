@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { formatarCpf, formatarTelefone } from "../../utils/formatacoes";
+import type { Cargos } from "../../utils/tipos";
 
 interface ModalCadastroColaboradorProps {
   show: boolean;
@@ -9,36 +10,53 @@ interface ModalCadastroColaboradorProps {
   onSuccess: () => void;
 }
 
-export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadastroColaboradorProps) => {
+export const ModalCadastroColaborador = ({ show, onClose, onSuccess }: ModalCadastroColaboradorProps) => {
   const [form, setForm] = useState({
     nome: "",
     email: "",
     senha: "",
     telefone: "",
     cpf: "",
+    id_cargo: "1",
     setor: "1",
   });
 
-  function limparForm(){
+  const [cargos, setCargos] = useState<Cargos[]>([]);
+
+  useEffect(() => {
+    if (show) {
+      axios.get("http://localhost:3000/api/colaboradores/cargos")
+        .then(response => {
+          setCargos(response.data);
+          if (response.data.length > 0) {
+            setForm(prevForm => ({ ...prevForm, id_cargo: response.data[0].ID_Cargo.toString() }));
+          }
+        })
+        .catch(error => console.error("Erro ao buscar cargos:", error));
+    }
+  }, [show]);
+
+  function limparForm() {
     setForm({
       nome: "",
       email: "",
       senha: "",
       telefone: "",
       cpf: "",
+      id_cargo: cargos.length > 0 ? cargos[0].ID_Cargo.toString() : "",
       setor: "1",
     });
   }
 
   const handleChange = (e: React.ChangeEvent<React.ChangeEvent<HTMLInputElement>["target"] | React.ChangeEvent<HTMLSelectElement>["target"] | React.ChangeEvent<HTMLTextAreaElement>["target"]> & { target: { name: string; value: string } }) => {
 		switch (e.target.name){
-			case "telefone":
+      case "telefone":
 				e.target.value = formatarTelefone(e.target.value)
 				break
-			case "cpf":
+      case "cpf":
 				e.target.value = formatarCpf(e.target.value)
         break
-		}
+    }
 		setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -121,14 +139,24 @@ export const ModalCadastroColaborador = ({show, onClose, onSuccess}: ModalCadast
           <Form.Group className="mb-3">
             <Form.Label>CPF</Form.Label>
             <Form.Control
-              type="text"
-              name="cpf"
-              value={form.cpf}
-              onChange={handleChange}
-              placeholder="000.000.000-00"
-							maxLength={14}
-              required
+            type="text"
+            name="cpf"
+            value={form.cpf}
+            onChange={handleChange}
+            placeholder="000.000.000-00"
+            maxLength={14}
+            required
             />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Cargo</Form.Label>
+            <Form.Select name="id_cargo" value={form.id_cargo} onChange={handleChange} required>
+              {cargos.map(cargo => (
+                <option key={cargo.ID_Cargo} value={cargo.ID_Cargo}>
+                  {cargo.Nome_Cargo}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">
