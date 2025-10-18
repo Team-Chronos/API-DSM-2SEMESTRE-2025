@@ -23,10 +23,6 @@
   },
   "homepage": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025#readme",
   "devDependencies": {
-    "@types/pdfkit": "^0.17.3",
     "concurrently": "^9.2.1"
-  },
-  "dependencies": {
-    "pdfkit": "^0.17.2"
   }
 }

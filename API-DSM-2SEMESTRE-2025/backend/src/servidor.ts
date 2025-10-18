@@ -6,13 +6,8 @@ import authRoutes from './routes/authRoutes.js';
 import colaboradorRoutes from './routes/colaboradorRoutes.js';
 import agregadoRoutes from './routes/agregadoRoutes.js';
 import './routes/notificacaoObserver.js'; 
-import historicoInteracaoRoutes from './routes/historicoInteracaoRoutes.js';
-import clienteRoutes from './routes/clienteRoutes.js';
 import participacaoEventoRoutes from './routes/participacaoEventoRoutes.js';
 import certificadoPartRoutes from './routes/certificadoPartRoutes.js';
-import graficoDados from './service/graficoDados.js';
-import agendaRoutes from './routes/agendaRoutes.js';
-import LembreteObserver from './observer/lembreteObserver.js';
 import db from './config/db.js';
 import cors from 'cors';
 
@@ -34,18 +29,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
 
-app.use('/api/agenda', agendaRoutes);
-
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
 
 app.use('/api/certificadoParticipacao', certificadoPartRoutes)
-app.get('/api/relatorios/grafico', graficoDados);
 
 app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
-
-app.use('/api/historico-interacoes', historicoInteracaoRoutes);
-app.use('/api/clientes', clienteRoutes);
 
 app.get('/api/setores', async (req, res) => {
     try {
@@ -56,9 +45,6 @@ app.get('/api/setores', async (req, res) => {
         res.status(500).json({ mensagem: 'Erro ao buscar setores' });
     }
 });
-
-const lembreteObserver = new LembreteObserver();
-lembreteObserver.iniciar();
 
 app.post('/confirmarEvento', (req, res) => {
     const { resposta, justificativa } = req.body;

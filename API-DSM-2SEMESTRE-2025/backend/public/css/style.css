@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: 'Poppins', sans-serif;
+}
+
+:root {
+    --blue: rgb(28, 28, 255);
+    --dark-blue: rgb(13, 13, 139);
+    --muito-dark-blue: rgb(13, 13, 99);
+    --green: #28a745;
+    --red: #dc3545;
+}
+
+body {
+    min-height: 100vh;
+    max-width: 100vw;
+}
+
+
+#barra-lateral {
+    background-image: linear-gradient(var(--blue) 40%, black);
+    color: white;
+    height: 100vh; 
+    padding: 1rem;
+    width: 15%;
+    min-width: 250px;
+}
+
+
+#colab-info {
+    font-weight: 500;
+}
+
+#colab-img {
+    width: 100%;
+    height: auto;
+    max-width: 80px;
+}
+
+#colab-nome {
+    text-align: center;
+}
+
+
+nav > ul {
+    row-gap: 1.3rem;
+}
+
+nav > ul > li {
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    column-gap: 22px;
+    display: flex;
+    align-items: center;
+}
+
+nav > ul > li > .bi::before {
+    font-size: 32px;
+}
+
+
+#logo {
+    width: fit-content;
+    font-family: 'Poppins', sans-serif;
+}
+
+#newe {
+    color: var(--blue);
+    font-size: 40px;
+    font-weight: 700;
+}
+
+#logistica {
+    margin-top: -10px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+main {
+    width: 85%;
+    max-height: 100vh;
+    background-color: #eee;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+input[type='search'].search-icon{
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='gray' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2rem;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 897deabefe3c4713b7269d911869fd105dd29210
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #e0e0e0;
+    border-radius: 20px;
+    padding: 6px 15px;
+    width: 400px;
+    margin: 0 auto 20px auto;
+}
+
+.search-bar input {
+    border: none; outline: none; background: transparent; width: 100%; font-size: 14px; 
+}
+.search-bar button {
+    background: transparent; border: none; cursor: pointer; font-size: 16px; 
+}
+
+.notification {
+    display: flex;
+    align-items: flex-start;   
+    flex-direction: row;
+    gap: 10px; 
+    width: 50%;
+    border: 2px solid var(--blue);
+    border-radius: 4px;
+    background: #d9d9d9;
+    padding: 10px;
+    margin: 0 auto 15px auto;
+    cursor: pointer;
+}
+
+
+.notification .icon{ 
+    margin-right: 10px; 
+    font-size: 22px; 
+    color: var(--blue); 
+    flex-shrink: 0; 
+}
+.notification .content strong{ 
+    font-weight: bold; 
+    color: var(--blue); 
+}
+
+.notification .content p{ 
+    font-weight: bold; 
+    color: var(--blue); 
+}
+
+.details { 
+    max-height: 0; 
+    overflow: hidden; 
+    transition: max-height 0.4s ease; 
+}
+
+.notification.active .details { 
+    max-height: 500px; 
+}
+
+.buttons{ 
+    display: flex; 
+    margin-top: 10px; 
+    gap: 15px; 
+}
+.buttons button{ 
+    border: 2px solid; 
+    border-radius: 6px; 
+    padding: 6px 18px; 
+    font-size: 13px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    background: #fff; 
+}
+
+.accept{ 
+    border-color: var(--green); 
+    color: var(--green);
+}
+.accept:hover{ 
+    background: #eafbea; 
+}
+
+.reject{ 
+    border-color: var(--red); 
+    color: var(--red); 
+}
+.reject:hover { 
+    background: #fdeaea; 
+}
+
+.justificativa {
+    display: none;
+    width: 100%;
+    margin-top: 10px;
+    color: var(--blue);
+}
+
+.justificativa .input-area{ 
+    display: flex; 
+    gap: 5px; 
+}
+.justificativa textarea { 
+    flex-grow: 1; 
+    padding: 5px; 
+    border-radius: 5px; 
+    border: 1px solid #ccc; 
+}
+.justificativa button.send{ 
+    background-color: var(--blue); 
+    color: #fff; 
+    border: none; 
+    border-radius: 5px; 
+    padding: 5px 10px; 
+    cursor: pointer; 
+}
+.notification.inactive {
+    border: none;
+    background: #e0e0e0;
+    cursor: default;
+}
+
+.notification.inactive .icon { 
+    color: #555; 
+}
+.notification.inactive .content{ 
+    color: #999; 
+}
+.notification.finished .content a{ 
+    color: #999; 
+    pointer-events: none; 
+    text-decoration: none; 
+}
+.notification.inactive .content strong { 
+    color: #555; 
+} 
+
+.notification:not(.inactive) .content p {
+    font-weight: bold;
+    color: var(--blue);
+}
+
+.notification.inactive .content p {
+    color: #555;
+}
+.details, .buttons, .justificativa{ 
+    display: block; 
+} 
+.notification.accepted {
+    border: 2px solid var(--green);
+}
+
+.notification.rejected {
+    border: 2px solid var(--red);
+}
+
+.notification .concluido {
+    margin-top: 10px;
+    padding: 6px 12px;
+    font-size: 13px;
+    background-color: #fff;
+    color: var(--green);
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.notification .concluido:hover {
+    background-color: #fff;
+}
+.notification.finished {
+    opacity: 0.6;
+    filter: grayscale(0.8);
+}
+.notification.finished strong {
+    text-decoration: line-through;
+}
+.notification .concluido:disabled {
+    cursor: default;
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> dev
+=======
+}
+>>>>>>> 897deabefe3c4713b7269d911869fd105dd29210
