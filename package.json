@@ -26,6 +26,7 @@
     "concurrently": "^9.2.1"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "multer": "^2.0.2",
     "react-pdf": "^10.2.0"
   }

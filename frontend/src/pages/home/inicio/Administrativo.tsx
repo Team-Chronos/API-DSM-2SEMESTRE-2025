@@ -21,13 +21,13 @@ export const Administrativo = () => {
   const [searchText, setSearchText] = useState("");
   const [filtroSetor, setFiltroSetor] = useState("");
   const [filtroModalidade, setFiltroModalidade] = useState("");
-
   const colaboradoresFiltrados = colaboradores?.filter((colab) => {
     const matchesSearch =
       normalizarTexto(colab.Nome_Col.toLowerCase()).includes(normalizarTexto(searchText.toLowerCase())) ||
       colab.Email.toLowerCase().includes(searchText.toLowerCase());
 
     const matchesSetor = filtroSetor ? colab.Setor.toString() === filtroSetor : true;
+    
     const matchesModalidade = filtroModalidade
       ? colab.Localidade === filtroModalidade
       : true;
@@ -79,7 +79,6 @@ export const Administrativo = () => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-
       {activeTab === "colaboradores" ? (
         <HeaderControlsColaboradores
           onSuccess={carregarColaboradores}
@@ -87,8 +86,8 @@ export const Administrativo = () => {
           setFiltroSetor={setFiltroSetor}
           filtroModalidade={filtroModalidade}
           setFiltroModalidade={setFiltroModalidade}
-        searchText={searchText}
-        setSearchText={setSearchText}
+          searchText={searchText}
+          setSearchText={setSearchText}
         />
       ) : (
         <HeaderControlsEventos

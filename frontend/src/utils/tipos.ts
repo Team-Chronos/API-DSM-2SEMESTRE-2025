@@ -53,4 +53,9 @@ export type Certificado = {
   Descricao?: string
   Local_Evento: string
 };
+export interface HistoricoModalidade {
+  id: number;
+  modalidade: string;
+  data_resposta: string;
+}
 export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado";

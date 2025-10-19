@@ -1,18 +1,23 @@
+import 'dotenv/config';
+
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
+import db from './src/config/db.js';
+
 import eventoRoutes from './src/routes/eventoRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import agregadoRoutes from './src/routes/agregadoRoutes.js';
-import './src/routes/notificacaoObserver.js'; 
 import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
 import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
-import db from './src/config/db.js';
-import cors from 'cors';
+import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
+
+import './src/routes/notificacaoObserver.js';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -28,13 +33,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
-
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
-
-app.use('/api/certificadoParticipacao', certificadoPartRoutes)
-
+app.use('/api/certificadoParticipacao', certificadoPartRoutes);
 app.use('/api/agregados', agregadoRoutes);
-app.use('/api/participacaoEventos', participacaoEventoRoutes);
+app.use('/api', modalidadeRoutes);
 
 app.get('/api/setores', async (req, res) => {
     try {
@@ -48,11 +50,7 @@ app.get('/api/setores', async (req, res) => {
 
 app.post('/confirmarEvento', (req, res) => {
     const { resposta, justificativa } = req.body;
-
-    console.log('Resposta recebida do cliente:');
-    console.log(`- Decisão: ${resposta}`); 
-    console.log(`- Justificativa: ${justificativa}`); 
-
+    console.log('Resposta recebida do cliente:', { resposta, justificativa });
     res.status(200).json({ mensagem: 'Resposta registrada com sucesso no servidor!' });
 });
 
