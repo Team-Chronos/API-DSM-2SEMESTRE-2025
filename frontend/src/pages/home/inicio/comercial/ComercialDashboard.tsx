@@ -71,17 +71,17 @@ export const ComercialDashboard = () => {
       <h2 className="dashboard-title">Painel Comercial</h2>
 
       <Row>
-        <Col md={8}>
+        <Col md={15}>
           <Card className="dashboard-card">
             <Card.Body>
               <Card.Title className="dashboard-card-title">
                 Clientes por Segmento
               </Card.Title>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer width="100%" height={550}>
                 <BarChart
                   data={data}
                   margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
-                  barCategoryGap="10%"
+                  barCategoryGap="30%"
                   barGap={1}
 
                 >

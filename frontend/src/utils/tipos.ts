@@ -50,4 +50,4 @@ export interface Cliente {
   Data_Cadastro: string;
 }
 
-export type Tab = "colaboradores" | "eventos" | "cargos";
+export type Tab = "colaboradores" | "eventos" | "cargos" | "cliente";
