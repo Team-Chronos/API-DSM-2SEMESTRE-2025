@@ -8,7 +8,7 @@ interface LocalidadeModalProps {
   onClose?: () => void;
 }
 
-export const LocalidadeModal = ({ onClose }: LocalidadeModalProps) => {
+export const LocalidadeModal = ({ }: LocalidadeModalProps) => {
   const { user } = useAuth();
   const [localidade, setLocalidade] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
@@ -46,11 +46,8 @@ export const LocalidadeModal = ({ onClose }: LocalidadeModalProps) => {
       setStatus("success");
       localStorage.setItem("localidadeData", new Date().toLocaleDateString());
 
-      setTimeout(() => {
-        setShow(false);
-        if (onClose) onClose();
-      }, 1500);
-
+      window.location.reload();
+      
     } catch (error) {
       console.error(error);
       setStatus("error");

@@ -126,6 +126,14 @@ CREATE TABLE Agregados (
     CONSTRAINT uc_rg UNIQUE (rg)
 );
 
+create table historico_modalidade(
+	id int auto_increment primary key,
+	colaborador_id int not null, 
+    modalidade varchar(30),
+    data_resposta timestamp default current_timestamp,
+    FOREIGN KEY (colaborador_id) REFERENCES Colaboradores(ID_colaborador));
+    
+
 INSERT INTO Setor (Nome_Setor, Descricao) VALUES 
 ('Administrativo', 'Setor responsável pelas operações administrativas da empresa.'),
 ('Comercial', 'Setor de vendas e relacionamento com clientes.'),
