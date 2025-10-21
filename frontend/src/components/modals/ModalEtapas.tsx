@@ -1,35 +1,52 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {DragDropContext,Droppable,Draggable,type DropResult,} from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type DropResult,
+} from "@hello-pangea/dnd";
 import "../../css/ModalEtapas.css";
-import type { Cliente } from "../../utils/tipos"; 
+import type { Cliente } from "../../utils/tipos";
 
-interface ClientesPorEtapa {
-  inicial: Cliente[];
-  andamento: Cliente[];
-  finalizada: Cliente[];
-}
+const etapasConfig = [
+  { key: "prospects", label: "Prospects" },
+  { key: "inicial", label: "Inicial" },
+  { key: "potencial", label: "Potencial" },
+  { key: "manutenção", label: "Em Manutenção" },
+  { key: "negociação", label: "Em Negociação" },
+  { key: "followup", label: "Follow Up" },
+
+];
+
+type EtapaKey = (typeof etapasConfig)[number]["key"];
+
+type ClientesPorEtapa = Record<EtapaKey, Cliente[]>;
 
 export const ModalEtapas = () => {
-  const [clientes, setClientes] = useState<ClientesPorEtapa>({
-    inicial: [],
-    andamento: [],
-    finalizada: [],
-  });
+  const [clientes, setClientes] = useState<ClientesPorEtapa>(
+    etapasConfig.reduce((acc, etapa) => {
+      acc[etapa.key] = [];
+      return acc;
+    }, {} as ClientesPorEtapa)
+  );
 
   const carregarClientes = async () => {
     try {
       const res = await axios.get<Cliente[]>(
-        "http://localhost:3000/api/clientes" 
+        "http://localhost:3000/api/clientes"
       );
 
-      const etapas: ClientesPorEtapa = {
-        inicial: res.data.filter((c) => c.Etapa === "Inicial"),
-        andamento: res.data.filter((c) => c.Etapa === "Em andamento"),
-        finalizada: res.data.filter((c) => c.Etapa === "Finalizada"),
-      };
+      const novoEstado = etapasConfig.reduce((acc, etapa) => {
+        acc[etapa.key] = res.data.filter(
+          (c) =>
+            c.Etapa?.toLowerCase() === etapa.label.toLowerCase() ||
+            c.Etapa?.toLowerCase() === etapa.key.toLowerCase()
+        );
+        return acc;
+      }, {} as ClientesPorEtapa);
 
-      setClientes(etapas);
+      setClientes(novoEstado);
     } catch (err) {
       console.error("Erro ao carregar clientes:", err);
       alert("Erro ao carregar clientes");
@@ -43,37 +60,27 @@ export const ModalEtapas = () => {
   const onDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
     if (!destination) return;
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    )
-      return;
 
-    const origemKey = source.droppableId as keyof ClientesPorEtapa;
-    const destinoKey = destination.droppableId as keyof ClientesPorEtapa;
+    const origemKey = source.droppableId as EtapaKey;
+    const destinoKey = destination.droppableId as EtapaKey;
+
+    if (origemKey === destinoKey && source.index === destination.index) return;
 
     const origem = Array.from(clientes[origemKey]);
     const [movido] = origem.splice(source.index, 1);
-    const destinoLista = Array.from(clientes[destinoKey]);
-    destinoLista.splice(destination.index, 0, movido);
+    const destino = Array.from(clientes[destinoKey]);
+    destino.splice(destination.index, 0, movido);
 
     setClientes({
       ...clientes,
       [origemKey]: origem,
-      [destinoKey]: destinoLista,
+      [destinoKey]: destino,
     });
-
-    const novaEtapa =
-      destinoKey === "inicial"
-        ? "Inicial"
-        : destinoKey === "andamento"
-        ? "Em andamento"
-        : "Finalizada";
 
     try {
       await axios.put(
-        `http://localhost:3000/api/clientes/${movido.ID_Cliente}/etapa`, 
-        { etapa: novaEtapa }
+        `http://localhost:3000/api/clientes/${movido.ID_Cliente}/etapa`,
+        { etapa: etapasConfig.find((e) => e.key === destinoKey)?.label }
       );
     } catch (err) {
       console.error("Erro ao atualizar etapa:", err);
@@ -83,11 +90,7 @@ export const ModalEtapas = () => {
   return (
     <div className="etapas-container">
       <DragDropContext onDragEnd={onDragEnd}>
-        {[
-          { key: "inicial", label: "Inicial" },
-          { key: "andamento", label: "Em andamento" },
-          { key: "finalizada", label: "Finalizada" },
-        ].map(({ key, label }) => (
+        {etapasConfig.map(({ key, label }) => (
           <Droppable key={key} droppableId={key}>
             {(provided) => (
               <div
@@ -97,11 +100,9 @@ export const ModalEtapas = () => {
               >
                 <div className="coluna-header">
                   <h3>{label}</h3>
-                  
                 </div>
-
-                {clientes[key as keyof ClientesPorEtapa].map(
-                  (cliente, index) => (
+                <div className="cards-list">
+                  {clientes[key].map((cliente, index) => (
                     <Draggable
                       key={cliente.ID_Cliente}
                       draggableId={String(cliente.ID_Cliente)}
@@ -118,10 +119,10 @@ export const ModalEtapas = () => {
                         </div>
                       )}
                     </Draggable>
-                  )
-                )}
+                  ))}
 
-                {provided.placeholder}
+                  {provided.placeholder}
+                </div>
               </div>
             )}
           </Droppable>
