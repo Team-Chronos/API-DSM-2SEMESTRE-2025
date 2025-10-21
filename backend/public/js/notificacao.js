@@ -172,14 +172,14 @@ function inicarNotificacao()
 
                 if(rejectBtn && justificativa){
                     rejectBtn.addEventListener("click",(event)=>{
-                        event.stopPropagation(); // impedir que feche
+                        event.stopPropagation();
                         justificativa.style.display = justificativa.style.display==="block" ? "none" : "block";
                         if (details && justificativa.style.display === "block") {
                             details.style.maxHeight = details.scrollHeight + "px";
                         }
                     });
                     justificativa.addEventListener("click",(event)=>{
-                        event.stopPropagation(); // impedir que feche
+                        event.stopPropagation(); 
                     });
                 }
 

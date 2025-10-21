@@ -1,0 +1,49 @@
+.etapas-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background-color: #f0f2f5;
+  height: calc(100vh - 100px);
+  box-sizing: border-box;
+}
+
+.coluna {
+  background-color: #002b5b;
+  border-radius: 20px;
+  width: 30%;
+  padding: 15px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.coluna::-webkit-scrollbar {
+  width: 0px;
+}
+
+.coluna-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-cliente {
+  background-color: #0a0a87;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  cursor: grab;
+  transition: transform 0.2s ease;
+}
+
+.card-cliente:hover {
+  transform: scale(1.03);
+  background-color: #1515a0;
+}
+
+.filtro {
+  cursor: pointer;
+}

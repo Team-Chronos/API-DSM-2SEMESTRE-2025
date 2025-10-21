@@ -23,10 +23,15 @@
   },
   "homepage": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025#readme",
   "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.1.8",
     "concurrently": "^9.2.1"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "lucide-react": "^0.546.0",
+    "react": "^18.3.1",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dom": "^18.3.1",
     "react-icons": "^5.5.0"
   }
 }

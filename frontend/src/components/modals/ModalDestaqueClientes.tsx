@@ -16,7 +16,6 @@ export const ModalDestaqueClientes = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  // Função para carregar clientes
   const carregarClientes = async () => {
     try {
       const res = await axios.get("http://localhost:3000/api/clientes");

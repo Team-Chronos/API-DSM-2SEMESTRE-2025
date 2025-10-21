@@ -48,6 +48,7 @@ export interface Cliente {
   segmento_atuacao: string;
   depart_responsavel: string;
   Data_Cadastro: string;
+  Etapa: string;
 }
 
 export type Tab = "colaboradores" | "eventos" | "cargos" | "cliente";

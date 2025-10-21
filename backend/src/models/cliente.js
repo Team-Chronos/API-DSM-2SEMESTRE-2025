@@ -40,6 +40,11 @@ class Cliente {
         const sql = "SELECT * FROM Cliente WHERE ID_Cliente = ?";
         return db.promise().query(sql, [id]);
     }
+    static async updateEtapa(id, etapa) {
+    const sql = "UPDATE Cliente SET Etapa = ? WHERE ID_Cliente = ?";
+    return db.promise().query(sql, [etapa, id]);
+}
+
 
 }
 

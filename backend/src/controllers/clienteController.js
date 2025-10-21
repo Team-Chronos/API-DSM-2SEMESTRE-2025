@@ -63,3 +63,15 @@ export async function listarClientePorId(req, res) {
 		res.status(500).json({ mensagem: "Erro ao buscar cliente." });
 	}
 }
+export async function atualizarEtapaCliente(req, res) {
+  const { id } = req.params;
+  const { etapa } = req.body;
+
+  try {
+    await Cliente.updateEtapa(id, etapa);
+    res.status(200).json({ mensagem: "Etapa atualizada com sucesso!" });
+  } catch (err) {
+    console.error("Erro ao atualizar etapa:", err);
+    res.status(500).json({ mensagem: "Erro interno ao atualizar etapa." });
+  }
+}
