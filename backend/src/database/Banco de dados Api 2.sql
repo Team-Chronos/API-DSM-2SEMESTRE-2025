@@ -135,7 +135,7 @@ CREATE TABLE Cliente (
     atividade varchar(255) not null,
     segmento_atuacao varchar(255) not null,
     depart_responsavel varchar(100) not null,
-    Etapa ENUM('Prospects','Inicial','Potencial','Em Manutenção','Em Negociação','Follow Up') DEFAULT 'Prospects',
+    Etapa varchar(255) DEFAULT 'Prospects',
     Data_Cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
