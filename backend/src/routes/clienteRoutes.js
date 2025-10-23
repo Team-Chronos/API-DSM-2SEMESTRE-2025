@@ -6,6 +6,6 @@ const router = express.Router();
 router.get('/', listarClientes);
 router.get('/:id', listarClientePorId)
 router.post('/', criarCliente);
-router.put("/clientes/:id/etapa", atualizarEtapaCliente);
+router.put('/:id/etapa', atualizarEtapaCliente);
 
 export default router;
