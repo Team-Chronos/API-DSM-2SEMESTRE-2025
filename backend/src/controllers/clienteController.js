@@ -47,7 +47,6 @@ export async function listarClientes(req, res){
 
 export async function listarClientePorId(req, res) {
     try{
-
         if (typeof Cliente.findById !== 'function') {
              console.error("Erro: Método Cliente.findById não encontrado no modelo.");
              return res.status(500).json({ mensagem: "Erro interno no servidor (modelo)." });
@@ -79,13 +78,12 @@ export async function listarCidades(req, res) {
             
             if (ultimaParte) {
                 let cidadePotencial = ultimaParte.split(' - ')[0].trim();
-
                 cidadePotencial = cidadePotencial.replace(/^\d{5}-\d{3}\s*/, '').trim();
 
                 if (cidadePotencial && 
                     cidadePotencial.length > 2 && 
                     !/^\d+$/.test(cidadePotencial) &&
-                    /[a-zA-Z]/g.test(cidadePotencial))
+                    /[a-zA-Z]/g.test(cidadePotencial)) 
                 {
                     const cidadeFormatada = cidadePotencial.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
                     cidades.add(cidadeFormatada);
@@ -104,6 +102,23 @@ export async function listarCidades(req, res) {
     } catch (err) {
         console.error("Erro detalhado ao listar cidades:", err); 
         res.status(500).json({ mensagem: "Erro interno ao listar cidades." });
+    }
+}
+
+export async function listarSegmentos(req, res) {
+    console.log("Recebido pedido GET /api/clientes/segmentos");
+    try {
+
+        const query = "SELECT DISTINCT segmento_atuacao FROM Cliente WHERE segmento_atuacao IS NOT NULL AND segmento_atuacao <> '' ORDER BY segmento_atuacao";
+        const [segmentosResult] = await db.promise().query(query);
+        const segmentos = segmentosResult.map(row => row.segmento_atuacao);
+        
+        console.log("Segmentos encontrados:", segmentos);
+        res.status(200).json(segmentos);
+
+    } catch (err) {
+        console.error("Erro detalhado ao listar segmentos:", err);
+        res.status(500).json({ mensagem: "Erro interno ao listar segmentos." });
     }
 }
 

@@ -16,48 +16,62 @@ export const ModalGerarRelatorio = ({ show, onClose, onSuccess }: ModalGerarRela
   const [segmento, setSegmento] = useState<string>('');
   
   const [cidades, setCidades] = useState<string[]>([]); 
+  const [segmentos, setSegmentos] = useState<string[]>([]);
   const [isLoadingCidades, setIsLoadingCidades] = useState(false); 
+  const [isLoadingSegmentos, setIsLoadingSegmentos] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCidades = async () => {
-      console.log("Modal aberto, tentando buscar cidades..."); 
+    const fetchData = async () => {
       if (show) { 
+  
         setIsLoadingCidades(true); 
         setError(null); 
         try {
-          console.log("Enviando pedido GET /api/clientes/cidades");
-          const response = await axios.get("http://localhost:3000/api/clientes/cidades"); 
-          console.log("Resposta cidades:", response.data); 
-          
-          if (Array.isArray(response.data)) {
-            setCidades(response.data);
-            if(response.data.length === 0) {
-              console.warn("API retornou lista vazia de cidades."); 
-            }
+          const resCidades = await axios.get("http://localhost:3000/api/clientes/cidades"); 
+          if (Array.isArray(resCidades.data)) {
+            setCidades(resCidades.data);
           } else {
-            console.error("Resposta da API de cidades não é um array:", response.data);
-            setError("Formato inesperado na lista de cidades.");
-            setCidades([]); 
+             console.error("Resposta cidades não é array:", resCidades.data);
+             setError("Erro ao carregar cidades.");
+             setCidades([]);
           }
-          
         } catch (err: any) {
           console.error("Erro ao buscar cidades:", err.response || err.message || err); 
-          setError("Não foi possível carregar a lista de cidades."); 
+          setError("Não foi possível carregar cidades."); 
           setCidades([]); 
         } finally {
           setIsLoadingCidades(false); 
         }
+
+        setIsLoadingSegmentos(true);
+        try {
+          const resSegmentos = await axios.get("http://localhost:3000/api/clientes/segmentos");
+           if (Array.isArray(resSegmentos.data)) {
+             setSegmentos(resSegmentos.data);
+           } else {
+              console.error("Resposta segmentos não é array:", resSegmentos.data);
+              setError(prev => prev ? `${prev} Erro ao carregar segmentos.` : "Erro ao carregar segmentos.");
+              setSegmentos([]);
+           }
+        } catch (err: any) {
+          console.error("Erro ao buscar segmentos:", err.response || err.message || err);
+          setError(prev => prev ? `${prev} Não foi possível carregar segmentos.` : "Não foi possível carregar segmentos."); 
+          setSegmentos([]); 
+        } finally {
+          setIsLoadingSegmentos(false);
+        }
       }
     };
 
-    fetchCidades();
+    fetchData(); 
   }, [show]); 
 
   const handleGerarRelatorio = async () => {
-    if (!tipoRelatorio) {
+
+     if (!tipoRelatorio) {
       setError("Por favor, selecione um tipo de relatório.");
       return;
     }
@@ -131,7 +145,7 @@ export const ModalGerarRelatorio = ({ show, onClose, onSuccess }: ModalGerarRela
   };
 
   const handleCloseModal = () => {
-    setTipoRelatorio('');
+     setTipoRelatorio('');
     setDataInicio('');
     setDataFim('');
     setCidade('');
@@ -200,7 +214,20 @@ export const ModalGerarRelatorio = ({ show, onClose, onSuccess }: ModalGerarRela
             <Col md={6}>
               <Form.Group controlId="formSegmento" className="mb-3">
                 <Form.Label>Segmento</Form.Label>
-                <Form.Control type="text" placeholder="Ex: Industria, Comercio" value={segmento} onChange={(e) => setSegmento(e.target.value)} disabled={isLoading} />
+                <Form.Control 
+                    as="select" 
+                    value={segmento} 
+                    onChange={(e) => setSegmento(e.target.value)} 
+                    disabled={isLoading || isLoadingSegmentos}
+                >
+                   <option value="">{isLoadingSegmentos ? 'A carregar...' : 'Todos os Segmentos'}</option> 
+                   {!isLoadingSegmentos && segmentos.map((s) => (
+                     <option key={s} value={s}>
+                       {s}
+                     </option>
+                   ))}
+                </Form.Control>
+                 {isLoadingSegmentos && <Spinner size="sm" className="ms-2" />} 
               </Form.Group>
             </Col>
           </Row>
@@ -210,7 +237,7 @@ export const ModalGerarRelatorio = ({ show, onClose, onSuccess }: ModalGerarRela
         <Button variant="secondary" onClick={handleCloseModal} disabled={isLoading}>
           Cancelar
         </Button>
-        <Button variant="primary" onClick={handleGerarRelatorio} disabled={isLoading || isLoadingCidades || !tipoRelatorio}>
+        <Button variant="primary" onClick={handleGerarRelatorio} disabled={isLoading || isLoadingCidades || isLoadingSegmentos || !tipoRelatorio}> 
           {isLoading ? (
             <><Spinner size="sm" /> Gerando...</>
           ) : (
