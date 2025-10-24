@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { NotificacaoItem } from "./NotificacaoItem";
 import type { Notificacao } from "../../../utils/tipos";
+import { ModalMensagem } from "../../../components/modals/ModalMensagem";
+import { ModalParticipacao } from "../../../components/modals/ModalParticipacao";
+
 
 interface Props {
   idColab: number;
@@ -11,6 +14,11 @@ export const ListaNotificacoes: React.FC<Props> = ({ idColab }) => {
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
   const [busca, setBusca] = useState("");
   const [eventoFocado, setEventoFocado] = useState<number | null>(null);
+  const [showModalForm, setShowModalForm] = useState(false);
+  const [eventoSelecionado, setEventoSelecionado] = useState<Notificacao | null>(null);
+  const [showMessage, setShowMessage] = useState(false);
+  const [tituloMessage, setTituloMessage] = useState<"Sucesso" | "Erro" | "Aviso">("Aviso");
+  const [mensagem, setMensagem] = useState("");
 
   const carregarNotificacoes = async () => {
     try {
@@ -28,14 +36,14 @@ export const ListaNotificacoes: React.FC<Props> = ({ idColab }) => {
   }, []);
 
   useEffect(() => {
-  if (eventoFocado !== null) {
-    const el = document.getElementById(`evento-${eventoFocado}`);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (eventoFocado !== null) {
+      const el = document.getElementById(`evento-${eventoFocado}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      setEventoFocado(null);
     }
-    setEventoFocado(null);
-  }
-}, [eventoFocado]);
+  }, [eventoFocado]);
 
   const atualizarStatus = async (
     idEvento: number,
@@ -45,16 +53,26 @@ export const ListaNotificacoes: React.FC<Props> = ({ idColab }) => {
     try {
       await axios.put(
         `http://localhost:3000/api/participacaoEventos/${idColab}/${idEvento}`,
-        {
-          status,
-          justificativa_notificacao: justificativa || null,
-        }
+        { status, justificativa_notificacao: justificativa || null }
       );
-
       await carregarNotificacoes();
       setEventoFocado(idEvento);
     } catch (err) {
       console.error("Erro ao atualizar status:", err);
+    }
+  };
+
+  const handleConcluirCadastro = async (idEvento: number) => {
+    try {
+      await atualizarStatus(idEvento, 4);
+      setTituloMessage("Sucesso");
+      setMensagem("Evento concluído!");
+      setShowMessage(true);
+      setShowModalForm(false);
+    } catch {
+      setTituloMessage("Erro");
+      setMensagem("Erro ao concluir evento.");
+      setShowMessage(true);
     }
   };
 
@@ -69,21 +87,24 @@ export const ListaNotificacoes: React.FC<Props> = ({ idColab }) => {
 
   const renderSecao = (titulo: string, filtro: number) => {
     const lista = notificacoesFiltradas.filter((n) => n.ID_Status === filtro);
-    if (lista.length === 0) return
+    if (lista.length === 0) return null;
     return (
       <>
         <h4 className="text-center">{titulo}</h4>
         <div className="notificacoes-container">
           {lista.map((n) => (
+            <div id={`evento-${n.ID_Evento}`} key={n.ID_Evento}>
               <NotificacaoItem
-                key={n.ID_Evento}
                 data={n}
                 onAceitar={() => atualizarStatus(n.ID_Evento, 2)}
                 onRecusar={(j) => atualizarStatus(n.ID_Evento, 3, j)}
-                onConcluir={() => atualizarStatus(n.ID_Evento, 4)}
+                onConcluir={() => {
+                  setEventoSelecionado(n);
+                  setShowModalForm(true);
+                }}
               />
-            ))
-          }
+            </div>
+          ))}
         </div>
       </>
     );
@@ -105,6 +126,20 @@ export const ListaNotificacoes: React.FC<Props> = ({ idColab }) => {
       {renderSecao("Confirmadas", 2)}
       {renderSecao("Recusadas", 3)}
       {renderSecao("Concluídas", 4)}
+
+      <ModalParticipacao
+        show={showModalForm}
+        evento={eventoSelecionado}
+        onClose={() => setShowModalForm(false)}
+        onSuccess={(idEvento: number) => handleConcluirCadastro(idEvento)}
+      />
+
+      <ModalMensagem
+        show={showMessage}
+        titulo={tituloMessage}
+        mensagem={mensagem}
+        onClose={() => setShowMessage(false)}
+      />
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../../../css/notificacoes.css";
 import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
 
@@ -59,15 +58,26 @@ export const NotificacaoItem: React.FC<Props> = ({
 
   const podeInteragir = data.ID_Status === 1 || data.ID_Status === 2;
 
+  const getStatusClass = (status: number) => {
+    switch (status) {
+      case 2:
+        return "accept";
+      case 3:
+        return "reject";
+      case 4:
+        return "concluded";
+      default:
+        return "";
+    }
+  };
+
   return (
     <div
       id={`evento-${data.ID_Evento}`}
-      className={`notification py-2 d-flex flex-row card ${
-        !podeInteragir ? "inactive" : ""
-      }`}
+      className={`notification py-2 d-flex flex-row card ${!podeInteragir ? "inactive" : ""} ${getStatusClass(data.ID_Status)}`}
       onClick={() => setShowDetails(!showDetails)}
     >
-      <i className="bi bi-bell icon px-3 pt-3"></i>
+      <i className={ `bi bi-bell icon px-3 pt-3 ${getStatusClass(data.ID_Status)}`}></i>
       <div className="content pt-2">
         <strong>{data.Nome_Evento}</strong>
         <p>
@@ -98,7 +108,7 @@ export const NotificacaoItem: React.FC<Props> = ({
             {podeInteragir && (
               <div className="buttons">
                 <button
-                  className={data.ID_Status === 1 ? "accept" : "concluido"}
+                  className="btn-confirmar"
                   onClick={(e) => {
                     e.stopPropagation();
                     {data.ID_Status === 1 ? (onAceitar()) : (onConcluir())}
@@ -112,7 +122,7 @@ export const NotificacaoItem: React.FC<Props> = ({
                   )}
                 </button>
                 <button
-                  className="reject"
+                  className="btn-recusar"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowJustificativa(!showJustificativa);

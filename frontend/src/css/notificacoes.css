@@ -36,7 +36,6 @@
 .notification.inactive {
   opacity: 0.6;
   border: 1px solid #aaa;
-  cursor: default;
 }
 
 .notification .icon {
@@ -55,21 +54,36 @@
   gap: 10px;
   margin-top: 8px;
 }
-.accept {
+.accept.notification {
   border: 2px solid #28a745;
-  color: #28a745;
   background: #fff;
   padding: 5px 15px;
   border-radius: 6px;
   font-weight: 600;
 }
-.reject {
-  border: 2px solid #dc3545;
-  color: #dc3545;
+
+.reject.notification {
+  border: 2px solid #dc3546bb;
+  color: #c43442;
   background: #fff;
   padding: 5px 15px;
   border-radius: 6px;
   font-weight: 600;
+}
+.reject.icon {
+  color: #c43442;
+}
+
+.concluded.notification {
+  border: 2px solid #28a746a0;
+  color: #11832b;
+  background: #fff;
+  padding: 5px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.concluded.icon{
+  color: #11832b;
 }
 
 .justificativa {
@@ -92,7 +106,7 @@
   cursor: pointer;
 }
 
-.concluido {
+.btn-confirmar {
   border: 2px solid #28a745;
   color: #28a745;
   background: #fff;
@@ -100,6 +114,20 @@
   padding: 6px 12px;
   font-weight: 600;
 }
-.concluido:hover {
+
+.btn-confirmar:hover {
   background-color: #f0fff0;
+}
+
+.btn-recusar {
+  border: 2px solid #dc3545;
+  color: #dc3545;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 600;
+}
+
+.btn-recusar:hover {
+  background-color: #fff0f0;
 }

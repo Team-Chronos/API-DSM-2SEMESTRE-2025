@@ -17,6 +17,7 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
     data_evento: dataHora(),
     duracao_evento: "",
     local_evento: "",
+    tipo_evento: "1",
     descricao_evento: "",
     participantes: [] as number[],
   });
@@ -48,6 +49,7 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
       data_evento: dataHora(),
       duracao_evento: "",
       local_evento: "",
+      tipo_evento: "1",
       descricao_evento: "",
       participantes: [],
     });
@@ -160,6 +162,15 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
               value={form.local_evento}
               onChange={handleChange}
             />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Tipo do Evento</Form.Label>
+            <Form.Select name="tipo_evento" value={form.tipo_evento} onChange={handleChange} required>
+              <option value="1">Feira</option>
+              <option value="2">Workshop</option>
+              <option value="3">Reunião</option>
+            </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">

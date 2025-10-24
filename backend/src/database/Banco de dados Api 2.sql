@@ -31,15 +31,24 @@ CREATE TABLE Colaboradores (
     FOREIGN KEY (Setor) REFERENCES Setor(ID_Setor)
 );
 
+create table Tipo_Evento(
+	ID_Tipo_Evento int primary key auto_increment,
+    Tipo_Evento_Nome enum("Feira", "Workshop", "Reunião")
+);
+INSERT INTO Tipo_Evento (Tipo_Evento_Nome)
+VALUES ('Feira'), ('Workshop'), ('Reunião');
+
 CREATE TABLE Evento (
     ID_Evento INT PRIMARY KEY AUTO_INCREMENT,
     Nome_Evento VARCHAR(255) NOT NULL,
     Data_Evento DATETIME NOT NULL,
     Duracao_Evento varchar(30),
     Local_Evento VARCHAR(255) NOT NULL,
+    ID_Tipo_Evento int not null,
     Descricao TEXT NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    foreign key (ID_Tipo_Evento) references Tipo_Evento (ID_Tipo_Evento)
 );
 
 CREATE TABLE Status_Participacao (
@@ -66,13 +75,36 @@ CREATE TABLE Participacao_Evento (
 create table Certificado_Participacao (
 	ID_Colaborador int not null,
     ID_Evento int not null,
-    Data_Part datetime not null,
-    Duracao_Part varchar(30) not null,
-    Descricao_Part text not null,
+    Objetivo_Part text not null,
+    Principais_Inf text not null,
+    Aplicacoes_Newe text not null,
+    Referencias text,
+    Avaliacao int check (10 >= Avaliacao >= 0) not null,
+    Comentarios text,
+    criado_em datetime default current_timestamp,
     PRIMARY KEY (ID_Evento, ID_Colaborador),
     FOREIGN KEY (ID_Evento) REFERENCES Evento (ID_Evento) ON DELETE CASCADE,
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_colaborador) ON DELETE CASCADE
 );
+
+create view vw_participacao as
+select 
+"RELATÓRIO DE APROVEITAMENTO" as tipo_documento, s.Nome_Setor as departamento_funcionario,
+e.Nome_Evento as titulo_atividade, e.Data_Evento, e.Duracao_Evento,
+col.Nome_Col as participante, car.Nome_Cargo as cargo_funcionario,
+e.Local_Evento, te.Tipo_Evento_Nome,
+cp.Objetivo_Part,
+cp.Principais_Inf,
+cp.Aplicacoes_Newe,
+cp.Referencias,
+cp.Avaliacao,
+cp.Comentarios
+from certificado_participacao cp
+inner join colaboradores col on col.ID_colaborador = cp.ID_Colaborador
+inner join cargo car on car.ID_Cargo = col.ID_Cargo
+inner join setor s on s.ID_Setor = col.Setor
+inner join evento e on e.ID_Evento = cp.ID_Evento
+inner join tipo_evento te on te.ID_Tipo_Evento = e.ID_Tipo_Evento;
 
 CREATE TABLE colaboradores_emails_enviados (
     ID_colaborador INT PRIMARY KEY,
@@ -126,6 +158,31 @@ CREATE TABLE Agregados (
     CONSTRAINT uc_rg UNIQUE (rg)
 );
 
+CREATE TABLE Cliente (
+    ID_Cliente INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Cliente VARCHAR(255) NOT NULL,
+    Email_Cliente VARCHAR(255) NOT NULL UNIQUE,
+    Telefone_Cliente VARCHAR(15),
+    Endereco VARCHAR(255) not null,
+    atividade varchar(255) not null,
+    segmento_atuacao varchar(255) not null,
+    depart_responsavel varchar(100) not null,
+    Data_Cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Historico_Interacao (
+    ID_Interacao INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Cliente INT NOT NULL,
+    ID_Colaborador INT NULL,
+    Data_Interacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Tipo_Interacao ENUM('Ligação', 'Email', 'Reunião', 'Mensagem', 'Outro') NOT NULL,
+    Descricao TEXT NOT NULL,
+    Resultado VARCHAR(255),
+    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE SET NULL
+);
+
+
 INSERT INTO Setor (Nome_Setor, Descricao) VALUES 
 ('Administrativo', 'Setor responsável pelas operações administrativas da empresa.'),
 ('Comercial', 'Setor de vendas e relacionamento com clientes.'),
@@ -145,12 +202,12 @@ INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Carg
 ('lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
 ('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
 
-INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, Descricao) VALUES
-('Workshop de Gestão de Projetos', '2025-11-20 09:00:00', '4h', 'Auditório Principal', 'Workshop para aprimorar habilidades em gestão de projetos.'),
-('Treinamento Operacional', '2025-11-22 14:00:00', '3h', 'Sala de Treinamento 2', 'Treinamento prático para a equipe operacional.'),
-('Reunião Comercial Mensal', '2025-11-25 10:00:00', '2h', 'Sala de Reuniões 1', 'Discussão das metas e estratégias comerciais do mês.'),
-('Seminário de Inovação', '2025-12-01 09:00:00', '5h', 'Auditório Principal', 'Seminário sobre tendências e inovações no setor.'),
-('Palestra Motivacional', '2025-12-05 15:00:00', '2h', 'Auditório Secundário', 'Palestra para engajar e motivar a equipe.');
+INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao) VALUES
+('Workshop de Gestão de Projetos', '2025-11-20 09:00:00', '4h', 'Auditório Principal', 2, 'Workshop para aprimorar habilidades em gestão de projetos.'),
+('Treinamento Operacional', '2025-11-22 14:00:00', '3h', 'Sala de Treinamento 2', 1, 'Treinamento prático para a equipe operacional.'),
+('Reunião Comercial Mensal', '2025-11-25 10:00:00', '2h', 'Sala de Reuniões 1', 3, 'Discussão das metas e estratégias comerciais do mês.'),
+('Seminário de Inovação', '2025-12-01 09:00:00', '5h', 'Auditório Principal', 1, 'Seminário sobre tendências e inovações no setor.'),
+('Palestra Motivacional', '2025-12-05 15:00:00', '2h', 'Auditório Secundário', 1, 'Palestra para engajar e motivar a equipe.');
 
 
 INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
@@ -178,3 +235,8 @@ INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
 (5, 1, 1),
 (5, 5, 1),
 (5, 6, 1);
+
+-- INSERT INTO Historico_Interacao (ID_Cliente, ID_Colaborador, Tipo_Interacao, Descricao, Resultado) VALUES
+-- (1, 2, 'Ligação', 'Cliente pediu proposta comercial.', 'Enviado orçamento por e-mail'),
+-- (1, 3, 'Email', 'Envio de follow-up após proposta.', 'Cliente respondeu positivamente'),
+-- (2, 1, 'Reunião', 'Reunião presencial para demonstração do produto.', 'Em negociação');

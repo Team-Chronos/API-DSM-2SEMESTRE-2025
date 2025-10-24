@@ -19,16 +19,6 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
     setor: "1",
   });
 
-	function limparForm(){
-		setForm({
-			nome: "",
-			email: "",
-			telefone: "",
-			cpf: "",
-			setor: "1",
-		});
-	}
-
   useEffect(() => {
 		if (colaborador) {
 			setForm({
@@ -38,8 +28,6 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
 				cpf: formatarCpf(colaborador.CPF || "") || "",
 				setor: colaborador.Setor || 1,
 			});
-		} else {
-			limparForm();
 		}
 	}, [colaborador]);
 
@@ -76,7 +64,6 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
       show={show}
       centered
       onHide={() => {
-        limparForm();
         onClose();
       }}
     >
@@ -150,7 +137,6 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
           <Button
             variant="secondary"
             onClick={() => {
-              limparForm();
               onClose();
             }}
           >

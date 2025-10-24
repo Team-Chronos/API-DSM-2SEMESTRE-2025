@@ -1,5 +1,6 @@
 import { useAuth } from "../../context/AuthContext";
 import { ListaNotificacoes } from "./notificacoes/ListaNotificacoes";
+import "../../css/notificacoes.css";
 
 export const Notificacoes = () => {
   const { user } = useAuth();
