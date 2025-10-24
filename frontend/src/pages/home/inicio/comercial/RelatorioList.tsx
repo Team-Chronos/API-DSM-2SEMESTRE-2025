@@ -5,7 +5,7 @@ import { ModalGerarRelatorio } from "../../../../components/modals/ModalGerarRel
 
 interface Relatorio {
   ID_Relatorio: number;
-  Nome_Relatorio: string; 
+  Nome_Relatorio: string;
   Tipo_Relatorio: string;
   Data_Geracao: string;
   Gerado_Por: string;
@@ -22,14 +22,15 @@ export const RelatorioList = () => {
 
   const carregarRelatorios = async () => {
     setIsLoading(true);
-    setError(null);
+    setError(null); 
     try {
-      const res = await axios.get("http://localhost:3000/api/relatorios");
+
+      const res = await axios.get("http://localhost:3000/api/relatorios"); 
       setRelatorios(res.data);
     } catch (err: any) {
       console.error("Erro ao carregar relatórios:", err);
       setError("Não foi possível carregar a lista de relatórios.");
-      setRelatorios([]); 
+      setRelatorios([]);
     } finally {
       setIsLoading(false);
     }
@@ -72,7 +73,7 @@ export const RelatorioList = () => {
           setError("Erro ao descarregar o relatório.");
       }
     } finally {
-      setDownloadingId(null); 
+      setDownloadingId(null);
     }
   };
   
@@ -98,19 +99,19 @@ export const RelatorioList = () => {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <tr><td colSpan={5} className="text-center"><Spinner /></td></tr>
+        <tr><td colSpan={4} className="text-center"><Spinner /></td></tr>
       );
     }
 
     if (error && relatorios.length === 0) { 
       return (
-        <tr><td colSpan={5} className="text-center"><Alert variant="danger">{error}</Alert></td></tr>
+        <tr><td colSpan={4} className="text-center"><Alert variant="danger">{error}</Alert></td></tr>
       );
     }
 
     if (relatorios.length === 0) {
       return (
-        <tr><td colSpan={5} className="text-center">Nenhum relatório gerado ainda.</td></tr>
+        <tr><td colSpan={4} className="text-center">Nenhum relatório gerado ainda.</td></tr>
       );
     }
 
@@ -119,7 +120,6 @@ export const RelatorioList = () => {
         <td>{r.Nome_Relatorio}</td>
         <td>{r.Tipo_Relatorio}</td>
         <td>{new Date(r.Data_Geracao).toLocaleString("pt-BR")}</td>
-        <td>{r.Gerado_Por || 'Desconhecido'}</td> 
         <td>
           {confirmingDeleteId === r.ID_Relatorio ? (
             <>
@@ -162,7 +162,6 @@ export const RelatorioList = () => {
             <th>Nome Ficheiro</th>
             <th>Tipo</th>
             <th>Data Geração</th>
-            <th>Gerado Por</th>
             <th>Ações</th>
           </tr>
         </thead>
