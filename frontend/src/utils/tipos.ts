@@ -19,6 +19,7 @@ export interface Evento {
   Data_Evento: string;
   Duracao_Evento: number;
   Local_Evento: string;
+  ID_Tipo_Evento: number;
   Descricao: string;
   criado_em: string;
   atualizado_em: string;
@@ -39,9 +40,15 @@ export interface Notificacao {
   Data_Evento: string;
   Duracao_Evento: number;
   Local_Evento: string;
+  ID_Tipo_Evento: number;
   Descricao: string;
   ID_Status: number;
   justificativa_notificacao?: string;
 }
 
+export const tp_tipo_evento = {
+  1: "Feira",
+  2: "Workshop",
+  3: "Reunião",
+}
 export type Tab = "colaboradores" | "eventos" | "cargos";

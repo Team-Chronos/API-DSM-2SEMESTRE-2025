@@ -118,17 +118,7 @@ export const EventosList = ({ eventos, loading, refetch }: EventosListProps) => 
 // import { useState } from "react";
 // import { formatarDataHora } from "../../../../utils/formatacoes";
 // import { EventosCalendar } from "../../../../components/EventosCalendar";
-
-// interface Evento {
-//   ID_Evento: number;
-//   Nome_Evento: string;
-//   Data_Evento: string;
-//   Duracao_Evento: number;
-//   Local_Evento: string;
-//   Descricao: string;
-//   criado_em: string;
-//   atualizado_em: string;
-// }
+// import type { Evento } from "../../../../utils/tipos";
 
 // interface EventosListProps {
 //   eventos: Evento[];
