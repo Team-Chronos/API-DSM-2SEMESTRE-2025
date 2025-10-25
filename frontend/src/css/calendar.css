@@ -1,0 +1,185 @@
+#divEventos .calendar-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+#divEventos .search-bar {
+  display: flex;
+  gap: 10px;
+  width: 95%;
+  margin-bottom: 20px;
+  justify-content: flex-end;
+}
+
+#divEventos .search-bar input[type="text"] {
+  flex: 1;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#divEventos .search-bar input[type="date"] {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#divEventos .search-bar button {
+  background: var(--azul);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+#divEventos .search-bar button:hover {
+  background: var(--azul-escuro);
+}
+
+#divEventos .calendar-table {
+  width: 95%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  table-layout: fixed;
+}
+
+#divEventos .header-row {
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+#divEventos .day-header {
+  text-align: center;
+  padding: 12px 0 8px;
+  border-right: 1px solid #e0e0e0;
+  position: relative;
+}
+
+#divEventos .day-header:last-child {
+  border-right: none;
+}
+
+#divEventos .day-number {
+  font-size: 20px;
+  color: #333;
+  font-weight: 400;
+  line-height: 1;
+}
+
+#divEventos .day-name {
+  font-size: 13px;
+  color: #555;
+  text-transform: capitalize;
+  margin-top: 3px;
+}
+
+#divEventos .hour-header {
+  width: 50px;
+  border-right: 1px solid #e0e0e0;
+  background-color: #fff;
+}
+
+#divEventos .hour-cell {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  width: 50px;
+  border-right: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f7f7f7;
+  background-color: #fff;
+}
+
+#divEventos .day-header.today {
+  border-top: 3px solid #1b3aff;
+}
+
+#divEventos .day-header.today .day-number {
+  color: #1b3aff;
+  font-weight: 600;
+}
+
+#divEventos .event-row {
+  height: 60px;
+}
+
+#divEventos .event-cell {
+  border: 1px solid #f0f0f0;
+  border-right: 1px solid #e0e0e0;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+#divEventos .event-cell:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+#divEventos .event-cell:last-child {
+  border-right: none;
+}
+
+#divEventos .today-column {
+  background-color: #fafaff;
+  border-left: 2px solid #1b3aff !important;
+  border-right: 2px solid #1b3aff !important;
+}
+
+#divEventos .today-column:hover {
+  background-color: #f1f1ff !important;
+}
+
+#divEventos .event-card {
+  background: #fff;
+  color: #1b3aff;
+  border: 1px solid #1b3aff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: left;
+  margin: 4px;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+#divEventos .event-card:hover {
+  background: #1b3aff;
+  color: #fff;
+  border-color: #1b3aff;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(58, 111, 247, 0.25);
+}
+
+#divEventos .event-card .title {
+  font-size: 13px;
+  margin-bottom: 2px;
+  color: #1b3aff;
+}
+
+#divEventos .event-card .time {
+  font-size: 11px;
+  color: #555;
+}
+
+#divEventos .event-card:hover .title,
+#divEventos .event-card:hover .time {
+  color: #fff;
+}
+
+#divEventos .hora-atual td {
+  background-color: #e3f0ff !important;
+  transition: background-color 0.3s ease;
+}
+
+#divEventos .hora-atual td.hour-cell {
+  background-color: #1b3aff !important;
+  color: white;
+  font-weight: 600;
+}
