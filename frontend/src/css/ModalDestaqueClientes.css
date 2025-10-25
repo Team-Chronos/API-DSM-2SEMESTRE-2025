@@ -1,0 +1,91 @@
+.destaque-clientes-wrapper {
+    background-color: #e8e8e8; 
+    padding: 15px 30px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    
+}
+  
+.destaque-clientes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 50px; 
+}
+  
+.destaque-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    white-space: nowrap; 
+}
+  
+.titulo {
+    font-size: 18px;
+    color: #001f6b; 
+    font-weight: bold;
+    margin: 0;
+}
+  
+.contador {
+    font-size: 42px;
+    color: #001f6b;
+    margin: 0;
+    font-weight: bold;
+}
+.destaque-right {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+  
+.cliente-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease;
+    width: 130px; 
+
+  }
+  .cliente-add {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+  .cliente-card:hover {
+    transform: scale(1.05);
+  }
+    
+  .cliente-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #0d1d84;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-shrink: 0; 
+  }
+    
+  .cliente-icon {
+    color: white;
+    font-size: 45px;
+  }
+    
+  .cliente-nome {
+    font-size: 14px;
+    color: #0d1d84;
+    font-weight: 500;
+    margin: 0px;
+    width: 100%; 
+  }

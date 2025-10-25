@@ -1,0 +1,19 @@
+import express from 'express';
+import { 
+    listarClientes, 
+    criarCliente, 
+    listarClientePorId, 
+    listarCidades, 
+    listarSegmentos
+} from '../controllers/clienteController.js'; 
+
+const router = express.Router();
+
+router.get('/', listarClientes);
+router.get('/cidades', listarCidades); 
+router.get('/segmentos', listarSegmentos);
+router.get('/:id', listarClientePorId);
+router.post('/', criarCliente);
+
+export default router;
+
