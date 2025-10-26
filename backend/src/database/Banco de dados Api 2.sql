@@ -139,6 +139,16 @@ CREATE TABLE Cliente (
     Data_Cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE Relatorio (
+    ID_Relatorio INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Relatorio VARCHAR(255) NOT NULL,
+    Tipo_Relatorio VARCHAR(50) NOT NULL,
+    Data_Geracao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    URL_Relatorio VARCHAR(255),
+    Gerado_Por INT,
+    FOREIGN KEY (Gerado_Por) REFERENCES Colaboradores(ID_colaborador) ON DELETE SET NULL
+);
+
 CREATE TABLE Historico_Interacao (
     ID_Interacao INT PRIMARY KEY AUTO_INCREMENT,
     ID_Cliente INT NOT NULL,
