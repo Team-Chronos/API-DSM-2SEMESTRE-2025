@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ComercialDashboard } from "./comercial/ComercialDashboard";
 import { ClientesList } from "./comercial/ClientesList";
+import { RelatorioList } from "./comercial/RelatorioList";
 import { ModalDestaqueClientes } from "../../../components/modals/ModalDestaqueClientes";
 import { ModalEtapas } from "../../../components/modals/ModalEtapas"; 
 import "../../../css/Comercial.css";
@@ -15,6 +16,15 @@ export const Comercial = () => {
           &larr; Voltar ao Dashboard
         </button>
         <ClientesList />
+      </div>
+    );
+  } else if (view === "relatorio") {
+    return (
+      <div>
+        <button className="btn-voltar" onClick={() => setView("dashboard")}>
+          &larr; Voltar ao Dashboard
+        </button>
+        <RelatorioList />
       </div>
     );
   }
@@ -46,7 +56,7 @@ export const Comercial = () => {
           <button className="btn-azul" onClick={() => setView("clientes")}>
             Clientes
           </button>
-          <button className="btn-azul botao-separado">Gerar relatórios</button>
+          <button className="btn-azul botao-separado" onClick={() => setView("relatorio")}>Gerar relatórios</button>
         </nav>
       </div>
     </div>
