@@ -1,0 +1,183 @@
+<!--
+    Variaveis:
+        imagem do colaborador: #colab-img
+        nome do colaborador: #colab-nome
+        modulo: #modulo
+-->
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newe Log</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/inicio.css">
+</head>
+
+<body>
+    <div class="container-fuid d-flex flex-row overflow-hidden">
+        <div id="barra-lateral" class="d-flex flex-column align-items-center">
+            <div id="colab-info" class="d-flex flex-column align-items-center mb-1 mt-4">
+                <img id="colab-img" class="mb-3" src="./images/img-colab-test.png" alt="Foto do Colaborador">
+                <div id="colab-nome" class="mb-2 px-1">Ana Sette Henrique Lima Moura de Paula</div>
+                <div id="modulo">Administrativo</div>
+            </div>
+            <nav class="my-auto">
+                <ul class="list-unstyled d-flex flex-column mb-0">
+                    <li id="inicio">
+                        <i class="bi bi-house-door-fill"></i>
+                        <span>Início</span>
+                    </li>
+                    <li id="notificacoes">
+                        <i class="bi bi-bell"></i>
+                        <span>Notificações</span>
+                    </li>
+                    <li id="eventos">
+                        <i class="bi bi-calendar-event"></i>
+                        <span>Eventos</span>
+                    </li>
+                    <li id="modalidade">
+                        <i class="bi bi-buildings"></i>
+                        <span>Modalidade</span>
+                    </li>
+                    <li id="certificados">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Certificados</span>
+                    </li>
+                    <li id="btn-logout" class="text-danger align-self-center"> <i class="bi bi-box-arrow-right"></i>
+                        <span>Sair</span>
+                    </li>
+                </ul>
+            </nav>
+            <div id="logo" class="text-center flex-column d-flex mt-auto mb-3">
+                <span id="newe" class="mb-0">
+                    Newe
+                </span>
+                <span id="logistica">
+                    Logistíca Integrada
+                </span>
+            </div>
+        </div>
+
+        <main class="d-flex flex-column overflow-y-auto w-100 p-4">
+
+        </main>
+    </div>
+
+    <div id="localidadeModal" class="modal fade" tabindex="-1" aria-labelledby="localidadeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="localidadeModalLabel">Informe sua localização</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <form id="formLocalidade" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label d-block">Por favor, qual a sua localidade?</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="local" id="presencial" value="P">
+                                <label class="form-check-label" for="presencial">Presencial</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="local" id="remoto" value="R">
+                                <label class="form-check-label" for="remoto">Remoto</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="local" id="outro" value="O">
+                                <label class="form-check-label" for="outro">Outro</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" form="formLocalidade" type="submit">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sucessoModal" class="modal fade" tabindex="-1" aria-labelledby="sucessoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sucessoModalLabel">Sucesso!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="sucessoMensagem" class="fs-5"></p>
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="erroModal" class="modal fade" tabindex="-1" aria-labelledby="erroModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="erroModalLabel">Erro!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="erroMensagem" class="fs-5"></p>
+                    <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="participacaoModal" class="modal fade" tabindex="-1" aria-labelledby="participacaoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="participacaoModalLabel">Formulário de conclusão de evento.</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h3 id="evento-title"></h3>
+                    <form id="formParticipacao" novalidate>
+                        <div class="mb-3">
+                            <label for="dataPart" class="form-label d-block">Data do Evento:</label>
+                            <input type="datetime-local" class="form-control" name="dataPart" id="dataPart">
+                        </div>
+                        <div class="mb-3">
+                            <label for="duracaoPart" class="form-label d-block">Duração do Evento:</label>
+                            <input type="text" class="form-control" name="duracaoPart" id="duracaoPart">
+                        </div>
+                        <div class="mb-3">
+                            <label for="conhecimentoAdqPart" class="form-label d-block">Conhecimentos Adquiridos no Evento:</label>
+                            <textarea name="conhecimentoAdqPart" class="form-control" id="conhecimentoAdqPart"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button class="btn btn-primary" form="formParticipacao" type="submit">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
+    <script src="/js/home.js" defer></script>
+</body>
+
+</html>
