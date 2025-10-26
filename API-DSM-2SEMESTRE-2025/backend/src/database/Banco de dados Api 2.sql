@@ -288,3 +288,9 @@ UPDATE Cliente SET Ultima_Interacao = '2024-12-04 16:00:00' WHERE ID_Cliente = 1
 UPDATE Cliente SET Ultima_Interacao = '2024-12-02 14:30:00' WHERE ID_Cliente = 2;
 UPDATE Cliente SET Ultima_Interacao = '2024-12-03 11:00:00' WHERE ID_Cliente = 3;
 UPDATE Cliente SET Ultima_Interacao = '2024-12-04 09:00:00' WHERE ID_Cliente = 4;
+
+ALTER TABLE historico_modalidade ADD COLUMN data_resposta DATETIME;
+INSERT INTO historico_modalidade (colaborador_id, modalidade) 
+VALUES (1, 'Remoto');
+
+SHOW COLUMNS FROM certificado_Participacao;

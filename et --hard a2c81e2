@@ -1,0 +1,106 @@
+[33mec41d5c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mteste[m[33m, [m[1;31morigin/teste[m[33m)[m Merge branch 'Modalidade' into teste
+[33ma2c81e2[m fix (scrum-2) consertando erros de tela
+[33maf22bfd[m[33m ([m[1;31morigin/dev[m[33m)[m feat (scrum-77): calendário de eventos criado
+[33me9e6e4b[m fix (scrum-2): corrigido erros de merge
+[33m2658905[m Merge pull request #8 from Team-Chronos/Cargo
+[33mb7dd9e1[m Merge pull request #7 from Team-Chronos/react
+[33mfd65990[m[33m ([m[1;31morigin/Modalidade[m[33m, [m[1;32mModalidade[m[33m)[m feat (SCRUM-88): Implementação do historico modalidade no banco de dados.
+[33m77fccff[m refactor (SCRUM-88): Implementação do histórico de modalidade.
+[33ma5ad7cb[m[33m ([m[1;31morigin/Certificado[m[33m)[m refactor (SCRUM-88): Implementação da tela de certificados com react.
+[33md2a0d24[m[33m ([m[1;31morigin/Cargo[m[33m)[m refactor (scrum-2): Inclusão do atributo "ID_cargo" no cadastro de colaborador
+[33m92315dd[m refactor (scrum-88): seleção da localidade e pesquisa de eventos com react
+[33mc5c6f23[m feat (scrum-2): adição da tabela cargo e registros de data da criação e última atualização de registros
+[33m169b3bb[m refactor (scrum-88): implementação da aba de notificações com react
+[33m7233fec[m refactor (scrum-88): adicionado criação, edição e exclusão de eventos com react
+[33m3dfa85c[m refactor (scrum-88): adicionado a edição dos dados dos colaboradores
+[33m3ad2acd[m refactor (scrum-88): implementado o cadastro e a exclusão de colaboradores com react
+[33me1cb7bb[m refactor (scrum-88): implementada a pagina de inicio de administrador com react
+[33ma6b7510[m feat: login integrado com o banco de dados
+[33maf93bb7[m feat: criação das rotas das páginas após o login
+[33m825c6a6[m feat: criação do front da pagina de login
+[33mf92d156[m docs: atualização do README.md
+[33m357a83f[m fix: filtro da tabela que lista colaboradores e eventos
+[33ma65a76d[m Merge pull request #6 from Team-Chronos/dev
+[33me0c7d7e[m feat: notificação de confirmação de cadastro para agregados
+[33m68e39ce[m Merge pull request #5 from Team-Chronos/notificacao
+[33mb53afbd[m Merge branch 'dev' into notificacao
+[33md195866[m feat: geração de certificados
+[33m12f41f4[m refactor(task 43):adição  da notificação a o codigo
+[33mca2cd30[m feat (notificações): front end de notificações acabado
+[33m4294e3f[m Merge branch 'dev' of https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025 into notificacao
+[33m2eb66e7[m feat: criação do formulário de conclusão do evento
+[33m8fb5a89[m notficacao
+[33mb7f0e27[m Merge branch 'dev' of https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025 into notificacao
+[33mc1137d0[m feat (notificação): carrega as notificações do banco e atualiza o status dela
+[33mf1b092c[m Style(notificação):Separação de funcionalidade de notificação do servidor
+[33m85bc503[m Style(notificação):Separação de funcionalidade de notificação do servidor
+[33m69c4bba[m resolvendo conflitos entre branch
+[33m897deab[m feat: adiciona funcionalidade de cadastro de agregado
+[33mdea13c2[m feat: Adiciona funcionalidade de localidade
+[33m7e00bfb[m fix: refatoração de scripts e correção de carregamento de conteúdo
+[33m0a01dbe[m fix: adicão do on delete cascade nas tabelas necessárias
+[33m86bedf0[m fix: notificações
+[33ma88f923[m fix: nomes com acento apareciam errado na barra lateral
+[33m5c29084[m erro
+[33m78464ca[m feat(notificação de evento): atualização e correção de bugs
+[33m113887b[m fix (evento): edição e exclusão de eventos arrumados
+[33ma039b94[m fix(eventos): correcao do cadastro de eventos
+[33m14cc75a[m feat (task 44): criação do botão de conclusão do evento
+[33m3083967[m feat (task 44): criação do botão de conclusão do evento
+[33m23e20eb[m Merge remote-tracking branch 'origin/Eventos' into dev
+[33mb96d8f6[m 	Revert "Merge branch 'notificacao' of 	https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025 into 	Eventos"
+[33mb4f33bf[m Merge pull request #3 from Team-Chronos/geradorDoc
+[33mcd76c04[m fix: resolução da importação do css pro html
+[33mec17083[m Merge branch 'notificacao' of https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025 into Eventos
+[33m684a049[m refactor: atulizaçao de notificaçoes e email
+[33m8b125ad[m refactor: atulizaçao de notificaçoes e email
+[33m1570e22[m feat: Atulização do Banco de Dados
+[33mfc3c3c6[m feat (task 40-41): criação da aba de notificações
+[33mba20b62[m refactor: atualização no envio de email
+[33m3f97982[m refactor: atulizaçao de chamada e justificativa
+[33m7282173[m fix: consertando configuraçoes de banco de dados e adicionando alguns modulos a função
+[33m3b54ed3[m update: Atribuição 'auto_increment' no id_evento
+[33me10104b[m feat (task 36): [BACK] Criar funcionalidade para envio de notificações automáticas de eventos
+[33m5fdedf4[m Remove arquivos conflitantes para resolver merge
+[33mc7d149a[m feat (task 55): Adição do campo descrição e  seleção de participantes do evento
+[33mbc81689[m feat (task 55): Criação da tela de cadastro de eventos e exibição
+[33m030bb99[m Merge pull request #2 from Team-Chronos/cadastro
+[33m81eb475[m Merge branch 'main' into cadastro
+[33m73ac00d[m docs: correção da documentação da sprint 1
+[33m435e70d[m chore: adição dos campos do formulário no topo do html como referência
+[33maf13bd1[m feat (task 50): criação do formulário de localização
+[33mc67875c[m feat: adição do modal de erro
+[33m8a86778[m feat (task 29): criação do formulário de cadastro para agregados
+[33m30a234d[m feat: implementacao do confimarCadastro.js
+[33mfc15c0e[m feat(task33): Implementação de filtros na lista de Colaboradores
+[33md17beb1[m feat: Update css
+[33m40b0715[m docs: reorganização de pasta e adição do DoR da segunda sprint aos documentos
+[33m3357f0e[m feat: Organização do projeto, navegação entre telas e login.
+[33m82204aa[m feat (task 43): [BACK] notificar o organizador do evento sobre a resposta do colaborador
+[33m5bd0736[m feat (task 43): [BACK] notificar o organizador do evento sobre a resposta do colaborador
+[33meaf51f0[m docs (task 22): [BD] criar as tabelas relacionadas no banco de dados
+[33m6cd3571[m feat: update arquivo css e servidor.js
+[33m0a726a2[m docs: atualização do README.md
+[33md81fa31[m feat (task 28): tela de inicio do módulo administrativo
+[33m2719112[m feat: adição do campo telefone
+[33m3fdf42b[m UPDATE: Merge pull request #1 from Team-Chronos/cadastro
+[33m6e8b1a3[m Merge branch 'main' into cadastro
+[33me799366[m feat (Cadastro Colaborador): Integração js com html
+[33m73eef44[m feat (task 54): [BD] armazenar a localização inserida pelo colaborador no banco de dados
+[33m2f92207[m feat (task 54): [BD] armazenar a localização inserida pelo colaborador no banco de dados
+[33m506977a[m feat (task 24): criação do modal de cadastro de colaboradores
+[33maac8592[m fix: update geradorAta.js, correcao no tamanho do pdf
+[33mac6ff14[m feat (task 48): implementando código para criacao de Ata e download
+[33m1caacf7[m docs: atualização de README
+[33m7e646c8[m docs: criada pasta de documentação e DoR da sprint 1
+[33m85c6923[m feat (task 27): Criação função Editar e Excluir
+[33m20ccdf8[m feat (task 25): Criação do cadastro e Validação
+[33m191cc5c[m feat: criação da tela inicial
+[33m6cc2075[m feat (task 30): implementação da confirmação automática de cadastro via e-mail
+[33m1662098[m Merge branch 'login' of https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025
+[33m77fc987[m docs: atualização do README.MD
+[33m915e378[m Revert "feat: criação da tela inicial"
+[33m31b4d7d[m feat: criação da tela inicial
+[33m6d2f7d3[m Merge branch 'banco-de-dados' into main - conflitos resolvidos
+[33m6602e19[m feat (task 38): criação das tabelas de eventos e suas relações com outras tabelas no banco
+[33me6be3a2[m feat (task 26): criação das tabelas de colaboradores e suas relações no ban

@@ -61,3 +61,11 @@ export interface HistoricoModalidade {
   data_resposta: string;
 }
 export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado";
+
+export const tp_tipo_evento = {
+  1: "Workshop",
+  2: "Treinamento",
+  3: "Palestra",
+  4: "Reunião",
+  5: "Curso",
+};
