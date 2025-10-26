@@ -10,7 +10,6 @@
   <a href ="#backlog"> Backlog do Produto</a>  |
   <a href ="#dor">DoR</a>  |
   <a href ="#dod">DoD</a>  |
-  <a href ="#vpc">Value Proposition Chart</a>  |
   <a href ="#sprint"> Cronograma de Sprints</a>  |
   <a href ="#tecnologias">Tecnologias</a> |
   <a href ="#equipe"> Equipe</a> |
@@ -34,21 +33,21 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 
 ## 📋 Backlog do Produto <a id="backlog"></a>
 
-| Rank | Prioridade | User Story                                                                                                                                                                                                      |  Estimativa  | Sprint | Status |
+| Rank | Prioridade | User Story                                                                                                                                                                                                      | Story Points | Sprint | Status |
 | :--: | :--------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------: | :----: | :----: |
 |   1  |    Alta    | Como um usuário cadastrado, eu quero fazer login na plataforma utilizando meu e-mail empresarial para acessar o sistema de forma segura e utilizar suas funcionalidades.                                        |       5      |    1   |   ✅   |
 |   2  |    Alta    | Como um administrador, eu quero cadastrar colaboradores com nome e informações básicas para ter um registro centralizado da equipe.                                                                             |       5      |    1   |   ✅   |
-|   3  |    Alta    | Como um vendedor, eu quero registrar o cadastro completo de clientes (nome, endereço, atividade, segmento, contatos, departamento) para centralizar as informações do contato.                                  |       5      |    2   |   ✅   |
-|   4  |    Alta    | Como um vendedor, eu quero registrar o histórico completo de interações com os clientes (data, forma de contato, relatório detalhado) para acompanhar o relacionamento.                                         |       4      |    2   |   ✅   |
-|   5  |    Alta    | Como um gerente, eu quero gerar relatórios e gráficos quantitativos sobre interações, vendas, e clientes (por cidade, segmento), com filtros de período (dia, mês, ano), para tomar decisões baseadas em dados. |       6      |    2   |   ✅   |
+|   3  |    Alta    | Como um vendedor, eu quero registrar o cadastro completo de clientes (nome, endereço, atividade, segmento, contatos, departamento) para centralizar as informações do contato.                                  |       5      |    2   |        |
+|   4  |    Alta    | Como um vendedor, eu quero registrar o histórico completo de interações com os clientes (data, forma de contato, relatório detalhado) para acompanhar o relacionamento.                                         |       4      |    2   |        |
+|   5  |    Alta    | Como um gerente, eu quero gerar relatórios e gráficos quantitativos sobre interações, vendas, e clientes (por cidade, segmento), com filtros de período (dia, mês, ano), para tomar decisões baseadas em dados. |       6      |    2   |        |
 |   6  |    Alta    | Como um agregado, eu quero me cadastrar e que me seja enviada uma devolutiva automática, para saber se fui cadastrado corretamente.                                                                             |       4      |    1   |   ✅   |
 |   7  |    Alta    | Como um gestor, eu quero ter uma visão centralizada de todos os checklists e cadastros para simplificar o acesso e padronizar as operações.                                                                     |       3      |    1   |   ✅   |
 |   8  |    Média   | Como um organizador de eventos, eu quero que o sistema envie notificações automáticas sobre novos eventos, presenciais ou online (com link) para os colaboradores, para garantir que todos sejam informados.    |       4      |    1   |   ✅   |
 |   9  |    Média   | Como um colaborador, eu quero poder confirmar ou recusar a participação de um evento e, caso recuse, informar o motivo, para que a organização tenha visibilidade.                                              |       2      |    1   |   ✅   |
 |  10  |    Média   | Como um colaborador, eu quero marcar um evento ou treinamento como "concluído" após sua realização, para manter meu histórico de participação atualizado.                                                       |       1      |    1   |   ✅   |
 |  11  |    Média   | Como um colaborador, eu quero acessar um documento padrão gerado automaticamente após um evento, contendo data, duração e um campo para descrever o conhecimento adquirido, para registrar meu desenvolvimento. |       3      |    1   |   ✅   |
-|  12  |    Média   | Como um gerente de vendas, eu quero visualizar e classificar os clientes em um funil de vendas (Prospects, Inicial, Potencial, Manutenção, Em Negociação, Follow Up) para gerenciar o processo comercial.       |       2      |    2   |   ✅   |
-|  13  |    Média   | Como um vendedor, eu quero agendar tarefas e receber lembretes para próximos contatos com clientes, para não perder oportunidades de negócio.                                                                   |       8      |    2   |   ⏳    |
+|  12  |    Média   | Como um gerente de vendas, eu quero visualizar e classificar os clientes em um funil de vendas (Prospects, Inicial, Potencial, Manutenção, Em Negociação, Follow Up) para gerenciar o processo comercial.       |       2      |    2   |        |
+|  13  |    Média   | Como um vendedor, eu quero agendar tarefas e receber lembretes para próximos contatos com clientes, para não perder oportunidades de negócio.                                                                   |       8      |    2   |        |
 |  14  |    Média   | Como um operador, eu quero preencher o checklist de "Abertura e fechamento da empresa" (sim/não) para registrar o cumprimento dos procedimentos diários.                                                        |       5      |    3   |        |
 |  15  |    Média   | Como um operador, eu quero preencher o "Checklist de Agregado", inserindo dados do motorista, do veículo e fotos para formlizar a vistoria.                                                                     |       4      |    3   |        |
 |  16  |    Média   | Como um operador, eu quero preencher o "Checklist de veículo da frota" (sim/não) para registrar a conformidade dos veículos.                                                                                    |       4      |    3   |        |
@@ -75,22 +74,12 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 
 ---
 
-## 🔴 VPC (Value Proposition Chart) <a id="vpc"></a>
-
-[Value Proposition Chart](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/blob/main/docs/VPC%20(Value%20Proposition%20Canvas)%20-%20Chronos.jpg)
-
-
-## 🚀 Estratégia de Branch <a id="branch"></a>
-
-[Documentação da Estratégia de Branch](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/blob/main/docs/Documenta%C3%A7%C3%A3o%20da%20Estrat%C3%A9gia%20de%20Branches%20-%20Equipe%20Chronos.pdf)
-
-
 ## 📅 Cronograma de Sprints <a id="sprint"></a>
 
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | ------------------------------------------------ |
 | 🔖 **SPRINT 1** | 08/09 - 28/09 ✅ | [Sprint 1](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%201) |
-| 🔖 **SPRINT 2** | 06/10 - 26/10 ⏳ | [Sprint 2](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%202)  |
+| 🔖 **SPRINT 2** | 06/10 - 26/10 |                                                  |
 | 🔖 **SPRINT 3** | 03/11 - 23/11 |                                                  |
 
 ## 💻 Tecnologias <a id="tecnologias"></a>
