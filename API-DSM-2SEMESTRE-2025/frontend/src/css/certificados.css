@@ -1,0 +1,127 @@
+#certificados-module {
+  padding: 20px;
+}
+
+.main-title {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.barra-pesquisa {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+}
+
+.barra-pesquisa input {
+  width: 100%;
+  height: 48px;
+  padding: 10px 60px 10px 20px;
+  border-radius: 50px;
+  border: 1px solid #d1d5db;
+  background-color: #e0e0e0;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.botao-pesquisar {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4b5563;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.botao-pesquisar:hover {
+  background-color: #374151;
+}
+
+.grid-certificados {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 5rem;
+}
+
+.certificado-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.certificado-card {
+  background-color: #d9d9d9;
+  border-radius: 12px;
+  transition: transform 0.2s ease-in-out;
+  border: 1px solid transparent;
+}
+
+.certificado-card:hover {
+  transform: translateY(-5px);
+  border-color: #e0e0e0;
+}
+
+.card-preview {
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #4a3232;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  line-height: 0;
+}
+
+.iframe-preview-container {
+  width: 100%;
+  position: relative;
+  padding-bottom: 70.71%;
+  height: 0;
+}
+
+.iframe-preview-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.card-footer {
+  padding: 25px 5px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.footer-title {
+  display: block;
+  font-weight: 500;
+  color: #1b3aff;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footer-date {
+  display: block;
+  font-size: 0.8rem;
+  color: #1b3aff;
+  margin-top: 4px;
+}
+
+.text-center {
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+}
