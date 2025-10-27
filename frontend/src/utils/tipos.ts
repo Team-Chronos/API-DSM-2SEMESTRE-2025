@@ -60,12 +60,22 @@ export interface HistoricoModalidade {
   modalidade: string;
   criado_em: string;
 }
-export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado";
+export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado" | "cliente";
+
+export interface Cliente {
+  ID_Cliente: number;
+  Nome_Cliente: string;
+  Email_Cliente: string;
+  Telefone_Cliente: string;
+  Endereco: string;
+  atividade: string;
+  segmento_atuacao: string;
+  depart_responsavel: string;
+  Data_Cadastro: string;
+}
 
 export const tp_tipo_evento = {
-  1: "Workshop",
-  2: "Treinamento",
-  3: "Palestra",
-  4: "Reunião",
-  5: "Curso",
+  1: "Feira",
+  2: "Workshop",
+  3: "Reunião",
 };

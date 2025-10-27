@@ -1,8 +1,10 @@
+import Relatorio from '../models/relatorio.js';
 import db from '../config/db.js';
-import PDFDocument from 'pdfkit';
-import fs from 'fs';
+import excel from 'exceljs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import PDFDocument from 'pdfkit';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

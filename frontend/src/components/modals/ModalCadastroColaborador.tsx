@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react"; // Corrigido: useEffect adicionado
+import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { formatarCpf, formatarTelefone } from "../../utils/formatacoes";
-import type { Cargos } from "../../utils/tipos"; // Corrigido: 'type' adicionado
+import type { Cargos } from "../../utils/tipos";
 
 interface ModalCadastroColaboradorProps {
   show: boolean;

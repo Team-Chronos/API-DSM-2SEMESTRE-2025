@@ -217,7 +217,60 @@ CREATE TABLE Relatorio (
     FOREIGN KEY (Gerado_Por) REFERENCES Colaboradores(ID_colaborador) ON DELETE SET NULL
 );
 
-CREATE TABLE notificacoes_personalizadas (
+INSERT INTO Setor (Nome_Setor, Descricao) VALUES 
+('Administrativo', 'Setor responsável pelas operações administrativas da empresa.'),
+('Comercial', 'Setor de vendas e relacionamento com clientes.'),
+('Operacional', 'Setor responsável pela execução das atividades principais.');
+
+INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
+('Gerente de Projetos', 'Gestor'),
+('Coordenador de Equipe', 'Gestor'),
+('Assistente Administrativo', 'Colaborador'),
+('Analista de Operações', 'Colaborador');
+
+INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Cargo) VALUES
+('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'João Victor Moura', 1, '12345678901', '11999999999', 1),
+('rafael@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rafael Sette', 1, '77777777777', '12988777777', 1),
+('rebeca@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rebeca Lima', 1, '99999999999', '11999999999', 1),
+('rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
+('lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
+('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
+
+INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, Descricao) VALUES
+('Workshop de Gestão de Projetos', '2025-11-20 09:00:00', '4h', 'Auditório Principal', 'Workshop para aprimorar habilidades em gestão de projetos.'),
+('Treinamento Operacional', '2025-11-22 14:00:00', '3h', 'Sala de Treinamento 2', 'Treinamento prático para a equipe operacional.'),
+('Reunião Comercial Mensal', '2025-11-25 10:00:00', '2h', 'Sala de Reuniões 1', 'Discussão das metas e estratégias comerciais do mês.'),
+('Seminário de Inovação', '2025-12-01 09:00:00', '5h', 'Auditório Principal', 'Seminário sobre tendências e inovações no setor.'),
+('Palestra Motivacional', '2025-12-05 15:00:00', '2h', 'Auditório Secundário', 'Palestra para engajar e motivar a equipe.');
+
+
+INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
+(1, 2, 1),
+(1, 1, 1),
+(1, 3, 1);
+
+INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
+(2, 2, 1),
+(2, 4, 1),
+(2, 5, 1);
+
+INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
+(3, 2, 1),
+(3, 1, 1),
+(3, 5, 1);
+
+INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
+(4, 2, 1),
+(4, 3, 1),
+(4, 4, 1);
+
+INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
+(5, 2, 1),
+(5, 1, 1),
+(5, 5, 1),
+(5, 6, 1);
+
+  CREATE TABLE notificacoes_personalizadas (
     id INT PRIMARY KEY AUTO_INCREMENT,
     titulo VARCHAR(255) NOT NULL,
     mensagem TEXT NOT NULL,
@@ -240,49 +293,6 @@ CREATE TABLE historico_modalidade (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (colaborador_id) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE
 );
-
-
-INSERT  INTO Setor (ID_Setor, Nome_Setor, Descricao) VALUES 
-(1, 'Administrativo', 'Setor responsável pelas operações administrativas da empresa.'),
-(2, 'Comercial', 'Setor de vendas e relacionamento com clientes.'),
-(3, 'Operacional', 'Setor responsável pela execução das atividades principais.');
-
-INSERT INTO Cargo (ID_Cargo, Nome_Cargo, Nivel_Acesso) VALUES
-(1, 'Gerente de Projetos', 'Gestor'),
-(2, 'Coordenador de Equipe', 'Gestor'),
-(3, 'Assistente Administrativo', 'Colaborador'),
-(4, 'Analista de Operações', 'Colaborador'),
-(5, 'Vendedor', 'Colaborador');
-
-INSERT INTO Colaboradores (ID_colaborador, Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Cargo) VALUES
-(1, 'jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'João Victor Moura', 1, '12345678901', '11999999999', 1),
-(2, 'rafael@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rafael Sette', 1, '77777777777', '12988777777', 1),
-(3, 'rebeca@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rebeca Lima', 1, '99999999999', '11999999999', 1),
-(4, 'rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
-(5, 'lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
-(6, 'enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1),
-(7, 'vendedor1@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Carlos Silva', 2, '11111111111', '11988887777', 5),
-(8, 'vendedor2@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Maria Santos', 2, '22222222222', '11977776666', 5);
-
-INSERT INTO Status_Participacao (ID_Status, Nome_Status) VALUES
-(1, 'Pendente'),
-(2, 'Confirmado'),
-(3, 'Recusado'),
-(4, 'Concluído');
-
-INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao) VALUES
-('Workshop de Gestão de Projetos', '2025-11-20 09:00:00', '4h', 'Auditório Principal', 2, 'Workshop para aprimorar habilidades em gestão de projetos.'),
-('Treinamento Operacional', '2025-11-22 14:00:00', '3h', 'Sala de Treinamento 2', 1, 'Treinamento prático para a equipe operacional.'),
-('Reunião Comercial Mensal', '2025-11-25 10:00:00', '2h', 'Sala de Reuniões 1', 3, 'Discussão das metas e estratégias comerciais do mês.'),
-('Seminário de Inovação', '2025-12-01 09:00:00', '5h', 'Auditório Principal', 1, 'Seminário sobre tendências e inovações no setor.'),
-('Palestra Motivacional', '2025-12-05 15:00:00', '2h', 'Auditório Secundário', 1, 'Palestra para engajar e motivar a equipe.');
-
-INSERT  INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
-(1, 2, 1), (1, 1, 1), (1, 3, 1),
-(2, 2, 1), (2, 4, 1), (2, 5, 1),
-(3, 2, 1), (3, 1, 1), (3, 5, 1),
-(4, 2, 1), (4, 3, 1), (4, 4, 1),
-(5, 2, 1), (5, 1, 1), (5, 5, 1), (5, 6, 1);
 
 INSERT INTO Cliente (ID_Cliente, Nome_Cliente, Telefone_Cliente, Email_Cliente, Segmento, Criado_Por) VALUES
 (1, 'Empresa ABC Ltda', '1133334444', 'contato@empresaabc.com.br', 'Logística', 1),
@@ -324,5 +334,3 @@ UPDATE Cliente SET Ultima_Interacao = '2024-12-04 09:00:00' WHERE ID_Cliente = 4
 ALTER TABLE historico_modalidade ADD COLUMN data_resposta DATETIME;
 INSERT INTO historico_modalidade (colaborador_id, modalidade) 
 VALUES (1, 'Remoto');
-
-SHOW COLUMNS FROM certificado_Participacao;
