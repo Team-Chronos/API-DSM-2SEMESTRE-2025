@@ -1,56 +1,44 @@
-
 const formEvento = document.getElementById('form-evento');
 const resultado = document.getElementById('resultado');
 const campoJustificativa = document.getElementById('campo-justificativa');
 const textareaJustificativa = document.getElementById('justificativa');
 const radios = document.querySelectorAll('input[name="decisao_evento"]');
 
-
-
 radios.forEach(radio => {
-    
     radio.addEventListener('change', (e) => {
         if (e.target.value === 'recusado') {
-            
             campoJustificativa.style.display = 'block';
         } else {
-            
             campoJustificativa.style.display = 'none';
         }
     });
 });
 
 
-
 formEvento.addEventListener('submit', async (e) => {
-    
     e.preventDefault();
 
-    
     const radioSelecionado = document.querySelector('input[name="decisao_evento"]:checked');
-    
     
     if (!radioSelecionado) {
         resultado.innerText = 'Por favor, selecione uma opção.';
         return;
     }
 
-    const respostaUsuario = radioSelecionado.value; 
+    const respostaUsuario = radioSelecionado.value;
     const justificativaUsuario = textareaJustificativa.value;
 
-    
     if (respostaUsuario === 'aceito') {
         resultado.innerText = 'Presença confirmada!';
-    } else { 
+    } else {
         if (justificativaUsuario.trim().length === 0) {
             resultado.innerText = 'Recusado. Por favor, preencha a justificativa.';
-            
+           
             return; 
         } else {
             resultado.innerText = 'Ausência justificada e registrada.';
         }
     }
-    
     
     try {
         const response = await fetch('http://localhost:3000/confirmarEvento', {
@@ -59,7 +47,6 @@ formEvento.addEventListener('submit', async (e) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                
                 resposta: respostaUsuario,
                 justificativa: justificativaUsuario
             })
@@ -67,7 +54,6 @@ formEvento.addEventListener('submit', async (e) => {
 
         if (response.ok) {
             console.log('Resposta enviada com sucesso!');
-            
         } else {
             console.error('Falha ao enviar a resposta.');
             resultado.innerText = 'Ocorreu um erro ao enviar. Tente novamente.';
