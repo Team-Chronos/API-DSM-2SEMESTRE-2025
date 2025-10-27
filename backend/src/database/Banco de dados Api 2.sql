@@ -56,6 +56,8 @@ CREATE TABLE  Status_Participacao (
     ID_Status INT PRIMARY KEY AUTO_INCREMENT,
     Nome_Status ENUM('Pendente','Confirmado','Recusado', 'Concluído') NOT NULL
 );
+INSERT INTO Status_Participacao (Nome_Status)
+VALUES ('Pendente'), ('Confirmado'), ('Recusado'), ('Concluído');
 
 CREATE TABLE Participacao_Evento (
     ID_Evento INT NOT NULL,
@@ -236,12 +238,12 @@ INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Carg
 ('lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
 ('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
 
-INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, Descricao) VALUES
-('Workshop de Gestão de Projetos', '2025-11-20 09:00:00', '4h', 'Auditório Principal', 'Workshop para aprimorar habilidades em gestão de projetos.'),
-('Treinamento Operacional', '2025-11-22 14:00:00', '3h', 'Sala de Treinamento 2', 'Treinamento prático para a equipe operacional.'),
-('Reunião Comercial Mensal', '2025-11-25 10:00:00', '2h', 'Sala de Reuniões 1', 'Discussão das metas e estratégias comerciais do mês.'),
-('Seminário de Inovação', '2025-12-01 09:00:00', '5h', 'Auditório Principal', 'Seminário sobre tendências e inovações no setor.'),
-('Palestra Motivacional', '2025-12-05 15:00:00', '2h', 'Auditório Secundário', 'Palestra para engajar e motivar a equipe.');
+INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao) VALUES
+('Workshop de Gestão de Projetos', '2025-11-20 09:00:00', '4h', 'Auditório Principal', 2, 'Workshop para aprimorar habilidades em gestão de projetos.'),
+('Treinamento Operacional', '2025-11-22 14:00:00', '3h', 'Sala de Treinamento 2', 1, 'Treinamento prático para a equipe operacional.'),
+('Reunião Comercial Mensal', '2025-11-25 10:00:00', '2h', 'Sala de Reuniões 1', 3, 'Discussão das metas e estratégias comerciais do mês.'),
+('Seminário de Inovação', '2025-12-01 09:00:00', '5h', 'Auditório Principal', 1, 'Seminário sobre tendências e inovações no setor.'),
+('Palestra Motivacional', '2025-12-05 15:00:00', '2h', 'Auditório Secundário', 1, 'Palestra para engajar e motivar a equipe.');
 
 
 INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
@@ -298,28 +300,28 @@ INSERT INTO Cliente (ID_Cliente, Nome_Cliente, Telefone_Cliente, Email_Cliente, 
 (1, 'Empresa ABC Ltda', '1133334444', 'contato@empresaabc.com.br', 'Logística', 1),
 (2, 'Comércio XYZ S/A', '1144445555', 'vendas@comercioxyz.com.br', 'Varejo', 2),
 (3, 'Indústria 123 ME', '1155556666', 'compra@industria123.com.br', 'Indústria', 1),
-(4, 'Distribuidora Central', '1166667777', 'pedidos@distribuidoracentral.com.br', 'Distribuição', 7),
-(5, 'Atacadão Nacional', '1177778888', 'compras@atacadaonacional.com.br', 'Atacado', 8);
+(4, 'Distribuidora Central', '1166667777', 'pedidos@distribuidoracentral.com.br', 'Distribuição', 3),
+(5, 'Atacadão Nacional', '1177778888', 'compras@atacadaonacional.com.br', 'Atacado', 4);
 
 INSERT  INTO Historico_Interacao (ID_Cliente, ID_Colaborador, Data_Interacao, Forma_Contato, Titulo, Descricao, Resultado, Proxima_Acao, Data_Proxima_Acao, Prioridade, Status) VALUES
-(1, 7, '2024-12-01 10:00:00', 'Telefone', 'Follow-up Proposta', 'Cliente interessado na proposta, solicitou algumas alterações nos prazos.', 'Negociação em Andamento', 'Enviar proposta revisada', '2024-12-05 14:00:00', 'Alta', 'Realizada'),
-(2, 7, '2024-12-02 14:30:00', 'Reunião', 'Apresentação Comercial', 'Reunião presencial para apresentação completa dos serviços. Cliente demonstrou grande interesse.', 'Positivo', 'Enviar proposta formal', '2024-12-06 09:00:00', 'Alta', 'Realizada'),
-(3, 8, '2024-12-03 11:00:00', 'Email', 'Envio de Catálogo', 'Enviado catálogo completo de produtos com preços e condições.', 'Aguardando Retorno', 'Follow-up telefônico', '2024-12-10 10:00:00', 'Media', 'Realizada'),
-(1, 7, '2024-12-04 16:00:00', 'WhatsApp', 'Confirmação de Dados', 'Cliente confirmou dados para emissão da proposta final.', 'Dados Confirmados', 'Emitir proposta final', '2024-12-05 08:00:00', 'Urgente', 'Realizada'),
-(4, 7, '2024-12-04 09:00:00', 'Visita', 'Visita Técnica', 'Visita ao local do cliente para entender necessidades específicas.', 'Necessidades Mapeadas', 'Elaborar solução customizada', '2024-12-12 15:00:00', 'Alta', 'Realizada');
+(1, 3, '2024-12-01 10:00:00', 'Telefone', 'Follow-up Proposta', 'Cliente interessado na proposta, solicitou algumas alterações nos prazos.', 'Negociação em Andamento', 'Enviar proposta revisada', '2024-12-05 14:00:00', 'Alta', 'Realizada'),
+(2, 3, '2024-12-02 14:30:00', 'Reunião', 'Apresentação Comercial', 'Reunião presencial para apresentação completa dos serviços. Cliente demonstrou grande interesse.', 'Positivo', 'Enviar proposta formal', '2024-12-06 09:00:00', 'Alta', 'Realizada'),
+(3, 4, '2024-12-03 11:00:00', 'Email', 'Envio de Catálogo', 'Enviado catálogo completo de produtos com preços e condições.', 'Aguardando Retorno', 'Follow-up telefônico', '2024-12-10 10:00:00', 'Media', 'Realizada'),
+(1, 3, '2024-12-04 16:00:00', 'WhatsApp', 'Confirmação de Dados', 'Cliente confirmou dados para emissão da proposta final.', 'Dados Confirmados', 'Emitir proposta final', '2024-12-05 08:00:00', 'Urgente', 'Realizada'),
+(4, 3, '2024-12-04 09:00:00', 'Visita', 'Visita Técnica', 'Visita ao local do cliente para entender necessidades específicas.', 'Necessidades Mapeadas', 'Elaborar solução customizada', '2024-12-12 15:00:00', 'Alta', 'Realizada');
 
 INSERT  INTO Agenda (ID_Colaborador, Titulo, Descricao, Data_Hora_Inicio, Data_Hora_Fim, Local_Evento, ID_Cliente, Tipo_Contato, Prioridade) VALUES
 (1, 'Reunião de Apresentação', 'Apresentação dos serviços para novo cliente', '2024-12-01 09:00:00', '2024-12-01 10:30:00', 'Sala de Reuniões 1', 1, 'Reunião', 'Alta'),
 (2, 'Follow-up Comercial', 'Acompanhamento da proposta enviada', '2024-12-02 14:00:00', '2024-12-02 14:30:00', NULL, 2, 'Telefone', 'Média'),
 (1, 'Visita Técnica', 'Avaliação das necessidades do cliente', '2024-12-03 10:00:00', '2024-12-03 12:00:00', 'Plantão do Cliente', 3, 'Visita', 'Alta'),
-(7, 'Apresentação de Produtos', 'Demonstração da nova linha de produtos', '2024-12-04 15:00:00', '2024-12-04 16:30:00', 'Sala de Demonstração', 4, 'Reunião', 'Alta'),
-(8, 'Negociação de Contrato', 'Fechamento do contrato anual', '2024-12-05 11:00:00', '2024-12-05 12:00:00', 'Sala de Reuniões 2', 5, 'Reunião', 'Urgente');
+(3, 'Apresentação de Produtos', 'Demonstração da nova linha de produtos', '2024-12-04 15:00:00', '2024-12-04 16:30:00', 'Sala de Demonstração', 4, 'Reunião', 'Alta'),
+(4, 'Negociação de Contrato', 'Fechamento do contrato anual', '2024-12-05 11:00:00', '2024-12-05 12:00:00', 'Sala de Reuniões 2', 5, 'Reunião', 'Urgente');
 
 INSERT INTO Relatorio (Nome_Relatorio, Tipo_Relatorio, URL_Relatorio, Gerado_Por) VALUES
 ('Relatório de Participação em Eventos - Nov 2024', 'Participação Eventos', '/relatorios/participacao_nov_2024.pdf', 1),
 ('Relatório de Performance Comercial - Trimestre 4', 'Performance Comercial', '/relatorios/performance_trim4_2024.pdf', 2),
-('Relatório de Agendamentos - Dez 2024', 'Agendamentos', '/relatorios/agendamentos_dez_2024.pdf', 7),
-('Relatório de Clientes Ativos - 2024', 'Clientes', '/relatorios/clientes_ativos_2024.pdf', 8),
+('Relatório de Agendamentos - Dez 2024', 'Agendamentos', '/relatorios/agendamentos_dez_2024.pdf', 3),
+('Relatório de Clientes Ativos - 2024', 'Clientes', '/relatorios/clientes_ativos_2024.pdf', 4),
 ('Relatório de Certificados Emitidos', 'Certificados', '/relatorios/certificados_emitidos.pdf', 1);
 
 INSERT INTO notificacoes_personalizadas (titulo, mensagem, destinatarios, prioridade, criado_por, tipo) VALUES
