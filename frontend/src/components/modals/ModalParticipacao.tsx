@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
@@ -12,10 +12,19 @@ interface ModalParticipacaoProps {
   onSuccess: (idEvento: number) => void;
 }
 
-export const ModalParticipacao = ({ show, evento, onClose, onSuccess }: ModalParticipacaoProps) => {
+export const ModalParticipacao = ({
+  show,
+  evento,
+  onClose,
+  onSuccess,
+}: ModalParticipacaoProps) => {
   const { user } = useAuth();
 
+  if (!evento || !user) return null;
+
   const [form, setForm] = useState({
+    id_colab: user.id,
+    id_evento: evento.ID_Evento,
     objetivo: "",
     principais_infos: "",
     aplicacoes_newe: "",
@@ -24,73 +33,44 @@ export const ModalParticipacao = ({ show, evento, onClose, onSuccess }: ModalPar
     comentarios: "",
   });
 
-  const [loading, setLoading] = useState(false);
+  function limparForm() {
+    if (!evento || !user) return;
+    setForm({
+      id_colab: user.id,
+      id_evento: evento.ID_Evento,
+      objetivo: "",
+      principais_infos: "",
+      aplicacoes_newe: "",
+      referencias: "",
+      avaliacao: 0,
+      comentarios: "",
+    });
+  }
 
-  if (!evento || !user) return null;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
     try {
-      const descricaoCompleta = `
-OBJETIVO DA PARTICIPAÇÃO:
-${form.objetivo}
-
-PRINCIPAIS INFORMAÇÕES:
-${form.principais_infos}
-
-APLICAÇÕES E SUGESTÕES:
-${form.aplicacoes_newe}
-
-REFERÊNCIAS:
-${form.referencias}
-
-AVALIAÇÃO: ${form.avaliacao}/10
-
-COMENTÁRIOS ADICIONAIS:
-${form.comentarios}
-      `.trim();
-
-      const dadosParaEnviar = {
-        ID_Colaborador: user.id,
-        ID_Evento: evento.ID_Evento,
-        Data_Part: new Date().toISOString(),
-        Duracao_Part: evento.Duracao_Evento, 
-        Descricao_Part: descricaoCompleta
-      };
-
-      console.log(" Enviando dados para o banco:", dadosParaEnviar);
-
-      await axios.post("http://localhost:3000/api/certificadoParticipacao", dadosParaEnviar);
-
+      await axios.post("http://localhost:3000/api/certificadoParticipacao", form);
       onSuccess(evento.ID_Evento);
+      limparForm();
       onClose();
-      
-    } catch (error: any) {
-      console.error(" Erro ao enviar participação:", error);
-      console.error("Resposta do servidor:", error.response?.data);
-      
-      alert(`Erro ao enviar participação: ${error.response?.data?.mensagem || "Verifique o console para detalhes"}`);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Erro ao enviar participação:", error);
+      alert("Erro ao enviar participação. Tente novamente.");
     }
   };
 
   return (
-    <Modal
-      show={show}
-      centered
-      onHide={() => {
-        onClose();
-      }}
-      size="lg"
-    >
+    <Modal show={show} centered onHide={onClose} size="lg">
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
           <Modal.Title>Concluir Evento — {evento.Nome_Evento}</Modal.Title>
@@ -114,11 +94,7 @@ ${form.comentarios}
 
             <Form.Group className="flex-fill">
               <Form.Label>Duração</Form.Label>
-              <Form.Control
-                type="text"
-                value={evento.Duracao_Evento}
-                readOnly
-              />
+              <Form.Control type="text" value={evento.Duracao_Evento} readOnly />
             </Form.Group>
           </div>
 
@@ -132,7 +108,9 @@ ${form.comentarios}
               <Form.Label>Tipo do Evento</Form.Label>
               <Form.Control
                 type="text"
-                value={tp_tipo_evento[evento.ID_Tipo_Evento as keyof typeof tp_tipo_evento]}
+                value={
+                  tp_tipo_evento[evento.ID_Tipo_Evento as keyof typeof tp_tipo_evento]
+                }
                 readOnly
               />
             </Form.Group>
@@ -221,14 +199,14 @@ ${form.comentarios}
           <Button
             variant="secondary"
             onClick={() => {
+              limparForm();
               onClose();
             }}
-            disabled={loading}
           >
             Cancelar
           </Button>
-          <Button variant="primary" type="submit" disabled={loading}>
-            {loading ? "Enviando..." : "Enviar e Concluir"}
+          <Button variant="primary" type="submit">
+            Enviar e Concluir
           </Button>
         </Modal.Footer>
       </Form>
