@@ -433,7 +433,7 @@ class NotificacaoObserver {
         try {
             const [criadores] = await db.promise().query(
                 'SELECT c.* FROM Colaboradores c WHERE c.ID_colaborador = ?',
-                [evento.Criado_Por || 1] 
+                [evento.Criado_Por] // Ajuste este campo conforme sua estrutura
             );
 
             if (criadores.length === 0) {

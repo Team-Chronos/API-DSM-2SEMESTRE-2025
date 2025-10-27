@@ -11,7 +11,6 @@ import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
 import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js'
 import interacaoRoutes from './src/routes/interacaoRoutes.js'
-import relatorioRoutes from './src/routes/relatorioRoutes.js'
 
 import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
 import agendaRoutes from './src/routes/agendaRoutes.js';
@@ -23,8 +22,7 @@ const PORT = 3000;
 
 app.use(cors({
     origin: 'http://localhost:5173',
-    credentials: true,
-    exposedHeaders: ['Content-Disposition']
+    credentials: true
 }));
 
 const __filename = fileURLToPath(import.meta.url);
@@ -48,7 +46,6 @@ app.use('/api/participacaoEventos', participacaoEventoRoutes);
 
 app.use('/api/clientes', clienteRoutes)
 app.use('/api/interacoes', interacaoRoutes)
-app.use('/api/relatorios', relatorioRoutes)
 
 app.get('/api/setores', async (req, res) => {
     try {

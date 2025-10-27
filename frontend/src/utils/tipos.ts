@@ -3,14 +3,8 @@ export interface Colaborador {
   Nome_Col: string;
   Email: string;
   Setor: number;
-  ID_cargo: number;
   Localidade: string;
   Telefone: string;
-}
-export interface Cargos {
-  ID_Cargo: number;
-  Nome_Cargo: string;
-  Nivel_Acesso: string;
 }
 
 export interface Evento {
@@ -72,6 +66,7 @@ export interface Cliente {
   segmento_atuacao: string;
   depart_responsavel: string;
   Data_Cadastro: string;
+  Etapa: string;
 }
 
 export const tp_tipo_evento = {

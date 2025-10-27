@@ -35,6 +35,7 @@ function inicarCertificados() {
             main.appendChild(certificadosDiv);
         }
 
+        
         let modal = document.querySelector('#certificadoModal');
         if (!modal) {
             modal = document.createElement('div');

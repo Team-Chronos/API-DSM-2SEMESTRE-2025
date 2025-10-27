@@ -160,6 +160,14 @@ CREATE TABLE Agregados (
 CREATE TABLE  Cliente (
     ID_Cliente INT AUTO_INCREMENT PRIMARY KEY,
     Nome_Cliente VARCHAR(255) NOT NULL,
+    Email_Cliente VARCHAR(255) NOT NULL UNIQUE,
+    Telefone_Cliente VARCHAR(15),
+    Endereco VARCHAR(255) not null,
+    atividade varchar(255) not null,
+    segmento_atuacao varchar(255) not null,
+    depart_responsavel varchar(100) not null,
+    Etapa varchar(255) DEFAULT 'Prospects',
+    Data_Cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
     Telefone_Cliente VARCHAR(20),
     Email_Cliente VARCHAR(255),
     Segmento VARCHAR(100) NULL,
@@ -229,7 +237,7 @@ INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
 ('Analista de Operações', 'Colaborador');
 
 INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Cargo) VALUES
-('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'João Victor Moura', 1, '12345678901', '11999999999', 1),
+('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'João Victor Moura', 2, '12345678901', '11999999999', 1),
 ('rafael@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rafael Sette', 1, '77777777777', '12988777777', 1),
 ('rebeca@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rebeca Lima', 1, '99999999999', '11999999999', 1),
 ('rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
