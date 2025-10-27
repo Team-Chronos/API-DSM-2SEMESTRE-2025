@@ -35,7 +35,6 @@ function inicarCertificados() {
             main.appendChild(certificadosDiv);
         }
 
-        // Criar modal (se não existir)
         let modal = document.querySelector('#certificadoModal');
         if (!modal) {
             modal = document.createElement('div');
@@ -80,7 +79,7 @@ function inicarCertificados() {
             const response = await fetch(`/api/certificadoParticipacao/${payload.id}`);
             const certificados = await response.json();
 
-            certificadosDiv.innerHTML = ''; // limpar antes de renderizar
+            certificadosDiv.innerHTML = ''; 
 
             certificados.forEach(cert => {
                 const card = document.createElement('div');
@@ -95,7 +94,7 @@ function inicarCertificados() {
                 card.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
                 card.style.cursor = 'pointer';
 
-                // Preview do PDF (cortado, sem scroll)
+                
                 const pdfPreview = document.createElement('div');
                 pdfPreview.style.width = '100%';
                 pdfPreview.style.height = '220px';
@@ -107,7 +106,7 @@ function inicarCertificados() {
                 pdfPreview.style.overflow = 'hidden';
                 pdfPreview.style.display = '-webkit-box';
                 pdfPreview.style.webkitBoxOrient = 'vertical';
-                pdfPreview.style.webkitLineClamp = '12'; // número de linhas
+                pdfPreview.style.webkitLineClamp = '12'; 
                 pdfPreview.style.textOverflow = 'ellipsis';
                 pdfPreview.style.marginBottom = '10px';
 
@@ -123,7 +122,7 @@ function inicarCertificados() {
                 `;
                 card.appendChild(pdfPreview);
 
-                // Rodapé com título e data
+                
                 const footer = document.createElement('div');
                 footer.style.textAlign = 'center';
                 footer.style.fontSize = '14px';
@@ -135,7 +134,7 @@ function inicarCertificados() {
                 `;
                 card.appendChild(footer);
 
-                // Evento para abrir modal
+                
                 card.addEventListener('click', () => {
                     const modalBody = document.querySelector('#modalBody');
                     modalBody.innerHTML = `

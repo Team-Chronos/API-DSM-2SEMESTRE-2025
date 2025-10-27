@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
@@ -15,11 +15,7 @@ interface ModalParticipacaoProps {
 export const ModalParticipacao = ({ show, evento, onClose, onSuccess }: ModalParticipacaoProps) => {
   const { user } = useAuth();
 
-  if (!evento || !user) return null;
-
   const [form, setForm] = useState({
-    id_colaborador: user.id,
-    id_evento: evento.ID_Evento,
     objetivo: "",
     principais_infos: "",
     aplicacoes_newe: "",
@@ -28,19 +24,9 @@ export const ModalParticipacao = ({ show, evento, onClose, onSuccess }: ModalPar
     comentarios: "",
   });
 
-  function limparForm() {
-    if (!evento || !user) return
-    setForm({
-      id_colaborador: user.id,
-      id_evento: evento.ID_Evento,
-      objetivo: "",
-      principais_infos: "",
-      aplicacoes_newe: "",
-      referencias: "",
-      avaliacao: 0,
-      comentarios: "",
-    });
-  }
+  const [loading, setLoading] = useState(false);
+
+  if (!evento || !user) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -49,15 +35,50 @@ export const ModalParticipacao = ({ show, evento, onClose, onSuccess }: ModalPar
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      await axios.post("http://localhost:3000/api/certificadoParticipacao", form);
+      const descricaoCompleta = `
+OBJETIVO DA PARTICIPAÇÃO:
+${form.objetivo}
+
+PRINCIPAIS INFORMAÇÕES:
+${form.principais_infos}
+
+APLICAÇÕES E SUGESTÕES:
+${form.aplicacoes_newe}
+
+REFERÊNCIAS:
+${form.referencias}
+
+AVALIAÇÃO: ${form.avaliacao}/10
+
+COMENTÁRIOS ADICIONAIS:
+${form.comentarios}
+      `.trim();
+
+      const dadosParaEnviar = {
+        ID_Colaborador: user.id,
+        ID_Evento: evento.ID_Evento,
+        Data_Part: new Date().toISOString(),
+        Duracao_Part: evento.Duracao_Evento, 
+        Descricao_Part: descricaoCompleta
+      };
+
+      console.log(" Enviando dados para o banco:", dadosParaEnviar);
+
+      await axios.post("http://localhost:3000/api/certificadoParticipacao", dadosParaEnviar);
 
       onSuccess(evento.ID_Evento);
-      limparForm();
       onClose();
-    } catch (error) {
-      console.error("Erro ao enviar participação:", error);
-      alert("Erro ao enviar participação. Tente novamente.");
+      
+    } catch (error: any) {
+      console.error(" Erro ao enviar participação:", error);
+      console.error("Resposta do servidor:", error.response?.data);
+      
+      alert(`Erro ao enviar participação: ${error.response?.data?.mensagem || "Verifique o console para detalhes"}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -200,14 +221,14 @@ export const ModalParticipacao = ({ show, evento, onClose, onSuccess }: ModalPar
           <Button
             variant="secondary"
             onClick={() => {
-              limparForm();
               onClose();
             }}
+            disabled={loading}
           >
             Cancelar
           </Button>
-          <Button variant="primary" type="submit">
-            Enviar e Concluir
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading ? "Enviando..." : "Enviar e Concluir"}
           </Button>
         </Modal.Footer>
       </Form>

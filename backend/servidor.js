@@ -8,6 +8,9 @@ import agregadoRoutes from './src/routes/agregadoRoutes.js';
 import './src/routes/notificacaoObserver.js'; 
 import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
 import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
+import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
+import agendaRoutes from './src/routes/agendaRoutes.js';
+import interacaoRoutes from './src/routes/interacaoRoutes.js';
 import db from './src/config/db.js';
 import cors from 'cors';
 
@@ -15,7 +18,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:5174',
     credentials: true
 }));
 
@@ -28,10 +31,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
+app.use('/api/interacoes', interacaoRoutes);
 
-app.use('/api/participacaoEventos', participacaoEventoRoutes);
+app.use('/api/agenda', agendaRoutes);
 
 app.use('/api/certificadoParticipacao', certificadoPartRoutes)
+app.use('/api', modalidadeRoutes);
 
 app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
