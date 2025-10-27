@@ -35,9 +35,15 @@ const Colaborador = {
 
 
     updateById: (id, data) => {
-        const { nome, email, telefone, cpf, setor } = data;
-        const query = "UPDATE Colaboradores SET Nome_Col = ?, Email = ?, Telefone = ?, CPF = ?, Setor = ? WHERE ID_colaborador = ?";
-        return db.promise().query(query, [nome, email, telefone, cpf, setor, id]);
+        const { nome, email, telefone, cpf, id_cargo, setor } = data;
+        if (cpf === ""){
+            const query = "UPDATE Colaboradores SET Nome_Col = ?, Email = ?, Telefone = ?, Setor = ?, id_cargo = ? WHERE ID_colaborador = ?";
+            return db.promise().query(query, [nome, email, telefone, setor, id_cargo, id]);
+        }
+        else{
+            const query = "UPDATE Colaboradores SET Nome_Col = ?, Email = ?, Telefone = ?, CPF = ?, Setor = ?, id_cargo = ? WHERE ID_colaborador = ?";
+            return db.promise().query(query, [nome, email, telefone, cpf, setor, id_cargo, id]);
+        }
     },
 
 
@@ -47,7 +53,8 @@ const Colaborador = {
     },
     updateLocalidade: (colaboradorId, localidade) => {
         const query = "UPDATE Colaboradores SET Localidade = ? WHERE ID_colaborador = ?";
-        return db.promise().query(query, [localidade, colaboradorId]);}
+        return db.promise().query(query, [localidade, colaboradorId]);
+    }
 };
 
 export default Colaborador;

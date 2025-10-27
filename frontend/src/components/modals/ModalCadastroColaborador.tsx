@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; // Corrigido: useEffect adicionado
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { formatarCpf, formatarTelefone } from "../../utils/formatacoes";
-import type { Cargos } from "../../utils/tipos";
+import type { Cargos } from "../../utils/tipos"; // Corrigido: 'type' adicionado
 
 interface ModalCadastroColaboradorProps {
   show: boolean;
@@ -48,27 +48,32 @@ export const ModalCadastroColaborador = ({ show, onClose, onSuccess }: ModalCada
     });
   }
 
-  const handleChange = (e: React.ChangeEvent<React.ChangeEvent<HTMLInputElement>["target"] | React.ChangeEvent<HTMLSelectElement>["target"] | React.ChangeEvent<HTMLTextAreaElement>["target"]> & { target: { name: string; value: string } }) => {
-		switch (e.target.name){
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    let formattedValue = value;
+    switch (name) {
       case "telefone":
-				e.target.value = formatarTelefone(e.target.value)
-				break
+        formattedValue = formatarTelefone(value);
+        break;
       case "cpf":
-				e.target.value = formatarCpf(e.target.value)
-        break
+        formattedValue = formatarCpf(value);
+        break;
     }
-		setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({ ...form, [name]: formattedValue });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-			form.telefone = form.telefone.replace(/\D/g, '')
-			form.cpf = form.cpf.replace(/\D/g, '')
-      await axios.post("http://localhost:3000/api/colaboradores", form);
+      const payload = {
+        ...form,
+        telefone: form.telefone.replace(/\D/g, ''),
+        cpf: form.cpf.replace(/\D/g, '')
+      };
+      await axios.post("http://localhost:3000/api/colaboradores", payload);
       onSuccess();
       onClose();
-			limparForm()
+      limparForm();
     } catch (err: any) {
       alert(err.response?.data?.message || "Erro ao cadastrar colaborador");
     }
@@ -87,66 +92,23 @@ export const ModalCadastroColaborador = ({ show, onClose, onSuccess }: ModalCada
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>Nome Completo</Form.Label>
-            <Form.Control
-              type="text"
-              name="nome"
-							placeholder="Nome"
-              value={form.nome}
-              onChange={handleChange}
-							autoComplete="none"
-              required
-            />
+            <Form.Control type="text" name="nome" placeholder="Nome" value={form.nome} onChange={handleChange} autoComplete="none" required />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              name="email"
-							placeholder="Email"
-              value={form.email}
-              onChange={handleChange}
-							autoComplete="none"
-              required
-            />
+            <Form.Control type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} autoComplete="none" required />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Senha</Form.Label>
-            <Form.Control
-              type="password"
-              name="senha"
-							placeholder="Senha"
-              value={form.senha}
-              onChange={handleChange}
-              required
-            />
+            <Form.Control type="password" name="senha" placeholder="Senha" value={form.senha} onChange={handleChange} required />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Telefone</Form.Label>
-            <Form.Control
-              type="tel"
-              name="telefone"
-              value={form.telefone}
-              onChange={handleChange}
-              placeholder="(99) 99999-9999"
-							maxLength={15}
-              required
-            />
+            <Form.Control type="tel" name="telefone" value={form.telefone} onChange={handleChange} placeholder="(99) 99999-9999" maxLength={15} required />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>CPF</Form.Label>
-            <Form.Control
-            type="text"
-            name="cpf"
-            value={form.cpf}
-            onChange={handleChange}
-            placeholder="000.000.000-00"
-            maxLength={14}
-            required
-            />
+            <Form.Control type="text" name="cpf" value={form.cpf} onChange={handleChange} placeholder="000.000.000-00" maxLength={14} required />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Cargo</Form.Label>
@@ -158,7 +120,6 @@ export const ModalCadastroColaborador = ({ show, onClose, onSuccess }: ModalCada
               ))}
             </Form.Select>
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Setor</Form.Label>
             <Form.Select name="setor" value={form.setor} onChange={handleChange} required>
