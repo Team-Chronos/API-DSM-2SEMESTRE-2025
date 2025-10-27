@@ -3,175 +3,373 @@ import db from '../config/db.js';
 import excel from 'exceljs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import PDFDocument from 'pdfkit';
 import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const reportsDir = path.join(__dirname, '..', '..', 'reports');
-if (!fs.existsSync(reportsDir)) {
-  fs.mkdirSync(reportsDir, { recursive: true });
-}
+export const gerarRelatorioEventos = async (req, res) => {
+    try {
+        const { data_inicio, data_fim, tipo_relatorio } = req.body;
+        const gerado_por = req.user?.id || 1;
 
-export async function listarRelatorios(req, res) {
-  try {
-    const [relatorios] = await Relatorio.findAll(); 
-    res.status(200).json(relatorios);
-  } catch (err) {
-    console.error("Erro ao listar relatórios:", err);
-    res.status(500).json({ mensagem: "Erro interno ao listar relatórios." });
-  }
-}
+        let relatorioData;
+        let tituloRelatorio;
 
-export async function gerarRelatorio(req, res) {
-  const { tipo, dataInicio, dataFim, cidade, segmento } = req.body;
-  
-  const geradoPorId = 1; 
-
-  if (!tipo || !['clientes', 'vendas', 'interacoes'].includes(tipo)) {
-    return res.status(400).json({ mensagem: "Um tipo de relatório válido deve ser fornecido." });
-  }
-
-  try {
-    const workbook = new excel.Workbook();
-    const worksheet = workbook.addWorksheet(`Relatório de ${tipo}`);
-    let data = [];
-    let headers = [];
-
-    switch (tipo) {
-      case 'clientes': {
-        let query = "SELECT ID_Cliente, Nome_Cliente, Email_Cliente, Telefone_Cliente, segmento_atuacao, atividade, Etapa, Data_Cadastro, Endereco FROM Cliente";
-        const whereClauses = [];
-        const params = [];
-        if (dataInicio && dataFim) { whereClauses.push("Data_Cadastro BETWEEN ? AND ?"); params.push(dataInicio, `${dataFim} 23:59:59`); }
-        if (cidade) { whereClauses.push("Endereco LIKE ?"); params.push(`%${cidade}%`); } 
-        if (segmento) { whereClauses.push("segmento_atuacao = ?"); params.push(segmento); }
-        if (whereClauses.length > 0) { query += " WHERE " + whereClauses.join(" AND "); }
-        query += " ORDER BY Nome_Cliente";
-        
-        const [clientes] = await db.promise().query(query, params);
-        if (clientes.length === 0) {
-             return res.status(404).json({ mensagem: "Nenhum dado encontrado para os filtros selecionados. O relatório não foi gerado." });
+        switch (tipo_relatorio) {
+            case 'eventos':
+                relatorioData = await gerarDadosRelatorioEventos(data_inicio, data_fim);
+                tituloRelatorio = 'Relatório de Eventos';
+                break;
+            case 'participacao':
+                relatorioData = await gerarDadosRelatorioParticipacao(data_inicio, data_fim);
+                tituloRelatorio = 'Relatório de Participação';
+                break;
+            case 'colaboradores':
+                relatorioData = await gerarDadosRelatorioColaboradores();
+                tituloRelatorio = 'Relatório de Colaboradores';
+                break;
+            case 'agregados':
+                relatorioData = await gerarDadosRelatorioAgregados();
+                tituloRelatorio = 'Relatório de Agregados';
+                break;
+            default:
+                return res.status(400).json({ mensagem: 'Tipo de relatório inválido' });
         }
+
+        const pdfBuffer = await gerarPDF(relatorioData, tituloRelatorio, data_inicio, data_fim);
+
+        const nomeArquivo = `${tipo_relatorio}_${Date.now()}.pdf`;
+        const caminhoArquivo = `/relatorios/${nomeArquivo}`;
+
+        await salvarRelatorioNoBanco({
+            nome_relatorio: tituloRelatorio,
+            tipo_relatorio: tipo_relatorio,
+            url_relatorio: caminhoArquivo,
+            gerado_por: gerado_por
+        });
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${nomeArquivo}"`);
         
-        headers = [
-          { header: 'ID', key: 'ID_Cliente', width: 10 }, { header: 'Nome', key: 'Nome_Cliente', width: 35 },
-          { header: 'Email', key: 'Email_Cliente', width: 35 }, { header: 'Telefone', key: 'Telefone_Cliente', width: 20 },
-          { header: 'Segmento', key: 'segmento_atuacao', width: 25 }, { header: 'Atividade', key: 'atividade', width: 30 },
-          { header: 'Endereço', key: 'Endereco', width: 50 }, { header: 'Etapa', key: 'Etapa', width: 15 },
-          { header: 'Data Cadastro', key: 'Data_Cadastro', width: 20 },
-        ];
-        data = clientes.map(c => ({ ...c, Data_Cadastro: c.Data_Cadastro ? new Date(c.Data_Cadastro).toLocaleDateString('pt-BR') : '' }));
-        break;
-      }
-      case 'vendas': {
-        let query = "SELECT ID_Cliente, Nome_Cliente, Email_Cliente, Telefone_Cliente, segmento_atuacao, depart_responsavel, Data_Cadastro, Endereco FROM Cliente";
-        const whereClauses = ["Etapa = 'Finalizada'"]; 
-        const params = [];
-        if (dataInicio && dataFim) { whereClauses.push("Data_Cadastro BETWEEN ? AND ?"); params.push(dataInicio, `${dataFim} 23:59:59`); }
-        if (cidade) { whereClauses.push("Endereco LIKE ?"); params.push(`%${cidade}%`); }
-        if (segmento) { whereClauses.push("segmento_atuacao = ?"); params.push(segmento); }
-        query += " WHERE " + whereClauses.join(" AND ");
-        query += " ORDER BY Nome_Cliente";
+        res.send(pdfBuffer);
 
-        const [vendas] = await db.promise().query(query, params);
-        if (vendas.length === 0) return res.status(404).json({ mensagem: "Nenhum dado encontrado para os filtros selecionados." });
+    } catch (error) {
+        console.error(' Erro ao gerar relatório:', error);
+        res.status(500).json({ mensagem: 'Erro interno ao gerar relatório' });
+    }
+};
 
-        headers = [
-          { header: 'ID Cliente', key: 'ID_Cliente', width: 10 }, { header: 'Nome Cliente', key: 'Nome_Cliente', width: 35 },
-          { header: 'Email', key: 'Email_Cliente', width: 35 }, { header: 'Telefone', key: 'Telefone_Cliente', width: 20 },
-          { header: 'Endereço', key: 'Endereco', width: 50 }, { header: 'Segmento', key: 'segmento_atuacao', width: 25 },
-          { header: 'Departamento', key: 'depart_responsavel', width: 30 }, { header: 'Data Cadastro', key: 'Data_Cadastro', width: 20 },
-        ];
-        data = vendas.map(v => ({ ...v, Data_Cadastro: v.Data_Cadastro ? new Date(v.Data_Cadastro).toLocaleDateString('pt-BR') : '' }));
-        break;
-      }
-      case 'interacoes': {
-        let query = `SELECT hi.ID_Interacao, c.Nome_Cliente, c.Endereco, c.segmento_atuacao, col.Nome_Col AS Nome_Colaborador, hi.Data_Interacao, hi.Tipo_Interacao, hi.Descricao, hi.Resultado FROM Historico_Interacao hi LEFT JOIN Cliente c ON hi.ID_Cliente = c.ID_Cliente LEFT JOIN Colaboradores col ON hi.ID_Colaborador = col.ID_colaborador`;
-        const whereClauses = [];
-        const params = [];
-        if (dataInicio && dataFim) { whereClauses.push("hi.Data_Interacao BETWEEN ? AND ?"); params.push(dataInicio, `${dataFim} 23:59:59`); }
-        if (cidade) { whereClauses.push("c.Endereco LIKE ?"); params.push(`%${cidade}%`); } 
-        if (segmento) { whereClauses.push("c.segmento_atuacao = ?"); params.push(segmento); } 
-        if (whereClauses.length > 0) { query += " WHERE " + whereClauses.join(" AND "); }
-        query += " ORDER BY hi.Data_Interacao DESC";
-        
-        const [interacoes] = await db.promise().query(query, params);
-        if (interacoes.length === 0) return res.status(404).json({ mensagem: "Nenhum dado encontrado para os filtros selecionados." });
+export const listarRelatorios = async (req, res) => {
+    try {
+        const query = `
+            SELECT r.*, c.Nome_Col as gerador_nome 
+            FROM Relatorio r
+            LEFT JOIN Colaboradores c ON r.Gerado_Por = c.ID_colaborador
+            ORDER BY r.Data_Geracao DESC
+        `;
 
-        headers = [
-            { header: 'ID', key: 'ID_Interacao', width: 10 }, { header: 'Cliente', key: 'Nome_Cliente', width: 30 },
-            { header: 'Colaborador', key: 'Nome_Colaborador', width: 30 }, { header: 'Data', key: 'Data_Interacao', width: 20 },
-            { header: 'Tipo', key: 'Tipo_Interacao', width: 15 }, { header: 'Descrição', key: 'Descricao', width: 50 },
-            { header: 'Resultado', key: 'Resultado', width: 30 },
-        ];
-        data = interacoes.map(i => ({ ...i, Data_Interacao: i.Data_Interacao ? new Date(i.Data_Interacao).toLocaleString('pt-BR') : '' }));
-        break;
-      }
+        const [relatorios] = await db.promise().query(query);
+        res.status(200).json(relatorios);
+
+    } catch (error) {
+        console.error(' Erro ao listar relatórios:', error);
+        res.status(500).json({ mensagem: 'Erro interno ao listar relatórios' });
+    }
+};
+
+async function gerarDadosRelatorioEventos(dataInicio, dataFim) {
+    let query = `
+        SELECT 
+            e.*,
+            COUNT(pe.ID_Colaborador) as total_participantes,
+            SUM(CASE WHEN pe.ID_Status = 2 THEN 1 ELSE 0 END) as confirmados,
+            SUM(CASE WHEN pe.ID_Status = 3 THEN 1 ELSE 0 END) as recusados
+        FROM Evento e
+        LEFT JOIN Participacao_Evento pe ON e.ID_Evento = pe.ID_Evento
+    `;
+
+    const params = [];
+
+    if (dataInicio && dataFim) {
+        query += ' WHERE e.Data_Evento BETWEEN ? AND ?';
+        params.push(dataInicio, dataFim);
     }
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `relatorio-${tipo}-${timestamp}.xlsx`;
-    const filePath = path.join(reportsDir, filename); 
+    query += ' GROUP BY e.ID_Evento ORDER BY e.Data_Evento DESC';
 
-    worksheet.columns = headers;
-    worksheet.addRows(data);
-    worksheet.getRow(1).font = { bold: true };
-    await workbook.xlsx.writeFile(filePath);
+    const [eventos] = await db.promise().query(query, params);
+    return eventos;
+}
 
-    await Relatorio.create({
-      nome: filename,
-      tipo: tipo,
-      geradoPor: geradoPorId,
+async function gerarDadosRelatorioParticipacao(dataInicio, dataFim) {
+    let query = `
+        SELECT 
+            c.Nome_Col,
+            c.Email,
+            c.Setor,
+            COUNT(pe.ID_Evento) as total_eventos,
+            SUM(CASE WHEN pe.ID_Status = 2 THEN 1 ELSE 0 END) as eventos_confirmados,
+            SUM(CASE WHEN pe.ID_Status = 3 THEN 1 ELSE 0 END) as eventos_recusados,
+            s.Nome_Setor
+        FROM Colaboradores c
+        LEFT JOIN Participacao_Evento pe ON c.ID_colaborador = pe.ID_Colaborador
+        LEFT JOIN Evento e ON pe.ID_Evento = e.ID_Evento
+        LEFT JOIN Setor s ON c.Setor = s.ID_Setor
+    `;
+
+    const params = [];
+
+    if (dataInicio && dataFim) {
+        query += ' WHERE e.Data_Evento BETWEEN ? AND ? OR e.Data_Evento IS NULL';
+        params.push(dataInicio, dataFim);
+    }
+
+    query += ' GROUP BY c.ID_colaborador ORDER BY c.Nome_Col';
+
+    const [participacoes] = await db.promise().query(query, params);
+    return participacoes;
+}
+
+async function gerarDadosRelatorioColaboradores() {
+    const query = `
+        SELECT 
+            c.*,
+            s.Nome_Setor,
+            car.Nome_Cargo,
+            COUNT(pe.ID_Evento) as total_eventos_participados
+        FROM Colaboradores c
+        LEFT JOIN Setor s ON c.Setor = s.ID_Setor
+        LEFT JOIN Cargo car ON c.ID_Cargo = car.ID_Cargo
+        LEFT JOIN Participacao_Evento pe ON c.ID_colaborador = pe.ID_Colaborador
+        GROUP BY c.ID_colaborador
+        ORDER BY c.Nome_Col
+    `;
+
+    const [colaboradores] = await db.promise().query(query);
+    return colaboradores;
+}
+
+async function gerarDadosRelatorioAgregados() {
+    const query = `
+        SELECT 
+            *,
+            TIMESTAMPDIFF(YEAR, nascimento, CURDATE()) as idade
+        FROM Agregados 
+        ORDER BY nome
+    `;
+
+    const [agregados] = await db.promise().query(query);
+    return agregados;
+}
+
+async function gerarPDF(dados, titulo, dataInicio, dataFim) {
+    return new Promise((resolve, reject) => {
+        try {
+            const doc = new PDFDocument({ margin: 50 });
+            const buffers = [];
+
+            doc.on('data', buffers.push.bind(buffers));
+            doc.on('end', () => {
+                const pdfData = Buffer.concat(buffers);
+                resolve(pdfData);
+            });
+
+            doc.fillColor('#333333')
+               .fontSize(20)
+               .text(titulo, 50, 50, { align: 'center' });
+
+            doc.fontSize(10)
+               .text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 50, 80);
+
+            if (dataInicio && dataFim) {
+                doc.text(`Período: ${new Date(dataInicio).toLocaleDateString('pt-BR')} à ${new Date(dataFim).toLocaleDateString('pt-BR')}`, 50, 95);
+            }
+
+            doc.moveDown(2);
+
+            if (titulo.includes('Eventos')) {
+                gerarPDFEventos(doc, dados);
+            } else if (titulo.includes('Participação')) {
+                gerarPDFParticipacao(doc, dados);
+            } else if (titulo.includes('Colaboradores')) {
+                gerarPDFColaboradores(doc, dados);
+            } else if (titulo.includes('Agregados')) {
+                gerarPDFAgregados(doc, dados);
+            }
+
+            const pageHeight = doc.page.height;
+            doc.fontSize(8)
+               .text('Sistema Newe Log - Relatório Gerado Automaticamente', 50, pageHeight - 50, { align: 'center' });
+
+            doc.end();
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+function gerarPDFEventos(doc, eventos) {
+    let yPosition = 120;
+
+    eventos.forEach((evento, index) => {
+        if (yPosition > 700) {
+            doc.addPage();
+            yPosition = 50;
+        }
+
+        doc.fontSize(12)
+           .fillColor('#2c5530')
+           .text(`${index + 1}. ${evento.Nome_Evento}`, 50, yPosition);
+
+        doc.fontSize(9)
+           .fillColor('#666666')
+           .text(`Data: ${new Date(evento.Data_Evento).toLocaleString('pt-BR')}`, 70, yPosition + 15)
+           .text(`Local: ${evento.Local_Evento}`, 70, yPosition + 30)
+           .text(`Participantes: ${evento.total_participantes} (${evento.confirmados} confirmados, ${evento.recusados} recusados)`, 70, yPosition + 45);
+
+        yPosition += 70;
     });
 
-    res.download(filePath, filename);
-
-  } catch (err) {
-    console.error(`Erro ao gerar relatório de ${tipo}:`, err);
-    res.status(500).json({ mensagem: `Erro interno ao gerar o relatório de ${tipo}.` });
-  }
-}
-
-export async function downloadRelatorio(req, res) {
-  const { filename } = req.params;
-  const filePath = path.join(reportsDir, filename);
-
-  if (fs.existsSync(filePath)) {
-    res.download(filePath, filename);
-  } else {
-    res.status(404).json({ mensagem: "Arquivo de relatório não encontrado no servidor." }); 
-  }
-}
-
-export async function excluirRelatorio(req, res) {
-  const { id } = req.params;
-
-  try {
-    const [relatorioResult] = await Relatorio.findById(id);
-    if (relatorioResult.length === 0) {
-      return res.status(404).json({ mensagem: "Registo de relatório não encontrado." });
+    if (yPosition > 600) {
+        doc.addPage();
+        yPosition = 50;
     }
-    const filename = relatorioResult[0].Nome_Relatorio;
 
-    await Relatorio.deleteById(id);
+    doc.fontSize(11)
+       .fillColor('#333333')
+       .text('RESUMO:', 50, yPosition + 20)
+       .text(`Total de Eventos: ${eventos.length}`, 70, yPosition + 35)
+       .text(`Total de Participantes: ${eventos.reduce((sum, e) => sum + parseInt(e.total_participantes), 0)}`, 70, yPosition + 50);
+}
 
-    const filePath = path.join(reportsDir, filename);
-    if (fs.existsSync(filePath)) {
-      fs.unlink(filePath, (unlinkErr) => {
-        if (unlinkErr) {
-          console.error("Erro ao deletar o arquivo de relatório físico:", unlinkErr);
+function gerarPDFParticipacao(doc, participacoes) {
+    let yPosition = 120;
+
+    participacoes.forEach((part, index) => {
+        if (yPosition > 700) {
+            doc.addPage();
+            yPosition = 50;
         }
-      });
-    } else {
-        console.warn(`Ficheiro ${filename} não encontrado para exclusão física, mas o registo foi removido da base de dados.`);
-    }
 
-    res.status(200).json({ mensagem: "Relatório excluído com sucesso." });
+        doc.fontSize(11)
+           .fillColor('#2c5530')
+           .text(`${index + 1}. ${part.Nome_Col}`, 50, yPosition);
 
-  } catch (err) {
-    console.error(`Erro ao excluir o relatório ${id}:`, err);
-    res.status(500).json({ mensagem: `Erro interno ao excluir o relatório.` });
-  }
+        doc.fontSize(9)
+           .fillColor('#666666')
+           .text(`Setor: ${part.Nome_Setor || 'N/A'}`, 70, yPosition + 15)
+           .text(`Email: ${part.Email}`, 70, yPosition + 30)
+           .text(`Eventos: ${part.total_eventos} (${part.eventos_confirmados} confirmados, ${part.eventos_recusados} recusados)`, 70, yPosition + 45);
+
+        yPosition += 70;
+    });
 }
 
+function gerarPDFColaboradores(doc, colaboradores) {
+    let yPosition = 120;
+
+    colaboradores.forEach((colab, index) => {
+        if (yPosition > 700) {
+            doc.addPage();
+            yPosition = 50;
+        }
+
+        doc.fontSize(11)
+           .fillColor('#2c5530')
+           .text(`${index + 1}. ${colab.Nome_Col}`, 50, yPosition);
+
+        doc.fontSize(9)
+           .fillColor('#666666')
+           .text(`Cargo: ${colab.Nome_Cargo}`, 70, yPosition + 15)
+           .text(`Setor: ${colab.Nome_Setor}`, 70, yPosition + 30)
+           .text(`Email: ${colab.Email}`, 70, yPosition + 45)
+           .text(`Eventos Participados: ${colab.total_eventos_participados}`, 70, yPosition + 60);
+
+        yPosition += 85;
+    });
+}
+
+function gerarPDFAgregados(doc, agregados) {
+    let yPosition = 120;
+
+    agregados.forEach((agregado, index) => {
+        if (yPosition > 700) {
+            doc.addPage();
+            yPosition = 50;
+        }
+
+        doc.fontSize(11)
+           .fillColor('#2c5530')
+           .text(`${index + 1}. ${agregado.nome}`, 50, yPosition);
+
+        doc.fontSize(9)
+           .fillColor('#666666')
+           .text(`CPF: ${agregado.cpf || 'N/A'}`, 70, yPosition + 15)
+           .text(`Email: ${agregado.email || 'N/A'}`, 70, yPosition + 30)
+           .text(`Telefone: ${agregado.telefone || 'N/A'}`, 70, yPosition + 45)
+           .text(`Veículo: ${agregado.marca || 'N/A'} ${agregado.modelo || ''}`, 70, yPosition + 60);
+
+        yPosition += 85;
+    });
+}
+
+async function salvarRelatorioNoBanco(dadosRelatorio) {
+    const query = `
+        INSERT INTO Relatorio (Nome_Relatorio, Tipo_Relatorio, URL_Relatorio, Gerado_Por)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    await db.promise().query(query, [
+        dadosRelatorio.nome_relatorio,
+        dadosRelatorio.tipo_relatorio,
+        dadosRelatorio.url_relatorio,
+        dadosRelatorio.gerado_por
+    ]);
+}
+
+export const obterRelatorioPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const query = `
+            SELECT r.*, c.Nome_Col as gerador_nome 
+            FROM Relatorio r
+            LEFT JOIN Colaboradores c ON r.Gerado_Por = c.ID_colaborador
+            WHERE r.ID_Relatorio = ?
+        `;
+
+        const [relatorios] = await db.promise().query(query, [id]);
+
+        if (relatorios.length === 0) {
+            return res.status(404).json({ mensagem: 'Relatório não encontrado' });
+        }
+
+        res.status(200).json(relatorios[0]);
+
+    } catch (error) {
+        console.error(' Erro ao buscar relatório:', error);
+        res.status(500).json({ mensagem: 'Erro interno ao buscar relatório' });
+    }
+};
+
+export const excluirRelatorio = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const query = 'DELETE FROM Relatorio WHERE ID_Relatorio = ?';
+        const [result] = await db.promise().query(query, [id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ mensagem: 'Relatório não encontrado' });
+        }
+
+        res.status(200).json({ mensagem: 'Relatório excluído com sucesso' });
+
+    } catch (error) {
+        console.error(' Erro ao excluir relatório:', error);
+        res.status(500).json({ mensagem: 'Erro interno ao excluir relatório' });
+    }
+};

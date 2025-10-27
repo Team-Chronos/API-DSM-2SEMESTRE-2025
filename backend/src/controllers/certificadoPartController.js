@@ -1,16 +1,16 @@
 import db from '../config/db.js';
 
 export const criarCertPartEvento = async (req, res) => {
-    const { id_colab, id_evento, data_part, duracao_part, descricao_part} = req.body;
+    const { id_colab, id_evento, objetivo, principais_infos, aplicacoes_newe, referencias, avaliacao, comentarios} = req.body;
     
     try {
-        const query = 'INSERT INTO Certificado_Participacao (ID_Colaborador, ID_Evento, Data_Part, Duracao_Part, Descricao_Part) VALUES (?, ?, ?, ?, ?)';
-        const [result] = await db.promise().query(query, [id_colab, id_evento, data_part, duracao_part, descricao_part]);
+        const query = 'INSERT INTO Certificado_Participacao VALUES (?, ?, ?, ?, ?, ?, ?, ?, default)';
+        const [result] = await db.promise().query(query, [id_colab, id_evento, objetivo, principais_infos, aplicacoes_newe, referencias, avaliacao, comentarios]);
 
         res.status(201).json({ mensagem: "Participação cadastrado com sucesso!" });
 
     } catch (err) {
-        console.error("Erro ao cadastrar evento:", err);
+        console.error("Erro ao cadastrar participação evento:", err);
         res.status(500).json({ mensagem: "Erro interno ao cadastrar participação." });
     }
 };

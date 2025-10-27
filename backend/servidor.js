@@ -13,6 +13,8 @@ import clienteRoutes from './src/routes/clienteRoutes.js'
 import interacaoRoutes from './src/routes/interacaoRoutes.js'
 import relatorioRoutes from './src/routes/relatorioRoutes.js'
 
+import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
+import agendaRoutes from './src/routes/agendaRoutes.js';
 import db from './src/config/db.js';
 import cors from 'cors';
 
@@ -34,8 +36,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
+app.use('/api/interacoes', interacaoRoutes);
+
+app.use('/api/agenda', agendaRoutes);
 
 app.use('/api/certificadoParticipacao', certificadoPartRoutes)
+app.use('/api', modalidadeRoutes);
 
 app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);

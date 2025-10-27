@@ -1,12 +1,21 @@
 import express from 'express';
-import { listarRelatorios, gerarRelatorio, downloadRelatorio, excluirRelatorio } from '../controllers/relatorioController.js'; 
+import {
+    gerarRelatorioPDF,
+    gerarRelatorioExcel,
+    listarRelatorios,
+    obterRelatorioPorId,
+    excluirRelatorio,
+    obterTiposRelatorio
+} from '../controllers/relatorioController.js';
 
 const router = express.Router();
 
+router.post('/gerar-pdf', gerarRelatorioPDF);
+router.post('/gerar-excel', gerarRelatorioExcel);
+router.get('/tipos', obterTiposRelatorio);
+
 router.get('/', listarRelatorios);
-router.post('/gerar', gerarRelatorio);
-router.get('/download/:filename', downloadRelatorio);
+router.get('/:id', obterRelatorioPorId);
 router.delete('/:id', excluirRelatorio);
 
 export default router;
-

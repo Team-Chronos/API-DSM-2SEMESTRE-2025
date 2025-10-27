@@ -1,5 +1,9 @@
+import { Calendar } from "./eventos/Calendar"
+
 export const Eventos = () => {
     return (
-        <div>Teste</div>
+        <div id="divEventos">
+            <Calendar />
+        </div>
     )
 }

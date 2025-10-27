@@ -19,6 +19,7 @@ export interface Evento {
   Data_Evento: string;
   Duracao_Evento: number;
   Local_Evento: string;
+  ID_Tipo_Evento: number;
   Descricao: string;
   criado_em: string;
   atualizado_em: string;
@@ -39,10 +40,27 @@ export interface Notificacao {
   Data_Evento: string;
   Duracao_Evento: number;
   Local_Evento: string;
+  ID_Tipo_Evento: number;
   Descricao: string;
   ID_Status: number;
   justificativa_notificacao?: string;
 }
+export type Certificado = {
+  id: number
+  ID_colaborador: number
+  Nome_Evento: string
+  Url_Pdf: string
+  Data_Part: string
+  Duracao_Evento: string
+  Descricao?: string
+  Local_Evento: string
+};
+export interface HistoricoModalidade {
+  id: number;
+  modalidade: string;
+  criado_em: string;
+}
+export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado" | "cliente";
 
 export interface Cliente {
   ID_Cliente: number;
@@ -56,4 +74,8 @@ export interface Cliente {
   Data_Cadastro: string;
 }
 
-export type Tab = "colaboradores" | "eventos" | "cargos" | "cliente";
+export const tp_tipo_evento = {
+  1: "Feira",
+  2: "Workshop",
+  3: "Reunião",
+};

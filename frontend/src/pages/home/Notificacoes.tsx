@@ -1,5 +1,6 @@
 import { useAuth } from "../../context/AuthContext";
 import { ListaNotificacoes } from "./notificacoes/ListaNotificacoes";
+import "../../css/notificacoes.css";
 
 export const Notificacoes = () => {
   const { user } = useAuth();
@@ -9,7 +10,7 @@ export const Notificacoes = () => {
   }
 
   return (
-    <div className="p-3">
+    <div id="divNotificacoes" className="p-3">
       <ListaNotificacoes idColab={user.id} />
     </div>
   );

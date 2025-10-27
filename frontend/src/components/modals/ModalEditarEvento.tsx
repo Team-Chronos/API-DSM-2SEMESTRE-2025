@@ -17,20 +17,10 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
     data_evento: dataHora(),
     duracao_evento: "",
     local_evento: "",
+    tipo_evento: 1,
     descricao_evento: "",
-    participantes: [] as number[],
+    participantes: [],
   });
-
-  function limparForm() {
-    setForm({
-      nome_evento: "",
-      data_evento: dataHora(),
-      duracao_evento: "",
-      local_evento: "",
-      descricao_evento: "",
-      participantes: [],
-    });
-  }
 
   useEffect(() => {
     if (evento) {
@@ -39,11 +29,10 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
         data_evento: dataHora(evento.Data_Evento),
         duracao_evento: evento.Duracao_Evento?.toString() || "",
         local_evento: evento.Local_Evento || "",
+        tipo_evento: evento.ID_Tipo_Evento || 1,
         descricao_evento: evento.Descricao || "",
-        participantes: evento.participantes || [],
+        participantes: [],
       });
-    } else {
-      limparForm();
     }
   }, [evento]);
 
@@ -64,7 +53,6 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
       await axios.put(`http://localhost:3000/api/eventos/${evento.ID_Evento}`, form);
       onSuccess();
       onClose();
-      limparForm();
     } catch (error) {
       console.error("Erro ao atualizar evento:", error);
     }
@@ -75,7 +63,6 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
       show={show}
       centered
       onHide={() => {
-        limparForm();
         onClose();
       }}
     >
@@ -128,6 +115,15 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
           </Form.Group>
 
           <Form.Group className="mb-3">
+            <Form.Label>Tipo do Evento</Form.Label>
+            <Form.Select name="tipo_evento" value={form.tipo_evento} onChange={handleChange} required>
+              <option value="1">Feira</option>
+              <option value="2">Workshop</option>
+              <option value="3">Reunião</option>
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
             <Form.Label>Descrição</Form.Label>
             <Form.Control
               as="textarea"
@@ -143,7 +139,6 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
           <Button
             variant="secondary"
             onClick={() => {
-              limparForm();
               onClose();
             }}
           >

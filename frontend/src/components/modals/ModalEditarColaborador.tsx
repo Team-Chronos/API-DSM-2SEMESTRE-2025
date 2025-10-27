@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Modal, Button, Form } from "react-bootstrap";
 import { formatarCpf, formatarTelefone } from "../../utils/formatacoes";
+import type { Cargos } from "../../utils/tipos";
 
 interface ModalEditarColaboradorProps {
   show: boolean;
@@ -16,8 +17,11 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
     email: "",
     telefone: "",
     cpf: "",
+    id_cargo: "1",
     setor: "1",
   });
+
+  const [cargos, setCargos] = useState<Cargos[]>([]);
 
 	function limparForm(){
 		setForm({
@@ -25,22 +29,32 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
 			email: "",
 			telefone: "",
 			cpf: "",
+      id_cargo: "1",
 			setor: "1",
 		});
 	}
 
   useEffect(() => {
+
 		if (colaborador) {
 			setForm({
 				nome: colaborador.Nome_Col || "",
 				email: colaborador.Email || "",
 				telefone: formatarTelefone(colaborador.Telefone || "") || "",
 				cpf: formatarCpf(colaborador.CPF || "") || "",
+        id_cargo: colaborador.ID_Cargo,
 				setor: colaborador.Setor || 1,
 			});
 		} else {
 			limparForm();
 		}
+
+    async function getCargos(){
+      const resCargos = await axios.get("http://localhost:3000/api/colaboradores/cargos")
+      setCargos(resCargos.data)
+    }
+    getCargos()
+
 	}, [colaborador]);
 
   if (!colaborador) return null;
@@ -132,8 +146,18 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
               value={form.cpf}
               onChange={handleChange}
 							maxLength={14}
-              required
             />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Cargo</Form.Label>
+            <Form.Select name="id_cargo" value={form.id_cargo} onChange={handleChange} required>
+              {cargos.map(cargo => (
+                <option key={cargo.ID_Cargo} value={cargo.ID_Cargo}>
+                  {cargo.Nome_Cargo}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">

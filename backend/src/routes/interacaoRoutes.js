@@ -1,10 +1,25 @@
 import express from 'express';
-import { criarInteracao, listarInteracoes, listarInteracoesPorCliente } from '../controllers/interacaoController.js';
+import {
+    registrarInteracao,
+    listarInteracoesCliente,
+    listarInteracoesVendedor,
+    obterInteracaoPorId,
+    atualizarInteracao,
+    excluirInteracao,
+    obterProximasAcoes,
+    obterEstatisticasVendedor
+} from '../controllers/interacaoController.js';
 
 const router = express.Router();
 
-router.get('/', listarInteracoes)
-router.get("/:idCliente", listarInteracoesPorCliente)
-router.post('/', criarInteracao)
+router.post('/', registrarInteracao);
+router.get('/cliente/:id_cliente', listarInteracoesCliente);
+router.get('/vendedor/:id_vendedor', listarInteracoesVendedor);
+router.get('/:id', obterInteracaoPorId);
+router.put('/:id', atualizarInteracao);
+router.delete('/:id', excluirInteracao);
 
-export default router
+router.get('/vendedor/:id_vendedor/proximas-acoes', obterProximasAcoes);
+router.get('/vendedor/:id_vendedor/estatisticas', obterEstatisticasVendedor);
+
+export default router;

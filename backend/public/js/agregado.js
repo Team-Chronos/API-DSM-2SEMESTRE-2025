@@ -1,4 +1,4 @@
-// public/js/agregado.js
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     const sucessoModal = new bootstrap.Modal(document.getElementById('sucessoModal'));
