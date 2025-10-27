@@ -5,7 +5,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "fatec",
-  database: "Api_2"
+  database: "api_2a"
 });
 
 

@@ -50,4 +50,3 @@ class Relatorio {
 }
 
 export default Relatorio;
-
