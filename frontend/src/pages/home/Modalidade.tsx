@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { getHistoricoModalidade } from "../../services/modalidadeService";
 import { useAuth } from "../../context/AuthContext";
 import type { HistoricoModalidade } from "../../utils/tipos";
+import { dataHora } from "../../utils/facilidades";
+import { formatarDataHora } from "../../utils/formatacoes";
 
 export const Modalidade = () => {
   const { user } = useAuth();
@@ -22,6 +24,7 @@ export const Modalidade = () => {
       
       try {
         const data = await getHistoricoModalidade(user.id);
+        console.log(data)
         setHistorico(data);
       } catch (err) {
         console.error("Erro ao carregar histórico:", err);
@@ -62,7 +65,7 @@ export const Modalidade = () => {
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.modalidade}</td>
-                <td>{new Date(item.data_resposta).toLocaleString("pt-BR")}</td>
+                <td>{formatarDataHora(dataHora(item.criado_em))}</td>
               </tr>
             ))}
           </tbody>

@@ -1,5 +1,5 @@
-CREATE DATABASE Api_2;
-USE Api_2;
+CREATE DATABASE Api_2a;
+USE Api_2a;
 
 CREATE TABLE  Setor (
     ID_Setor INT PRIMARY KEY AUTO_INCREMENT,
@@ -31,12 +31,20 @@ CREATE TABLE  Colaboradores (
     FOREIGN KEY (Setor) REFERENCES Setor(ID_Setor)
 );
 
+create table Tipo_Evento(
+	ID_Tipo_Evento int primary key auto_increment,
+    Tipo_Evento_Nome enum("Feira", "Workshop", "Reunião")
+);
+INSERT INTO Tipo_Evento (Tipo_Evento_Nome)
+VALUES ('Feira'), ('Workshop'), ('Reunião');
+
 CREATE TABLE  Evento (
     ID_Evento INT PRIMARY KEY AUTO_INCREMENT,
     Nome_Evento VARCHAR(255) NOT NULL,
     Data_Evento DATETIME NOT NULL,
     Duracao_Evento VARCHAR(30),
     Local_Evento VARCHAR(255) NOT NULL,
+    ID_Tipo_Evento int not null,
     Descricao TEXT NOT NULL,
     Criado_Por INT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -62,16 +70,40 @@ CREATE TABLE Participacao_Evento (
     FOREIGN KEY (ID_Status) REFERENCES Status_Participacao(ID_Status)
 );
 
-CREATE TABLE Certificado_Participacao (
-    ID_Colaborador INT NOT NULL,
-    ID_Evento INT NOT NULL,
-    Data_Part DATETIME NOT NULL,
-    Duracao_Part VARCHAR(30) NOT NULL,
-    Descricao_Part TEXT NOT NULL,
+create table Certificado_Participacao (
+	ID_Colaborador int not null,
+    ID_Evento int not null,
+    Objetivo_Part text not null,
+    Principais_Inf text not null,
+    Aplicacoes_Newe text not null,
+    Referencias text,
+    Avaliacao int check (10 >= Avaliacao >= 0) not null,
+    Comentarios text,
+    criado_em datetime default current_timestamp,
     PRIMARY KEY (ID_Evento, ID_Colaborador),
     FOREIGN KEY (ID_Evento) REFERENCES Evento (ID_Evento) ON DELETE CASCADE,
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_colaborador) ON DELETE CASCADE
 );
+
+create view vw_participacao as
+select 
+"RELATÓRIO DE APROVEITAMENTO" as tipo_documento, s.Nome_Setor as departamento_funcionario,
+e.Nome_Evento as titulo_atividade, e.Data_Evento, e.Duracao_Evento,
+col.Nome_Col as participante, car.Nome_Cargo as cargo_funcionario,
+e.Local_Evento, te.Tipo_Evento_Nome,
+cp.Objetivo_Part,
+cp.Principais_Inf,
+cp.Aplicacoes_Newe,
+cp.Referencias,
+cp.Avaliacao,
+cp.Comentarios
+from certificado_participacao cp
+inner join colaboradores col on col.ID_colaborador = cp.ID_Colaborador
+inner join cargo car on car.ID_Cargo = col.ID_Cargo
+inner join setor s on s.ID_Setor = col.Setor
+inner join evento e on e.ID_Evento = cp.ID_Evento
+inner join tipo_evento te on te.ID_Tipo_Evento = e.ID_Tipo_Evento;
+
 
 CREATE TABLE  colaboradores_emails_enviados (
     ID_colaborador INT PRIMARY KEY,
@@ -238,12 +270,12 @@ INSERT INTO Status_Participacao (ID_Status, Nome_Status) VALUES
 (3, 'Recusado'),
 (4, 'Concluído');
 
-INSERT INTO Evento (ID_Evento, Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, Descricao, Criado_Por) VALUES
-(1, 'Workshop de Gestão de Projetos', '2025-11-20 09:00:00', '4h', 'Auditório Principal', 'Workshop para aprimorar habilidades em gestão de projetos.', 1),
-(2, 'Treinamento Operacional', '2025-11-22 14:00:00', '3h', 'Sala de Treinamento 2', 'Treinamento prático para a equipe operacional.', 1),
-(3, 'Reunião Comercial Mensal', '2025-11-25 10:00:00', '2h', 'Sala de Reuniões 1', 'Discussão das metas e estratégias comerciais do mês.', 2),
-(4, 'Seminário de Inovação', '2025-12-01 09:00:00', '5h', 'Auditório Principal', 'Seminário sobre tendências e inovações no setor.', 1),
-(5, 'Palestra Motivacional', '2025-12-05 15:00:00', '2h', 'Auditório Secundário', 'Palestra para engajar e motivar a equipe.', 2);
+INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao) VALUES
+('Workshop de Gestão de Projetos', '2025-11-20 09:00:00', '4h', 'Auditório Principal', 2, 'Workshop para aprimorar habilidades em gestão de projetos.'),
+('Treinamento Operacional', '2025-11-22 14:00:00', '3h', 'Sala de Treinamento 2', 1, 'Treinamento prático para a equipe operacional.'),
+('Reunião Comercial Mensal', '2025-11-25 10:00:00', '2h', 'Sala de Reuniões 1', 3, 'Discussão das metas e estratégias comerciais do mês.'),
+('Seminário de Inovação', '2025-12-01 09:00:00', '5h', 'Auditório Principal', 1, 'Seminário sobre tendências e inovações no setor.'),
+('Palestra Motivacional', '2025-12-05 15:00:00', '2h', 'Auditório Secundário', 1, 'Palestra para engajar e motivar a equipe.');
 
 INSERT  INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
 (1, 2, 1), (1, 1, 1), (1, 3, 1),

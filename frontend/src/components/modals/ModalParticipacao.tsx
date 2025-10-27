@@ -58,6 +58,8 @@ export const ModalParticipacao = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(user.id)
+    console.log(form)
     try {
       await axios.post("http://localhost:3000/api/certificadoParticipacao", form);
       onSuccess(evento.ID_Evento);

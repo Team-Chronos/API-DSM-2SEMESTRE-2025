@@ -3,10 +3,10 @@ import db from '../config/db.js';
 const HistoricoModalidade = {
   findByColaboradorId: (colaboradorId) => {
     const query = `
-      SELECT id, modalidade, data_resposta 
+      SELECT id, modalidade, criado_em 
       FROM historico_modalidade 
       WHERE colaborador_id = ? 
-      ORDER BY data_resposta DESC
+      ORDER BY criado_em DESC
     `;
     return db.promise().query(query, [colaboradorId]);
   },

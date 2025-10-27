@@ -58,7 +58,7 @@ export type Certificado = {
 export interface HistoricoModalidade {
   id: number;
   modalidade: string;
-  data_resposta: string;
+  criado_em: string;
 }
 export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado";
 
