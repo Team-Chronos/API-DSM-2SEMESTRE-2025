@@ -1,0 +1,37 @@
+{
+  "name": "api-dsm-2semestre-2025",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node servidor.js",
+    "dev": "nodemon servidor.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/issues"
+  },
+  "homepage": "https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  },
+  "dependencies": {
+    "api-dsm-2semestre-2025": "file:..",
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "9.0.2",
+    "jwt-decode": "^4.0.0",
+    "mysql2": "^3.14.5",
+    "nodemailer": "^7.0.6",
+    "pdfkit": "^0.17.2"
+  }
+}

@@ -1,0 +1,52 @@
+
+.dashboard-container {
+  padding: 1rem;
+}
+
+
+.dashboard-title {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+
+.dashboard-card {
+  background-color: #e9e9e9;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+
+.dashboard-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+
+.dashboard-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-text {
+  color: #333;
+}

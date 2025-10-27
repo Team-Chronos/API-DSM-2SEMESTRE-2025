@@ -1,0 +1,156 @@
+#adm-module .header-tabs .btn{
+    color: white;
+    background-color: var(--azul-escuro);
+    border-radius: 0;
+}
+
+#adm-module .header-tabs .btn:active{
+    border-color: transparent !important;
+}
+
+#adm-module .header-tabs .btn.ativo{
+    background-color: var(--azul);
+}
+
+#adm-module .header-tabs .btn:first-child {
+    border-radius: 10px 0 0 10px;
+    border-right: 1px solid var(--azul-muito-escuro);
+}
+
+#adm-module .header-tabs .btn:last-child {
+    border-radius: 0 10px 10px 0;
+    border-left: 1px solid var(--azul-muito-escuro);
+}
+
+#adm-module #btn-modal-cad {
+    color: white;
+    background-color: var(--azul);
+    margin-left: auto;
+}
+
+#adm-module .botoes-tabela {
+    font-size: 20px;
+    color: white !important;
+    column-gap: .5rem;
+    row-gap: .4rem;
+}
+
+#adm-module .btn-tabela-editar {
+    background-color: dodgerblue;
+    border-radius: 5px;
+    padding: 2px 5px;
+}
+
+#adm-module .btn-tabela-excluir {
+    background-color: red;
+    border-radius: 5px;
+    padding: 2px 5px;
+}
+
+#adm-module .pesquisa-principal {
+    max-width: 250px;
+    width: 100%;
+}
+
+#adm-module .filtro-select {
+    width: auto; 
+    min-width: 150px; 
+}
+
+#adm-module .btn-refresh-header {
+    background-color: transparent; 
+    border: none;
+    padding: 2px 6px;
+    border-radius: 5px;
+    line-height: 1;
+    color: #6c757d;
+}
+
+#adm-module .btn-refresh-header:hover {
+    background-color: #e9ecef;
+    color: #000;
+}
+
+#adm-module #descricao_evento {
+  resize: vertical;
+}
+
+#adm-module #colEventoDiv {
+    background-color: #eee;
+    border-radius: 15px;
+    border: 1px solid #bbb;
+}
+
+#adm-module #pesquisaColEvento {
+    grid-column: 1 / span 2;
+    justify-self: center;
+}
+
+#adm-module .text-large {
+    font-size: large;
+}
+
+#adm-module #colEvento {
+    grid-template-columns: 1fr 1fr;
+}
+
+#adm-module .page-header {
+    border-radius: 0.5rem;
+}
+
+#adm-module .page-header .form-control,
+#adm-module .page-header .form-select {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    font-size: 0.9rem;
+    padding: 0.375rem 0.75rem;
+}
+
+#adm-module .search-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+}
+
+#adm-module .search-wrapper .bi-search {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    pointer-events: none;
+}
+
+#adm-module .search-wrapper .form-control {
+    padding-left: 35px;
+}
+
+#adm-module .page-header .filter-wrapper label {
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+#adm-module .page-header .filter-wrapper .form-select {
+    min-width: 150px;
+}
+
+#adm-module .page-header #btn-modal-cad {
+    background-color: var(--azul);
+    color: white;
+    border-color: var(--azul);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+#adm-module .page-header #btn-modal-cad:hover {
+    background-color: var(--azul-escuro);
+    border-color: var(--azul-escuro);
+}
+
+#adm-module .page-header #btn-modal-cad .bi-plus-lg {
+    margin-right: 0.5rem;
+}
