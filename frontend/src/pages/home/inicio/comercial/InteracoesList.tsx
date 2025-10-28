@@ -50,12 +50,11 @@ export const InteracoesList = ({ idCliente }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const colaboradorId = user?.id;
-
       await axios.post("http://localhost:3000/api/interacoes", {
         ...form,
         ID_Cliente: idCliente,
-        ID_Colaborador: colaboradorId,
+        ID_Colaborador: user?.id,
+        data_interacao: new Date().toISOString().slice(0, 19).replace("T", " ")
       });
 
       setShowModal(false);
@@ -117,11 +116,12 @@ export const InteracoesList = ({ idCliente }: Props) => {
                 onChange={handleChange}
                 required
               >
-                <option value="Ligação">Ligação</option>
+                <option value="Telefone">Telefone</option>
                 <option value="Email">Email</option>
                 <option value="Reunião">Reunião</option>
-                <option value="Mensagem">Mensagem</option>
-                <option value="Outro">Outro</option>
+                <option value="Visita">Visita</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Proposta">Proposta</option>
               </Form.Select>
             </Form.Group>
 

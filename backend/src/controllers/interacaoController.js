@@ -1,23 +1,24 @@
 import db from '../config/db.js';
 
 export const registrarInteracao = async (req, res) => {
-    try {
-        const {
-            id_cliente,
-            id_vendedor,
-            data_interacao,
-            forma_contato,
-            titulo,
-            descricao,
-            resultado,
-            proxima_acao,
-            data_proxima_acao,
-            prioridade
-        } = req.body;
+    const {
+        ID_Cliente,
+        ID_Colaborador,
+        data_interacao,
+        Tipo_Interacao,
+        Descricao,
+        Resultado,
+        proxima_acao,
+        data_proxima_acao,
+        prioridade
+    } = req.body;
+    const titulo = req.body.titulo || `Interação ${Tipo_Interacao}`;
 
-        if (!id_cliente || !id_vendedor || !data_interacao || !forma_contato || !titulo) {
+    try {
+
+        if (!ID_Cliente || !ID_Colaborador || !Tipo_Interacao) {
             return res.status(400).json({
-                mensagem: "Campos obrigatórios: id_cliente, id_vendedor, data_interacao, forma_contato, titulo"
+                mensagem: "Campos obrigatórios: ID_Cliente, ID_Colaborador, data_interacao, forma_contato, titulo"
             });
         }
 
@@ -38,13 +39,13 @@ export const registrarInteracao = async (req, res) => {
         `;
 
         const [result] = await db.promise().query(query, [
-            id_cliente,
-            id_vendedor,
+            ID_Cliente,
+            ID_Colaborador,
             data_interacao,
-            forma_contato,
+            Tipo_Interacao,
             titulo,
-            descricao || null,
-            resultado || null,
+            Descricao || null,
+            Resultado || null,
             proxima_acao || null,
             data_proxima_acao || null,
             prioridade || 'Media'
@@ -54,7 +55,7 @@ export const registrarInteracao = async (req, res) => {
             UPDATE Cliente 
             SET Ultima_Interacao = ? 
             WHERE ID_Cliente = ?
-        `, [data_interacao, id_cliente]);
+        `, [data_interacao, ID_Cliente]);
 
         res.status(201).json({
             mensagem: "Interação registrada com sucesso!",

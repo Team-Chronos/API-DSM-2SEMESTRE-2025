@@ -23,13 +23,13 @@ export const Header = ({ activeTab, setActiveTab }: HeaderProps) => {
         >
           Eventos
         </div>
-        {/* <div
-          id="btn-cargos"
-          className={`btn ${activeTab === "cargos" ? "ativo" : ""}`}
-          onClick={() => setActiveTab("cargos")}
+        <div
+          id="btn-relatórios"
+          className={`btn ${activeTab === "relatórios" ? "ativo" : ""}`}
+          onClick={() => setActiveTab("relatórios")}
         >
-          Cargos
-        </div> */}
+          Relatórios
+        </div>
       </div>
     </div>
   );

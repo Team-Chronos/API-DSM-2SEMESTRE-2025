@@ -3,12 +3,13 @@ import { Modal, Button, Form, Alert, Spinner, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 interface ModalGerarRelatorioProps {
+  setor: number;
   show: boolean;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export const ModalGerarRelatorio = ({ show, onClose, onSuccess }: ModalGerarRelatorioProps) => {
+export const ModalGerarRelatorio = ({ setor, show, onClose, onSuccess }: ModalGerarRelatorioProps) => {
   const [tipoRelatorio, setTipoRelatorio] = useState<string>('');
   const [dataInicio, setDataInicio] = useState<string>('');
   const [dataFim, setDataFim] = useState<string>('');
@@ -22,6 +23,22 @@ export const ModalGerarRelatorio = ({ show, onClose, onSuccess }: ModalGerarRela
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const opcoesPorSetor: Record<number, { value: string; label: string }[]> = {
+    1: [
+      { value: "eventos", label: "Eventos (PDF)" },
+      { value: "participacao", label: "Participação Colaborador (PDF)" },
+      { value: "colaboradores", label: "Lista Colaboradores (PDF)" },
+      { value: "agregados", label: "Agregados (PDF/Excel)" },
+    ],
+    2: [
+      { value: "clientes", label: "Clientes (Excel)" },
+      { value: "interacoes", label: "Interações Cliente (Excel)" },
+    ],
+    3: [
+      { value: "agregados", label: "Agregados (PDF/Excel)" },
+    ],
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -160,15 +177,16 @@ export const ModalGerarRelatorio = ({ show, onClose, onSuccess }: ModalGerarRela
         <Form>
           <Form.Group controlId="formTipoRelatorio" className="mb-3">
             <Form.Label>Selecione o Tipo</Form.Label>
-            <Form.Control as="select" value={tipoRelatorio} onChange={(e) => setTipoRelatorio(e.target.value)} disabled={isLoading}>
-               <option value="">Selecione...</option>
-               {/* As opções aqui devem corresponder às chaves enviadas pela API /tipos */}
-               <option value="eventos">Eventos (PDF)</option>
-               <option value="participacao">Participação Colaborador (PDF)</option>
-               <option value="colaboradores">Lista Colaboradores (PDF)</option>
-               <option value="agregados">Agregados (PDF/Excel)</option>
-               <option value="clientes">Clientes (Excel)</option>
-               <option value="interacoes">Interações Cliente (Excel)</option>
+            <Form.Control
+              as="select"
+              value={tipoRelatorio}
+              onChange={(e) => setTipoRelatorio(e.target.value)}
+              disabled={isLoading}
+            >
+              <option value="">Selecione...</option>
+              {opcoesPorSetor[setor]?.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
             </Form.Control>
           </Form.Group>
 
@@ -190,47 +208,49 @@ export const ModalGerarRelatorio = ({ show, onClose, onSuccess }: ModalGerarRela
             </Col>
           </Row>
           
-          <Row>
-            <Col md={6}> 
-              <Form.Group controlId="formCidade" className="mb-3">
-                <Form.Label>Cidade</Form.Label>
-                <Form.Control 
-                  as="select" 
-                  value={cidade} 
-                  onChange={(e) => setCidade(e.target.value)} 
-                  disabled={isLoading || isLoadingCidades} 
-                >
-                  <option value="">{isLoadingCidades ? 'A carregar...' : 'Todas as Cidades'}</option> 
-                  {!isLoadingCidades && cidades.map((c) => ( 
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </Form.Control>
-                {isLoadingCidades && <Spinner size="sm" className="ms-2" />} 
-              </Form.Group>
-            </Col>
-            
-            <Col md={6}> 
-              <Form.Group controlId="formSegmento" className="mb-3">
-                <Form.Label>Segmento</Form.Label>
-                <Form.Control 
+          {setor === 2 && (
+            <Row>
+              <Col md={6}> 
+                <Form.Group controlId="formCidade" className="mb-3">
+                  <Form.Label>Cidade</Form.Label>
+                  <Form.Control 
                     as="select" 
-                    value={segmento} 
-                    onChange={(e) => setSegmento(e.target.value)} 
-                    disabled={isLoading || isLoadingSegmentos} 
-                >
-                   <option value="">{isLoadingSegmentos ? 'A carregar...' : 'Todos os Segmentos'}</option> 
-                   {!isLoadingSegmentos && segmentos.map((s) => ( 
-                     <option key={s} value={s}>
-                       {s}
-                     </option>
-                   ))}
-                </Form.Control>
-                 {isLoadingSegmentos && <Spinner size="sm" className="ms-2" />} 
-              </Form.Group>
-            </Col>
-          </Row>
+                    value={cidade} 
+                    onChange={(e) => setCidade(e.target.value)} 
+                    disabled={isLoading || isLoadingCidades} 
+                  >
+                    <option value="">{isLoadingCidades ? 'A carregar...' : 'Todas as Cidades'}</option> 
+                    {!isLoadingCidades && cidades.map((c) => ( 
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </Form.Control>
+                  {isLoadingCidades && <Spinner size="sm" className="ms-2" />} 
+                </Form.Group>
+              </Col>
+              
+              <Col md={6}> 
+                <Form.Group controlId="formSegmento" className="mb-3">
+                  <Form.Label>Segmento</Form.Label>
+                  <Form.Control 
+                      as="select" 
+                      value={segmento} 
+                      onChange={(e) => setSegmento(e.target.value)} 
+                      disabled={isLoading || isLoadingSegmentos} 
+                  >
+                    <option value="">{isLoadingSegmentos ? 'A carregar...' : 'Todos os Segmentos'}</option> 
+                    {!isLoadingSegmentos && segmentos.map((s) => ( 
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </Form.Control>
+                  {isLoadingSegmentos && <Spinner size="sm" className="ms-2" />} 
+                </Form.Group>
+              </Col>
+            </Row>
+          )}
         </Form>
       </Modal.Body>
       <Modal.Footer>

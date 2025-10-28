@@ -60,7 +60,7 @@ export interface HistoricoModalidade {
   modalidade: string;
   criado_em: string;
 }
-export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado" | "cliente";
+export type Tab = "colaboradores" | "eventos" | "cargos" | "certificado" | "cliente" | "relatórios";
 
 export interface Cliente {
   ID_Cliente: number;
@@ -80,3 +80,9 @@ export const tp_tipo_evento = {
   2: "Workshop",
   3: "Reunião",
 };
+
+export const tp_setor = {
+  1: "Administrativo",
+  2: "Comercial",
+  3: "Operacional"
+}

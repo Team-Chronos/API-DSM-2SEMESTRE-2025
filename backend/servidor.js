@@ -47,7 +47,6 @@ app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
 
 app.use('/api/clientes', clienteRoutes)
-app.use('/api/interacoes', interacaoRoutes)
 app.use('/api/relatorios', relatorioRoutes)
 
 app.get('/api/setores', async (req, res) => {
