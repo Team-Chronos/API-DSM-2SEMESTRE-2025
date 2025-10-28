@@ -16,7 +16,6 @@ export const ModalDestaqueClientes = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  // Função para carregar clientes
   const carregarClientes = async () => {
     try {
       const res = await axios.get("http://localhost:3000/api/clientes");
@@ -36,7 +35,7 @@ export const ModalDestaqueClientes = () => {
         new Date(b.Data_Cadastro).getTime() -
         new Date(a.Data_Cadastro).getTime()
     )
-    .slice(0, 8);
+    .slice(0, 6);
 
   const formatarNome = (nome: string, limite = 12) => {
     return nome.length > limite ? nome.slice(0, limite) + "..." : nome;

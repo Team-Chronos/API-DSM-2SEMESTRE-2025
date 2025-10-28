@@ -15,7 +15,7 @@ import {
 
 interface Cliente {
   ID_Cliente: number;
-  segmento_atuacao: string;
+  Segmento: string;
 }
 
 export const ComercialDashboard = () => {
@@ -43,7 +43,7 @@ export const ComercialDashboard = () => {
         acc: Record<string, { name: string; value: number }>,
         c: Cliente
       ) => {
-        const key = c.segmento_atuacao ?? "Não informado";
+        const key = c.Segmento ?? "Não informado";
         if (!acc[key]) {
           acc[key] = { name: key, value: 0 };
         }

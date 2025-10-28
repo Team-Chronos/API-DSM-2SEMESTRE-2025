@@ -10,7 +10,7 @@ interface Cliente {
   Nome_Cliente: string;
   Email_Cliente: string;
   Telefone_Cliente: string;
-  segmento_atuacao: string;
+  Segmento: string;
   atividade: string;
   depart_responsavel: string;
 }
@@ -47,7 +47,7 @@ export const ClienteDetalhes = () => {
           <h3>{cliente.Nome_Cliente}</h3>
           <p><strong>Email:</strong> {cliente.Email_Cliente}</p>
           <p><strong>Telefone:</strong> {formatarTelefone(cliente.Telefone_Cliente)}</p>
-          <p><strong>Segmento:</strong> {cliente.segmento_atuacao}</p>
+          <p><strong>Segmento:</strong> {cliente.Segmento}</p>
           <p><strong>Atividade:</strong> {cliente.atividade}</p>
           <p><strong>Departamento:</strong> {cliente.depart_responsavel}</p>
         </Card.Body>

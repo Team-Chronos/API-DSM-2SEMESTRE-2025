@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "api-dsm-2semestre-2025": "file:..",
     "axios": "^1.12.2",
     "bootstrap": "^5.3.8",

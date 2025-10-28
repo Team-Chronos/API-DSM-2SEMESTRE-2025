@@ -20,3 +20,4 @@ Thumbs.db
 backend/src/certificados/
 backend/package-lock.json
 frontend/package-lock.json
+backend/reports/

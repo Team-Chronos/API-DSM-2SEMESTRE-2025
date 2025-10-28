@@ -32,7 +32,7 @@ export const InteracoesList = ({ idCliente }: Props) => {
 
   const carregarInteracoes = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/interacoes/${idCliente}`);
+      const res = await axios.get(`http://localhost:3000/api/interacoes/cliente/${idCliente}`);
       setInteracoes(res.data);
     } catch (err) {
       console.error(err);
@@ -163,3 +163,4 @@ export const InteracoesList = ({ idCliente }: Props) => {
     </div>
   );
 };
+

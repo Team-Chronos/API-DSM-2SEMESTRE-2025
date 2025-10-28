@@ -67,11 +67,12 @@ export interface Cliente {
   Nome_Cliente: string;
   Email_Cliente: string;
   Telefone_Cliente: string;
-  Endereco: string;
+  Cidade: string;
   atividade: string;
-  segmento_atuacao: string;
+  Segmento: string;
   depart_responsavel: string;
-  Data_Cadastro: string;
+  criado_em: string;
+  Etapa: string;
 }
 
 export const tp_tipo_evento = {

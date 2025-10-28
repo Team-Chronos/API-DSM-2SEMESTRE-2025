@@ -1,5 +1,5 @@
-CREATE DATABASE Api_2a;
-USE Api_2a;
+CREATE DATABASE Api_2;
+USE Api_2;
 
 CREATE TABLE  Setor (
     ID_Setor INT PRIMARY KEY AUTO_INCREMENT,
@@ -176,8 +176,11 @@ CREATE TABLE  Cliente (
     Nome_Cliente VARCHAR(255) NOT NULL,
     Telefone_Cliente VARCHAR(20),
     Email_Cliente VARCHAR(255),
-    Segmento VARCHAR(100) NULL,
+    Segmento varchar(100) not null,
+    Etapa varchar(255) DEFAULT 'Prospects',
+    atividade varchar(100),
     Cidade VARCHAR(100) NULL,
+    depart_responsavel varchar(100),
     Ultima_Interacao DATETIME NULL,
     Criado_Por INT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -256,7 +259,7 @@ INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
 ('Assistente', 'Colaborador'), ('Analista', 'Colaborador');
 
 INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Cargo) VALUES
-('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'João Victor Moura', 1, '12345678901', '11999999999', 1),
+('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'João Victor Moura', 2, '12345678901', '11999999999', 1),
 ('rafael@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rafael Sette', 1, '77777777777', '12988777777', 1),
 ('rebeca@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rebeca Lima', 1, '99999999999', '11999999999', 1),
 ('rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
@@ -274,13 +277,6 @@ INSERT INTO Participacao_Evento (ID_Evento, ID_Colaborador, ID_Status) VALUES
 (1, 2, 1), (1, 1, 1), (1, 3, 1), (2, 2, 1), (2, 4, 1), (2, 5, 1),
 (3, 2, 1), (3, 1, 1), (3, 5, 1), (4, 2, 1), (4, 3, 1), (4, 4, 1),
 (5, 2, 1), (5, 1, 1), (5, 5, 1), (5, 6, 1);
-
-INSERT INTO Cliente (ID_Cliente, Nome_Cliente, Telefone_Cliente, Email_Cliente, Segmento, Cidade, Criado_Por) VALUES
-(1, 'Empresa ABC Ltda', '1133334444', 'contato@empresaabc.com.br', 'Logística', 'São Paulo', 1),
-(2, 'Comércio XYZ S/A', '1144445555', 'vendas@comercioxyz.com.br', 'Varejo', 'Rio de Janeiro', 2),
-(3, 'Indústria 123 ME', '1155556666', 'compra@industria123.com.br', 'Indústria', 'Belo Horizonte', 1),
-(4, 'Distribuidora Central', '1166667777', 'pedidos@distribuidoracentral.com.br', 'Distribuição', 'Curitiba', 3),
-(5, 'Atacadão Nacional', '1177778888', 'compras@atacadaonacional.com.br', 'Atacado', 'Porto Alegre', 4);
 
 INSERT INTO Agregados (genero, nome, cpf, nascimento, cidadeNascimento, telefone, email, endereco, placa, marca, modelo) VALUES
 ('Masculino', 'Carlos Silva', '11122233344', '1985-03-15', 'São Paulo', '11911112222', 'carlos.silva@email.com', 'Rua Exemplo, 10, São Paulo', 'BRA1A11', 'Honda', 'CG 160'),
@@ -312,4 +308,3 @@ INSERT INTO notificacoes_personalizadas (titulo, mensagem, destinatarios, priori
 UPDATE Cliente SET Ultima_Interacao = NOW() WHERE ID_Cliente IN (1, 2, 3, 4); 
 
 INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (1, 'Remoto');
-
