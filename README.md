@@ -78,11 +78,11 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 
 ## 🚀 Estratégia de Branch <a id="branch"></a>
 
-[Documentação da Estrátegia de Branch]()
+[Documentação da Estrátegia de Branch](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/blob/main/docs/Documenta%C3%A7%C3%A3o%20da%20Estrat%C3%A9gia%20de%20Branches%20-%20Equipe%20Chronos.pdf)
 
 ## 🔴 Value Proposition Canvas (VPC) <a id="vpc"></a>
 
-[Documentação do VPC]()
+[Documentação do VPC](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/blob/main/docs/VPC%20(Value%20Proposition%20Canvas)%20-%20Chronos.jpg)
 
 ## 📅 Cronograma de Sprints <a id="sprint"></a>
 
