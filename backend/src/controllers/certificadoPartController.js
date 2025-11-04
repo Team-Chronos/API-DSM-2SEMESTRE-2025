@@ -54,54 +54,64 @@ export const criarCertPartEvento = async (req, res) => {
       year: "numeric",
     });
 
-    const nomeArquivo = `certificado_${id_colab}_${id_evento}_${Date.now()}.pdf`;
+    const nomeArquivo = `certificado_${id_colab}_${nomeEvento}.pdf`;
     const caminhoCertificados = path.resolve("src/certificados", nomeArquivo);
 
     if (!fs.existsSync("src/certificados")) {
       fs.mkdirSync("src/certificados", { recursive: true });
     }
 
-    const doc = new PDFDocument({ size: "A4", margin: 50 });
+    const doc = new PDFDocument({ size: "A4", layout: "landscape", margin: 40 });
     const stream = fs.createWriteStream(caminhoCertificados);
     doc.pipe(stream);
 
-    doc.rect(20, 20, 555, 800).stroke("#555");
+    doc.rect(30, 30, 782, 525).stroke("#555");
 
     doc
-      .fontSize(28)
+      .fontSize(32)
       .font("Times-Bold")
       .fillColor("#1a237e")
-      .text("CERTIFICADO DE CONCLUSÃO", { align: "center" })
-      .moveDown(0.5);
+      .text("CERTIFICADO DE PARTICIPAÇÃO", 0, 80, { align: "center" })
+      .moveDown(1.2);
 
     doc
-      .fontSize(20)
+      .fontSize(22)
       .fillColor("#000")
+      .font("Times-Bold")
       .text(nomeEvento.toUpperCase(), { align: "center" })
+      .moveDown(1.5);
+
+    const texto = `Certificamos que ${nomeColab} participou e concluiu com êxito o evento "${nomeEvento}", realizado em ${dataEvento}, com carga horária total de ${duracao}.`;
+
+    doc
+      .fontSize(16)
+      .font("Times-Roman")
+      .fillColor("#000")
+      .text(texto, 100, doc.y, {
+        align: "justify",
+        width: 640, 
+        lineGap: 6,
+      })
       .moveDown(2);
 
     doc
       .fontSize(14)
-      .font("Times-Roman")
-      .fillColor("#000")
-      .text(
-        `Certificamos que ${nomeColab} participou e concluiu com êxito o evento "${nomeEvento}", realizado em ${dataEvento}, com carga horária total de ${duracao}.`,
-        { align: "justify", indent: 30, height: 300, ellipsis: true }
-      )
-      .moveDown(2);
-
-    doc
-      .font("Times-Roman")
-      .text(`São José dos Campos, ${dataAtual}.`, { align: "right" })
+      .text(`São José dos Campos, ${dataAtual}.`, 0, doc.y + 40, {
+        align: "right",
+      })
       .moveDown(5);
-
     doc
-      .moveDown(2)
+      .moveDown(3)
       .fontSize(12)
       .text("_________________________________________", { align: "center" })
-      .text("Coordenação de Eventos", { align: "center" });
+      .text("Coordenação de Eventos", { align: "center" })
+      .moveDown(1)
+      .fontSize(8)
+      .fillColor("#555")
+      .text("Sistema de Certificados - Projeto TCC 2025", { align: "center" });
 
     doc.end();
+
 
     stream.on("finish", () => {
       res.status(201).json({
