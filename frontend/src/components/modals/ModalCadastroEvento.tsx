@@ -11,7 +11,11 @@ interface ModalCadastroEventoProps {
   onSuccess: () => void;
 }
 
-export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroEventoProps) => {
+export const ModalCadastroEvento = ({
+  show,
+  onClose,
+  onSuccess,
+}: ModalCadastroEventoProps) => {
   const [form, setForm] = useState({
     nome_evento: "",
     data_evento: dataHora(),
@@ -34,7 +38,9 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
   async function carregarColaboradores() {
     setLoading(true);
     try {
-      const { data } = await axios.get("http://localhost:3000/api/colaboradores");
+      const { data } = await axios.get(
+        "http://localhost:3000/api/colaboradores"
+      );
       setColaboradores(data);
     } catch (error) {
       console.error("Erro ao carregar colaboradores:", error);
@@ -58,7 +64,9 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
   }
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -98,9 +106,9 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
     }
   }
 
-	const colaboradoresFiltrados = colaboradores.filter((c) =>
-		normalizarTexto(c.Nome_Col).includes(normalizarTexto(filtro))
-	);
+  const colaboradoresFiltrados = colaboradores.filter((c) =>
+    normalizarTexto(c.Nome_Col).includes(normalizarTexto(filtro))
+  );
 
   if (!show) return null;
 
@@ -143,11 +151,11 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Duração</Form.Label>
+            <Form.Label>Duração (em horas)</Form.Label>
             <Form.Control
-              type="text"
+              type="number"
               name="duracao_evento"
-              placeholder="Ex: 2 horas"
+              placeholder="Ex: 2"
               value={form.duracao_evento}
               onChange={handleChange}
             />
@@ -166,7 +174,12 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
 
           <Form.Group className="mb-3">
             <Form.Label>Tipo do Evento</Form.Label>
-            <Form.Select name="tipo_evento" value={form.tipo_evento} onChange={handleChange} required>
+            <Form.Select
+              name="tipo_evento"
+              value={form.tipo_evento}
+              onChange={handleChange}
+              required
+            >
               <option value="1">Feira</option>
               <option value="2">Workshop</option>
               <option value="3">Reunião</option>
@@ -190,7 +203,9 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
               <Form.Label className="mb-0">Participantes</Form.Label>
               <Button
                 size="sm"
-                variant={todosSelecionados ? "outline-danger" : "outline-primary"}
+                variant={
+                  todosSelecionados ? "outline-danger" : "outline-primary"
+                }
                 onClick={toggleSelecionarTodos}
                 disabled={loading || colaboradores.length === 0}
               >
@@ -198,10 +213,15 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
               </Button>
             </div>
 
-            <div id="colEventoDiv" className="border rounded p-3 mt-2" style={{ maxHeight: "250px", overflowY: "auto" }}>
+            <div
+              id="colEventoDiv"
+              className="border rounded p-3 mt-2"
+              style={{ maxHeight: "250px", overflowY: "auto" }}
+            >
               {loading ? (
                 <div className="text-center py-3">
-                  <Spinner animation="border" size="sm" /> Carregando colaboradores...
+                  <Spinner animation="border" size="sm" /> Carregando
+                  colaboradores...
                 </div>
               ) : (
                 <>
@@ -218,8 +238,12 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
                         className="form-check-input"
                         type="checkbox"
                         id={`col-${col.ID_colaborador}`}
-                        checked={form.participantes.includes(col.ID_colaborador)}
-                        onChange={() => handleCheckboxChange(col.ID_colaborador)}
+                        checked={form.participantes.includes(
+                          col.ID_colaborador
+                        )}
+                        onChange={() =>
+                          handleCheckboxChange(col.ID_colaborador)
+                        }
                       />
                       <label
                         className="form-check-label"
@@ -230,7 +254,9 @@ export const ModalCadastroEvento = ({ show, onClose, onSuccess }: ModalCadastroE
                     </div>
                   ))}
                   {colaboradoresFiltrados.length === 0 && (
-                    <p className="text-muted text-center">Nenhum colaborador encontrado</p>
+                    <p className="text-muted text-center">
+                      Nenhum colaborador encontrado
+                    </p>
                   )}
                 </>
               )}
