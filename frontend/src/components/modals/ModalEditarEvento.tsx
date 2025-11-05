@@ -11,7 +11,12 @@ interface ModalEditarEventoProps {
   onSuccess: () => void;
 }
 
-export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEditarEventoProps) => {
+export const ModalEditarEvento = ({
+  show,
+  evento,
+  onClose,
+  onSuccess,
+}: ModalEditarEventoProps) => {
   const [form, setForm] = useState({
     nome_evento: "",
     data_evento: dataHora(),
@@ -39,7 +44,9 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
   if (!evento) return null;
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -50,7 +57,10 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
     if (!evento) return;
 
     try {
-      await axios.put(`http://localhost:3000/api/eventos/${evento.ID_Evento}`, form);
+      await axios.put(
+        `http://localhost:3000/api/eventos/${evento.ID_Evento}`,
+        form
+      );
       onSuccess();
       onClose();
     } catch (error) {
@@ -97,7 +107,7 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
           <Form.Group className="mb-3">
             <Form.Label>Duração (horas)</Form.Label>
             <Form.Control
-              type="text"
+              type="number"
               name="duracao_evento"
               value={form.duracao_evento}
               onChange={handleChange}
@@ -116,7 +126,12 @@ export const ModalEditarEvento = ({ show, evento, onClose, onSuccess }: ModalEdi
 
           <Form.Group className="mb-3">
             <Form.Label>Tipo do Evento</Form.Label>
-            <Form.Select name="tipo_evento" value={form.tipo_evento} onChange={handleChange} required>
+            <Form.Select
+              name="tipo_evento"
+              value={form.tipo_evento}
+              onChange={handleChange}
+              required
+            >
               <option value="1">Feira</option>
               <option value="2">Workshop</option>
               <option value="3">Reunião</option>

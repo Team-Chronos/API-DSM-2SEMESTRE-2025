@@ -16,7 +16,7 @@ export const Calendar = () => {
   const [filtroData, setFiltroData] = useState<string>("");
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [eventosFiltrados, setEventosFiltrados] = useState<Evento[]>([]);
-  const [horaAtualIndex, setHoraAtualIndex] = useState<number | null>(null);
+  const [, setHoraAtualIndex] = useState<number | null>(null);
 
   const formatarDataLocal = (date: Date): string => {
     const ano = date.getFullYear();
@@ -39,7 +39,8 @@ export const Calendar = () => {
     for (let i = 0; i < 5; i++) {
       const currentDate = new Date(startOfWeek);
       currentDate.setDate(startOfWeek.getDate() + i);
-      const isToday = formatarDataLocal(currentDate) === formatarDataLocal(today);
+      const isToday =
+        formatarDataLocal(currentDate) === formatarDataLocal(today);
 
       weekDays.push({
         numero: currentDate.getDate(),
@@ -51,12 +52,16 @@ export const Calendar = () => {
     return weekDays;
   };
 
-  const horas = Array.from({ length: 16 }, (_, i) => (5 + i).toString().padStart(2, "0"));
+  const horas = Array.from({ length: 16 }, (_, i) =>
+    (5 + i).toString().padStart(2, "0")
+  );
 
   useEffect(() => {
     const fetchEventos = async () => {
       try {
-        const response = await axios.get<Evento[]>("http://localhost:3000/api/eventos/");
+        const response = await axios.get<Evento[]>(
+          "http://localhost:3000/api/eventos/"
+        );
         setEventos(response.data);
         setEventosFiltrados(response.data);
       } catch (error) {
@@ -70,7 +75,9 @@ export const Calendar = () => {
     let filtrados = eventos;
 
     if (filtroData) {
-      filtrados = filtrados.filter((ev) => ev.Data_Evento.split("T")[0] === filtroData);
+      filtrados = filtrados.filter(
+        (ev) => ev.Data_Evento.split("T")[0] === filtroData
+      );
     }
 
     if (busca.trim()) {
@@ -124,11 +131,14 @@ export const Calendar = () => {
           value={filtroData}
           onChange={(e) => setFiltroData(e.target.value)}
         />
-        <button onClick={() => {
-            setFiltroData("")
-            setBusca("")
-          }
-          }>Limpar</button>
+        <button
+          onClick={() => {
+            setFiltroData("");
+            setBusca("");
+          }}
+        >
+          Limpar
+        </button>
       </div>
 
       <table className="calendar-table">
@@ -148,42 +158,92 @@ export const Calendar = () => {
         </thead>
 
         <tbody>
-          {horas.map((hora, rowIndex) => (
-            <tr
-              key={`row-${rowIndex}`}
-              className={`event-row ${
-                horaAtualIndex === rowIndex ? "hora-atual" : ""
-              }`}
-            >
-              <td className="hour-cell">
-                <span>{hora}:00</span>
-              </td>
-              {dias.map((dia) => {
-                const eventosDoDiaHora = eventosFiltrados.filter((ev) => {
-                  const dataEvento = new Date(ev.Data_Evento);
-                  const horaEvento = dataEvento.getHours().toString().padStart(2, "0");
-                  return (
-                    formatarDataLocal(dataEvento) === dia.data && horaEvento === hora
-                  );
-                });
+          <tr className="calendar-body-row">
+            <td className="hour-labels-cell">
+              {horas.map((hora) => (
+                <div className="hour-label-item" key={hora}>
+                  <span>{hora}:00</span>
+                </div>
+              ))}
+            </td>
 
-                return (
-                  <td
-                    key={`cell-${dia.numero}-${rowIndex}`}
-                    className={`event-cell ${dia.isToday ? "today-column" : ""}`}
-                  >
-                    {eventosDoDiaHora.map((ev) => (
-                      <div key={ev.ID_Evento} className="event-card">
+            {dias.map((dia) => {
+              const eventosDoDia = eventosFiltrados.filter(
+                (ev) => formatarDataLocal(new Date(ev.Data_Evento)) === dia.data
+              );
+
+              return (
+                <td
+                  key={`cell-${dia.numero}`}
+                  className={`event-cell ${dia.isToday ? "today-column" : ""}`}
+                >
+                  {horas.map((hora) => (
+                    <div
+                      className="hour-background-line"
+                      key={`line-${dia.numero}-${hora}`}
+                    ></div>
+                  ))}
+
+                  {eventosDoDia.map((ev) => {
+                    const duracaoEmHoras = parseFloat(
+                      String(ev.Duracao_Evento).replace(",", ".")
+                    );
+
+                    const duracaoValidaHoras = isNaN(duracaoEmHoras)
+                      ? 0
+                      : duracaoEmHoras;
+                    const duracaoTotalMinutos = duracaoValidaHoras * 60;
+
+                    const dataEvento = new Date(ev.Data_Evento);
+                    const startHour = dataEvento.getHours();
+                    const startMinute = dataEvento.getMinutes();
+
+                    const totalStartMinutes = startHour * 60 + startMinute;
+                    const calendarStartMinutes = 5 * 60;
+
+                    const topOffset = totalStartMinutes - calendarStartMinutes;
+                    const eventHeight = duracaoTotalMinutos;
+
+                    const dataFim = new Date(
+                      dataEvento.getTime() + duracaoTotalMinutos * 60000
+                    );
+
+                    const style = {
+                      top: `${topOffset}px`,
+                      height: `${eventHeight}px`,
+                    };
+
+                    const horaInicioStr = dataEvento.toLocaleTimeString(
+                      "pt-BR",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }
+                    );
+
+                    const horaFimStr = !isNaN(dataFim.getTime())
+                      ? dataFim.toLocaleTimeString("pt-BR", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : "??";
+
+                    return (
+                      <div
+                        key={ev.ID_Evento}
+                        className="event-card"
+                        style={style}
+                      >
                         <strong className="title">{ev.Nome_Evento}</strong>
                         <p>{ev.Local_Evento}</p>
-                        <small className="time">{ev.Duracao_Evento}</small>
+                        <small className="time">{`${horaInicioStr} - ${horaFimStr}`}</small>
                       </div>
-                    ))}
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
+                    );
+                  })}
+                </td>
+              );
+            })}
+          </tr>
         </tbody>
       </table>
     </div>
