@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import { listarCertificados } from "./src/controllers/certificadoController.js";
 import eventoRoutes from './src/routes/eventoRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
@@ -48,7 +48,8 @@ app.use('/api/participacaoEventos', participacaoEventoRoutes);
 
 app.use('/api/clientes', clienteRoutes)
 app.use('/api/relatorios', relatorioRoutes)
-
+app.use('/api/certificadoParticipacao', certificadoPartRoutes);
+app.get("/api/certificados", listarCertificados);
 app.get('/api/setores', async (req, res) => {
     try {
         const [setores] = await db.promise().query('SELECT * FROM Setor');

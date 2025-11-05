@@ -1,0 +1,49 @@
+.pdf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem; 
+  }
+  
+  .pdf-card {
+    background-color: #f0f2f5; 
+    border-radius: 8px;
+    padding: 1rem; 
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none; 
+    box-shadow: none; 
+    text-decoration: none;
+  }
+  
+  .pdf-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+  }
+  
+  .pdf-preview-container {
+    background-color: #ffffff; 
+    border: 1px solid #dfe1e5; 
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    width: 100%; 
+   
+  }
+  
+  .pdf-card-title {
+    margin-top: 0;
+    font-weight: 500; 
+    color: #333333; 
+    text-align: center;
+    font-size: 0.875rem;
+    word-break: break-word;
+  }
+  

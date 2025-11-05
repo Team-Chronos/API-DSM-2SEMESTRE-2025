@@ -17,7 +17,8 @@ Thumbs.db
 
 
 /backend/dist
-backend/src/certificados/
 backend/package-lock.json
 frontend/package-lock.json
 backend/reports/
+backend/src/certificados/
+backend/src/relatorios_part/
