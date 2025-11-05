@@ -20,6 +20,5 @@ Thumbs.db
 backend/package-lock.json
 frontend/package-lock.json
 backend/reports/
-backend/src/certificados/certificado_1_5_1762263379624.pdf
-backend/src/certificados/certificado_2_Treinamento Oper..pdf
-backend/src/certificados/certificado_2_Palestra Motivacional_1762263653596.pdf
+backend/src/certificados/
+backend/src/relatorios_part/

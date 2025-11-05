@@ -48,7 +48,7 @@ app.use('/api/participacaoEventos', participacaoEventoRoutes);
 
 app.use('/api/clientes', clienteRoutes)
 app.use('/api/relatorios', relatorioRoutes)
-app.use("/certificados", express.static(path.resolve("src/certificados")));
+app.use('/api/certificadoParticipacao', certificadoPartRoutes);
 app.get("/api/certificados", listarCertificados);
 app.get('/api/setores', async (req, res) => {
     try {

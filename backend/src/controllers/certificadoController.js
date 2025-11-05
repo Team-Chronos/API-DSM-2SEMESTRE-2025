@@ -5,6 +5,10 @@ export const listarCertificados = (req, res) => {
   const dirPath = path.resolve("src/certificados");
 
   try {
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+      console.log("Pasta 'src/certificados' criada automaticamente.");
+    }
     const arquivos = fs.readdirSync(dirPath);
 
     const certificados = arquivos
@@ -20,3 +24,4 @@ export const listarCertificados = (req, res) => {
     res.status(500).json({ mensagem: "Erro ao listar certificados." });
   }
 };
+

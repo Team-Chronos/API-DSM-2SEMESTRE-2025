@@ -1,43 +1,36 @@
-import { useEffect, useState } from "react"
 import { Document, Page } from "react-pdf"
 import "../../css/modalpdf.css"
 
 interface Certificado {
-  nome: string
-  url: string
+  ID_Colaborador: number;
+  ID_Evento: number;
+  Arquivo_PDF: string;
+  Nome_Evento: string;
+  Data_Evento: string;
 }
 
-function PdfPreview({ filtro = "" }) {
-  const [certificados, setCertificados] = useState<Certificado[]>([])
+interface PdfPreviewProps {
+  certificados: Certificado[];
+}
 
-  useEffect(() => {
-    async function fetchCertificados() {
-      try {
-        const response = await fetch("http://localhost:3000/api/certificados")
-        const data = await response.json()
-        setCertificados(data)
-      } catch (error) {
-        console.error("Erro ao carregar certificados:", error)
-      }
-    }
-    fetchCertificados()
-  }, [])
+function PdfPreview({ certificados = [] }: PdfPreviewProps) {
 
-  const certificadosFiltrados = certificados.filter((cert) =>
-    cert.nome.toLowerCase().includes(filtro.toLowerCase())
-  )
   return (
     <div>
       <div className="pdf-grid">
-        {certificadosFiltrados.length > 0 ? (
-          certificadosFiltrados.map((cert) => (
-            <div
-              key={cert.nome}
-              className="pdf-card" 
+        {certificados.length > 0 ? (
+          certificados.map((cert) => (
+            <a
+              key={`${cert.ID_Colaborador}-${cert.ID_Evento}`}
+              href={`http://localhost:3000/api/certificadoParticipacao/download/${cert.Arquivo_PDF}`}
+              className="pdf-card"
+              rel="noopener noreferrer"
+              
+              title={`Baixar certificado: ${cert.Nome_Evento}`}
             >
               <div className="pdf-preview-container">
                 <Document
-                  file={`http://localhost:3000${cert.url}`}
+                  file={`http://localhost:3000/api/certificadoParticipacao/download/${cert.Arquivo_PDF}`}
                   loading="Carregando prévia..."
                   error="Falha ao carregar prévia."
                 >
@@ -49,8 +42,8 @@ function PdfPreview({ filtro = "" }) {
                   />
                 </Document>
               </div>
-              <p className="pdf-card-title">{cert.nome}</p>
-            </div>
+              <p className="pdf-card-title">{cert.Nome_Evento}</p>
+            </a> 
           ))
         ) : (
           <p>Nenhum certificado encontrado.</p>
