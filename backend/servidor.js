@@ -12,6 +12,7 @@ import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js'
 import interacaoRoutes from './src/routes/interacaoRoutes.js'
 import relatorioRoutes from './src/routes/relatorioRoutes.js'
+import checklistRoutes from './src/routes/checklistRoutes.js';
 
 import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
 import agendaRoutes from './src/routes/agendaRoutes.js';
@@ -42,6 +43,8 @@ app.use('/api/agenda', agendaRoutes);
 
 app.use('/api/certificadoParticipacao', certificadoPartRoutes)
 app.use('/api', modalidadeRoutes);
+
+app.use('/api/checklist', checklistRoutes);
 
 app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
