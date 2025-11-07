@@ -44,7 +44,7 @@
 }
 
 #divEventos .calendar-table {
-  width: 95%;
+  width: 76vw;
   border-collapse: collapse;
   border: 1px solid #ddd;
   table-layout: fixed;
