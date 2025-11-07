@@ -1,0 +1,11 @@
+.checklist{
+  display: flex;
+  border-radius: 10px;
+  text-align: left;
+  align-items: center;
+}
+.checklist::after{
+  content: ">";
+  margin-left: auto;
+  font-size: 2rem;
+}
