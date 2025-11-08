@@ -11,6 +11,7 @@ const Eventos = lazy(() => import("../pages/home/Eventos").then(mod => ({ defaul
 const Notificacoes = lazy(() => import("../pages/home/Notificacoes").then(mod => ({ default: (mod as any).default ?? (mod as any).Notificacoes })));
 const Certificados = lazy(() => import("../pages/home/Certificados").then(mod => ({ default: (mod as any).default ?? (mod as any).Certificados })));
 const Modalidade = lazy(() => import("../pages/home/Modalidade").then(mod => ({ default: (mod as any).default ?? (mod as any).Modalidade })));
+const ChecklistPredial = lazy(() => import("../pages/checklistPredial").then(mod => ({ default: (mod as any).default ?? (mod as any).ChecklistPredial })));
 
 const LoadingScreen = () => (
   <div className="d-flex justify-content-center align-items-center vh-100">
@@ -35,6 +36,7 @@ export const AppRoutes = () => {
               <Route path="notificacoes" element={<Notificacoes />} />
               <Route path="modalidade" element={<Modalidade />} />
               <Route path="certificados" element={<Certificados />} />
+              <Route path="checklistPredial" element={<ChecklistPredial />} />
 
               <Route path="comercial/cliente/:id" element={<ClienteDetalhes />} />
 
