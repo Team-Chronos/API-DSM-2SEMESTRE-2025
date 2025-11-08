@@ -3,6 +3,8 @@ import { Suspense, lazy } from "react";
 import { AuthProvider } from "../context/AuthContext";
 import { PrivateRoute } from "./PrivateRoute";
 import { ClienteDetalhes } from "../pages/home/inicio/comercial/ClienteDetalhes";
+import { SetorRoute } from "./SetorRoute";
+import { HistoricoChecklist } from "../pages/home/inicio/operacional/HistoricoChecklist";
 
 const Home = lazy(() => import("../pages/Home").then(mod => ({ default: (mod as any).default ?? (mod as any).Home })));
 const Login = lazy(() => import("../pages/Login").then(mod => ({ default: (mod as any).default ?? (mod as any).Login })));
@@ -12,7 +14,7 @@ const Notificacoes = lazy(() => import("../pages/home/Notificacoes").then(mod =>
 const Certificados = lazy(() => import("../pages/home/Certificados").then(mod => ({ default: (mod as any).default ?? (mod as any).Certificados })));
 const Modalidade = lazy(() => import("../pages/home/Modalidade").then(mod => ({ default: (mod as any).default ?? (mod as any).Modalidade })));
 
-const LoadingScreen = () => (
+export const LoadingScreen = () => (
   <div className="d-flex justify-content-center align-items-center vh-100">
     <div className="text-center">
       <div className="spinner-border text-primary mb-3" role="status" />
@@ -31,6 +33,9 @@ export const AppRoutes = () => {
 
             <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>}>
               <Route index element={<Inicio />} />
+              <Route element={<SetorRoute allowedRoles={[3]}></SetorRoute>}>
+                <Route index path="historicoChecklists" element={<HistoricoChecklist />} />
+              </Route>
               <Route path="eventos" element={<Eventos />} />
               <Route path="notificacoes" element={<Notificacoes />} />
               <Route path="modalidade" element={<Modalidade />} />

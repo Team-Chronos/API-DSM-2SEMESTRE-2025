@@ -255,6 +255,65 @@ INSERT INTO Setor (Nome_Setor, Descricao) VALUES
 ('Comercial', 'Vendas e relacionamento'),
 ('Operacional', 'Execução das atividades');
 
+create table responsaveisVistoria(
+    id_responsavel int primary key,
+    foreign key (id_responsavel) references Colaboradores(ID_colaborador)
+);
+
+create table checklistVeiculoAgregado(
+	ID_cva int primary key auto_increment,
+    nome_motorista varchar(255) not null,
+    cpf varchar(11) not null,
+    placa_veiculo varchar(7) not null,
+    tipo_veiculo varchar(127) not null,
+    nivel_oleo enum("sim", "não", "na") not null,
+    vazamento_oleo enum("sim", "não", "na") not null,
+    nivel_agua enum("sim", "não", "na") not null,
+    foto_motor varchar(255) not null, #tem foto de referencia
+    foto_etiqueta_troca_oleo varchar(255), #tbm tem
+    pne_liso enum("sim", "não") not null,
+    pte_liso enum("sim", "não") not null,
+    ptd_liso enum("sim", "não") not null,
+    pdd_liso enum("sim", "não") not null,
+    pne_foto varchar(255) not null, # 1
+    pte_foto varchar(255) not null, # 2
+    ptd_foto varchar(255) not null, # 3
+    pdd_foto varchar(255) not null, # 4
+    parabrisa_perfeito enum("sim", "não", "na") not null,
+    cabine_externa_limpa enum("sim", "não", "na") not null,
+    veiculo_externo_limpo enum("sim", "não", "na") not null,
+    sem_amassado_ferrugem enum("sim", "não", "na") not null,
+    assoalho_conservado enum("sim", "não", "na") not null,
+    faixas_refletivas enum("sim", "não", "na") not null,
+    parabrisa_funcionando enum("sim", "não", "na") not null,
+    buzina_funciona enum("sim", "não", "na") not null,
+    farol_alto enum("sim", "não", "na") not null,
+    farol_baixo enum("sim", "não", "na") not null,
+    setas_dianteiras enum("sim", "não", "na") not null,
+    setas_traseiras enum("sim", "não", "na") not null,
+    pisca_alerta enum("sim", "não", "na") not null,
+    luz_freio enum("sim", "não", "na") not null,
+    luz_re enum("sim", "não", "na") not null,
+    sirene_re enum("sim", "não", "na") not null,
+    extintor enum("sim", "não", "na") not null,
+    step enum("sim", "não", "na") not null,
+    triangulo enum("sim", "não", "na") not null,
+    macaco enum("sim", "não", "na") not null,
+    chave_roda enum("sim", "não", "na") not null,
+    capacete_seguranca enum("sim", "não", "na") not null,
+    colete_seguranca enum("sim", "não", "na") not null,
+    bota_seguranca enum("sim", "não", "na") not null,
+    foto_frente varchar(255) not null, #tem foto de referencia 1
+    foto_lateral_direita varchar(255) not null, # 2
+    foto_lateral_esquerda varchar(255) not null, # 3
+    foto_traseira varchar(255) not null, # 4
+    observacoes text,
+    id_responsavel_vistoria int,
+    nome_responsavel_vistoria varchar(255),
+    criado_em datetime default current_timestamp,
+    foreign key (id_responsavel_vistoria) references responsaveisVistoria (id_responsavel)
+);
+
 INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
 ('Gerente', 'Gestor'), ('Coordenador', 'Gestor'),
 ('Assistente', 'Colaborador'), ('Analista', 'Colaborador');
@@ -266,6 +325,9 @@ INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Carg
 ('rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
 ('lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
 ('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
+
+insert into responsaveisVistoria values
+(1), (2), (3);
 
 INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao, Criado_Por) VALUES
 ('Workshop Gestão', '2025-11-20 09:00:00', '4h', 'Auditório P.', 2, 'Workshop de gestão.', 1),
