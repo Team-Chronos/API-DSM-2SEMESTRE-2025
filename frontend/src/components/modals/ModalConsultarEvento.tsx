@@ -4,12 +4,10 @@ import { Modal, Button, ListGroup, Spinner, Badge } from "react-bootstrap";
 import { formatarDataHora } from "../../utils/formatacoes";
 import type { Evento } from "../../utils/tipos";
 
-// Você precisará criar uma rota no seu backend que retorne algo assim
-// A partir da tabela Participacao_Evento, Colaboradores e Status_Participacao
 interface Participante {
   ID_Colaborador: number;
   Nome_Col: string;
-  Nome_Status: string; // Ex: "Confirmado", "Pendente"
+  Nome_Status: string;
 }
 
 interface ModalConsultarEventoProps {
@@ -27,21 +25,17 @@ export const ModalConsultarEvento = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Busca os participantes apenas se o modal estiver visível e um evento selecionado
     if (show && evento) {
       const fetchParticipantes = async () => {
         setLoading(true);
         try {
-          // --- ATENÇÃO ---
-          // Você precisa criar esta rota no seu backend (ex: no Node.js/Express)
-          // Ela deve retornar a lista de participantes do evento
           const res = await axios.get(
             `http://localhost:3000/api/eventos/${evento.ID_Evento}/participantes`
           );
           setParticipantes(res.data);
         } catch (error) {
           console.error("Erro ao buscar participantes:", error);
-          setParticipantes([]); // Limpa em caso de erro
+          setParticipantes([]);
         } finally {
           setLoading(false);
         }
@@ -49,11 +43,10 @@ export const ModalConsultarEvento = ({
 
       fetchParticipantes();
     }
-  }, [show, evento]); // Executa toda vez que 'show' or 'evento' mudar
+  }, [show, evento]);
 
   if (!evento) return null;
 
-  // Função auxiliar para converter o ID do tipo em texto
   const getTipoEventoNome = (id: number | undefined) => {
     switch (id) {
       case 1:
@@ -67,7 +60,6 @@ export const ModalConsultarEvento = ({
     }
   };
 
-  // Função para dar cor ao status do participante
   const getStatusVariant = (status: string) => {
     switch (status.toLowerCase()) {
       case "confirmado":
@@ -89,7 +81,6 @@ export const ModalConsultarEvento = ({
       </Modal.Header>
 
       <Modal.Body>
-        {/* Seção de Detalhes do Evento */}
         <h4 className="mb-3">{evento.Nome_Evento}</h4>
         <div className="row">
           <div className="col-md-6">
@@ -121,7 +112,6 @@ export const ModalConsultarEvento = ({
 
         <hr />
 
-        {/* Seção de Participantes */}
         <h5>Participantes</h5>
         {loading ? (
           <div className="text-center my-3">
