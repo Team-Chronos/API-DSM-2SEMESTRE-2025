@@ -27,6 +27,7 @@ export async function registrarChecklist(req, res) {
     farol_baixo,
     setas_dianteiras,
     setas_traseiras,
+    pisca_alerta,
     luz_freio,
     luz_re,
     sirene_re,
@@ -83,6 +84,7 @@ export async function registrarChecklist(req, res) {
       farol_baixo,
       setas_dianteiras,
       setas_traseiras,
+      pisca_alerta,
       luz_freio,
       luz_re,
       sirene_re,
@@ -132,5 +134,33 @@ export async function listarResponsaveis(req, res) {
   } catch (err) {
     console.error("Erro ao listar Responsáveis pela vistoria:", err);
     res.status(500).json({ mensagem: "Erro interno ao listar Responsáveis pela vistoria." });
+  }
+}
+
+export async function listarChecklistsVeiculoAgregado(req, res) {
+  try{
+    const query = `SELECT cva.*, col.Nome_Col FROM checklistveiculoagregado cva left join colaboradores col on col.ID_colaborador = cva.id_responsavel_vistoria;`
+    const [result] = await db.promise().query(query)
+    res.status(200).json(result)
+  } catch (err) {
+    console.error("Erro ao listar checklists de veículo agregado:", err);
+    res.status(500).json({ mensagem: "Erro interno ao listar checklists de veículo agregado." });
+  }
+}
+
+export async function listarChecklistPorId(req, res) {
+  const { id } = req.params;
+  try {
+    const query = `
+      SELECT cva.*, col.Nome_Col FROM checklistVeiculoAgregado cva LEFT JOIN colaboradores col ON col.ID_colaborador = cva.id_responsavel_vistoria WHERE cva.ID_cva = ?;`;
+    const [result] = await db.promise().query(query, [id]);
+    if (result.length === 0){
+      return res.status(404).json({ mensagem: "Checklist não encontrado." });
+    }
+
+    res.status(200).json(result[0]);
+  } catch (err) {
+    console.error("Erro ao buscar checklist por ID:", err);
+    res.status(500).json({ mensagem: "Erro interno ao buscar checklist." });
   }
 }

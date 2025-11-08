@@ -9,3 +9,21 @@
   margin-left: auto;
   font-size: 2rem;
 }
+
+.historicoChecklists{
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  border: 2px solid var(--azul-muito-escuro);
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition: all .2s ease;
+}
+.historicoChecklists:hover{
+  background-color: #0d2d84;
+  color: whitesmoke;
+
+  transform: scale(1.03);
+}

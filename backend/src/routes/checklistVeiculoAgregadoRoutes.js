@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from "multer";
-import { listarResponsaveis, registrarChecklist } from '../controllers/checklistVeiculoAgregadoController.js';
+import { listarChecklistPorId, listarChecklistsVeiculoAgregado, listarResponsaveis, registrarChecklist } from '../controllers/checklistVeiculoAgregadoController.js';
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
@@ -18,7 +18,8 @@ const campos = [
 ]
 
 router.post("/", upload.fields(campos), registrarChecklist)
-
+router.get("/", listarChecklistsVeiculoAgregado)
 router.get("/responsaveis", listarResponsaveis)
+router.get("/:id", listarChecklistPorId);
 
 export default router;

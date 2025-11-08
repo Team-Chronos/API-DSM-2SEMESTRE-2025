@@ -1,0 +1,29 @@
+#historicoChecklist .historicoTab{
+  color: white;
+  background-color: var(--azul-escuro);
+  border-radius: 0;
+
+  padding: .65rem;
+}
+
+#historicoChecklist .historicoTab:active{
+  border-color: transparent !important;
+}
+
+#historicoChecklist .historicoTab.active{
+  background-color: var(--azul);
+}
+
+#historicoChecklist .historicoTab:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+
+  border-right: 1px solid var(--azul-muito-escuro);
+}
+
+#historicoChecklist .historicoTab:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  border-left: 1px solid var(--azul-muito-escuro);
+}

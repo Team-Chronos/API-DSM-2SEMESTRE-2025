@@ -309,6 +309,7 @@ create table checklistVeiculoAgregado(
     observacoes text,
     id_responsavel_vistoria int,
     nome_responsavel_vistoria varchar(255),
+    criado_em datetime default current_timestamp,
     foreign key (id_responsavel_vistoria) references responsaveisVistoria (id_responsavel)
 );
 

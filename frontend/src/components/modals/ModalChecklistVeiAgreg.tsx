@@ -6,9 +6,12 @@ import axios from "axios";
 interface Props {
   show: boolean;
   onClose: () => void;
+  onSucces: () => void
+  onErro: () => void
+  setMensagem: (x: string) => void
 }
 
-export function ModalChecklistVeiAgreg({ show, onClose }: Props) {
+export function ModalChecklistVeiAgreg({ show, onClose, onSucces, onErro, setMensagem }: Props) {
   const [formData, setFormData] = useState<any>({});
   const [ responsaveisVistoria, setResponsaveisVistoria ] = useState<any>(null)
 
@@ -64,13 +67,15 @@ export function ModalChecklistVeiAgreg({ show, onClose }: Props) {
       const response = await axios.post("http://localhost:3000/api/checklistVeiculoAgregado", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert(response.data.mensagem);
+      setMensagem(response.data.mensagem);
+      onSucces()
+      onClose()
     } catch (err) {
-      console.error(err);
-      alert("Erro ao enviar checklist");
+      console.error("Erro ao enviar checklist", err);
+      setMensagem("Erro ao enviar checklist")
+      onErro()
+      onClose()
     }
-
-    console.log("Dados enviados:", formData);
   }
 
   function renderRadios(name: string, label: string, options: string[]){
@@ -89,6 +94,7 @@ export function ModalChecklistVeiAgreg({ show, onClose }: Props) {
               value={opt}
               onChange={handleChange}
               checked={formData[name] === opt}
+              required
             />
           ))}
         </div>
@@ -153,6 +159,7 @@ export function ModalChecklistVeiAgreg({ show, onClose }: Props) {
                   value={opt}
                   onChange={handleChange}
                   checked={formData["tipo_veiculo"] === opt}
+                  required
                 />
               ))}
             </div>
@@ -293,6 +300,7 @@ export function ModalChecklistVeiAgreg({ show, onClose }: Props) {
                       value={resp.id_responsavel}
                       onChange={handleChange}
                       checked={Number(formData.id_responsavel_vistoria) === resp.id_responsavel}
+                      required
                     />
                   ))}
 
@@ -304,6 +312,7 @@ export function ModalChecklistVeiAgreg({ show, onClose }: Props) {
                     value="outro"
                     onChange={handleChange}
                     checked={formData.id_responsavel_vistoria === "outro"}
+                    required
                   />
                 </div>
 
