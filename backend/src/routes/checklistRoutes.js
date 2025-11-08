@@ -3,9 +3,9 @@ import { criarChecklist, listarChecklists, obterChecklistPorId, excluirChecklist
 
 const router = express.Router();
 
-router.post('/checklist', criarChecklist);
-router.get('/checklist', listarChecklists);
-router.get('/checklist/:id', obterChecklistPorId);
-router.delete('/checklist/:id', excluirChecklist);
+router.post('/', criarChecklist);
+router.get('/', listarChecklists);
+router.get('/:id', obterChecklistPorId);
+router.delete('/:id', excluirChecklist);
 
 export default router;

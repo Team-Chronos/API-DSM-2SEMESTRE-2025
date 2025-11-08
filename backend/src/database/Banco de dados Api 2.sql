@@ -250,6 +250,57 @@ CREATE TABLE notificacoes_personalizadas (
     FOREIGN KEY (criado_por) REFERENCES Colaboradores(ID_colaborador)
 );
 
+-- TABELA CHECKLIST CORRIGIDA (SEM FOREIGN KEY PROBLEMÁTICA)
+CREATE TABLE Checklist (
+    ID_Checklist INT PRIMARY KEY AUTO_INCREMENT,
+    Responsavel VARCHAR(100) NOT NULL,
+    Data_Verificacao DATETIME NOT NULL,
+    Piso_ADM TEXT,
+    Piso_Operacional TEXT,
+    Piso_Galpao TEXT,
+    Piso_Refeitorio TEXT,
+    Forro_ADM TEXT,
+    Forro_Operacional TEXT,
+    Forro_Galpao TEXT,
+    Forro_Refeitorio TEXT,
+    Instalacoes_Eletricas TEXT,
+    Protecao_Raios TEXT,
+    ArCond_ADM BOOLEAN DEFAULT FALSE,
+    ArCond_Diretoria BOOLEAN DEFAULT FALSE,
+    ArCond_Reuniao BOOLEAN DEFAULT FALSE,
+    ArCond_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_ADM BOOLEAN DEFAULT FALSE,
+    Lampadas_Diretoria BOOLEAN DEFAULT FALSE,
+    Lampadas_Reuniao BOOLEAN DEFAULT FALSE,
+    Lampadas_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_Galpao BOOLEAN DEFAULT FALSE,
+    Lampadas_Refeitorio BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroFem BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroMasc BOOLEAN DEFAULT FALSE,
+    Macanetas_OK BOOLEAN DEFAULT FALSE,
+    Mesas_Protecao_OK BOOLEAN DEFAULT FALSE,
+    Condicoes_Paleteiras TEXT,
+    Organizacao_Local TEXT,
+    Cameras_OK BOOLEAN DEFAULT FALSE,
+    Balanca_Condicao TEXT,
+    Data_Afericao_Balanca DATE,
+    Condicoes_Mictorios TEXT,
+    Data_Limpeza_Bebedouro DATE,
+    Data_Prox_Dedetizacao DATE,
+    Data_Ult_Recarga_Extintores DATE,
+    Data_Prox_Recarga_Extintores DATE,
+    Data_Limpeza_Caixa DATE,
+    Data_Prox_Limpeza DATE,
+    Cadeiras_Ruim BOOLEAN DEFAULT FALSE,
+    Cadeiras_Detalhe TEXT,
+    Observacoes TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    -- REMOVIDA A FOREIGN KEY: FOREIGN KEY (Responsavel) REFERENCES Colaboradores(Nome_Col)
+);
+
+
+-- INSERTS INICIAIS
 INSERT INTO Setor (Nome_Setor, Descricao) VALUES 
 ('Administrativo', 'Operações administrativas'),
 ('Comercial', 'Vendas e relacionamento'),
@@ -266,6 +317,23 @@ INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Carg
 ('rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
 ('lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
 ('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
+
+-- INSERTS PARA A TABELA CHECKLIST (2 REGISTROS)
+INSERT INTO Checklist (
+    Responsavel, Data_Verificacao, Piso_ADM, Piso_Operacional, Piso_Galpao, Piso_Refeitorio,
+    Forro_ADM, Forro_Operacional, Forro_Galpao, Forro_Refeitorio, Instalacoes_Eletricas, Protecao_Raios,
+    Condicoes_Paleteiras, Organizacao_Local, Balanca_Condicao, Condicoes_Mictorios, Observacoes
+) VALUES 
+(
+    'João Victor Moura', '2024-01-15 09:00:00', 'Bom estado', 'Regular', 'Ótimo', 'Bom',
+    'Sem problemas', 'Necessita limpeza', 'Perfeito', 'Regular', 'Funcionando normalmente', 'Ativo',
+    'Em boas condições', 'Organizado', 'Precisa calibrar', 'Limpos', 'Verificação geral realizada'
+),
+(
+    'Rafael Sette', '2024-01-16 14:30:00', 'Ótimo', 'Bom estado', 'Regular', 'Ótimo',
+    'Perfeito', 'Sem problemas', 'Bom estado', 'Perfeito', 'Tudo funcionando', 'Ativo',
+    'Condições normais', 'Muito organizado', 'Calibrada', 'Limpos e funcionais', 'Tudo em ordem'
+);
 
 INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao, Criado_Por) VALUES
 ('Workshop Gestão', '2025-11-20 09:00:00', '4h', 'Auditório P.', 2, 'Workshop de gestão.', 1),
@@ -309,6 +377,9 @@ INSERT INTO notificacoes_personalizadas (titulo, mensagem, destinatarios, priori
 UPDATE Cliente SET Ultima_Interacao = NOW() WHERE ID_Cliente IN (1, 2, 3, 4); 
 
 INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (1, 'Remoto');
--- Rode este comando no seu banco de dados
+
 ALTER TABLE Certificado_Participacao
 ADD COLUMN Arquivo_PDF VARCHAR(255) NULL;
+
+select * from Checklist;
+
