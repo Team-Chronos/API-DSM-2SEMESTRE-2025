@@ -79,7 +79,8 @@ export const getParticipantesDoEvento = async (req, res) => {
     SELECT
       c.ID_Colaborador,
       c.Nome_Col,
-      s.Nome_Status
+      s.Nome_Status,
+      pe.justificativa
     FROM Participacao_Evento AS pe
     JOIN Colaboradores AS c ON pe.ID_Colaborador = c.ID_Colaborador
     JOIN Status_Participacao AS s ON pe.ID_Status = s.ID_Status

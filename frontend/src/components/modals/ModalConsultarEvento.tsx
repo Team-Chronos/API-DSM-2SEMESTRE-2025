@@ -8,6 +8,7 @@ interface Participante {
   ID_Colaborador: number;
   Nome_Col: string;
   Nome_Status: string;
+  justificativa?: string | null;
 }
 
 interface ModalConsultarEventoProps {
@@ -123,12 +124,21 @@ export const ModalConsultarEvento = ({
               participantes.map((p) => (
                 <ListGroup.Item
                   key={p.ID_Colaborador}
-                  className="d-flex justify-content-between align-items-center"
+                  className="d-flex flex-column align-items-start"
                 >
-                  {p.Nome_Col}
-                  <Badge pill bg={getStatusVariant(p.Nome_Status)}>
-                    {p.Nome_Status}
-                  </Badge>
+                  <div className="d-flex justify-content-between align-items-center w-100">
+                    <span>{p.Nome_Col}</span>
+                    <Badge pill bg={getStatusVariant(p.Nome_Status)}>
+                      {p.Nome_Status}
+                    </Badge>
+                  </div>
+
+                  {p.Nome_Status.toLowerCase() === "recusado" &&
+                    p.justificativa && (
+                      <small className="text-muted fst-italic mt-1">
+                        <strong>Motivo:</strong> {p.justificativa}
+                      </small>
+                    )}
                 </ListGroup.Item>
               ))
             ) : (
