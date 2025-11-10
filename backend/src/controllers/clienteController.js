@@ -2,42 +2,42 @@ import db from '../config/db.js';
 import Cliente from '../models/cliente.js';
 
 export async function criarCliente(req, res) {
-    const { 
-        nome, 
-        email, 
-        telefone,
-        atividade,
-        segmento, 
-        cidade,
-        criadoPor,
-        depart_responsavel 
-    } = req.body;
-    
-    if (!nome || !segmento || !atividade) { 
-        return res.status(400).json({ mensagem:"Os campos obrigatórios devem ser preenchidos." });
-    }
+  const { 
+      nome, 
+      email, 
+      telefone,
+      atividade,
+      segmento, 
+      cidade,
+      criadoPor,
+      depart_responsavel 
+  } = req.body;
+  
+  if (!nome || !segmento || !atividade) { 
+      return res.status(400).json({ mensagem:"Os campos obrigatórios devem ser preenchidos." });
+  }
 
-    try {
-        if (typeof Cliente.create !== 'function') {
-             console.error("Erro: Método Cliente.create não encontrado ou inválido no modelo.");
-             return res.status(500).json({ mensagem: "Erro interno no servidor (modelo)." });
-        }
-        await Cliente.create({ 
-            nome, 
-            email, 
-            telefone,
-            atividade, 
-            segmento, 
-            cidade,
-            criadoPor,
-            depart_responsavel 
-         });
-        res.status(201).json({ mensagem: "Cliente cadastrado com sucesso!" });
+  try {
+      if (typeof Cliente.create !== 'function') {
+          console.error("Erro: Método Cliente.create não encontrado ou inválido no modelo.");
+          return res.status(500).json({ mensagem: "Erro interno no servidor (modelo)." });
+      }
+      await Cliente.create({ 
+          nome, 
+          email, 
+          telefone,
+          atividade, 
+          segmento, 
+          cidade,
+          criadoPor,
+          depart_responsavel 
+        });
+      res.status(201).json({ mensagem: "Cliente cadastrado com sucesso!" });
 
-    } catch (err) {
-        console.error("Erro ao cadastrar cliente:", err);
-        res.status(500).json({ mensagem: "Erro interno ao cadastrar cliente." });
-    }
+  } catch (err) {
+      console.error("Erro ao cadastrar cliente:", err);
+      res.status(500).json({ mensagem: "Erro interno ao cadastrar cliente." });
+  }
 }
 
 export async function atualizarEtapaCliente(req, res) {
@@ -52,6 +52,7 @@ export async function atualizarEtapaCliente(req, res) {
     res.status(500).json({ mensagem: "Erro interno ao atualizar etapa." });
   }
 }
+
 export async function listarClientes(req, res){
   try {
     const query = "SELECT * FROM Cliente";
@@ -64,14 +65,15 @@ export async function listarClientes(req, res){
     res.status(500).json({ mensagem: "Erro interno ao listar clientes." });
   }
 }
+
 export async function listarClientePorId(req, res) {
-	try{
-		const [result] = await Cliente.findById(req.params.id)
-		if (result.length === 0) return res.status(404).json({ mensagem: "Cliente não encontrado." });
-			res.json(result[0]);
-	} catch (err) {
-		res.status(500).json({ mensagem: "Erro ao buscar cliente." });
-	}
+  try{
+    const [result] = await Cliente.findById(req.params.id)
+    if (result.length === 0) return res.status(404).json({ mensagem: "Cliente não encontrado." });
+      res.json(result[0]);
+  } catch (err) {
+    res.status(500).json({ mensagem: "Erro ao buscar cliente." });
+  }
 }
 
 export async function listarCidades(req, res) {
@@ -106,4 +108,37 @@ export async function listarSegmentos(req, res) {
         console.error("Erro detalhado ao listar segmentos:", err);
         res.status(500).json({ mensagem: "Erro interno ao listar segmentos." });
     }
+}
+
+export async function listarClientesParaDropdown(req, res) {
+  const { idColaborador } = req.params;
+
+  if (!idColaborador) {
+    return res.status(400).json({ mensagem: "ID do colaborador é obrigatório." });
+  }
+
+  try {
+    const [[colaborador]] = await db.promise().query(
+      "SELECT Setor FROM Colaboradores WHERE ID_colaborador = ?",
+      [idColaborador]
+    );
+
+    if (!colaborador) {
+      return res.status(404).json({ mensagem: "Colaborador não encontrado." });
+    }
+
+    const SETOR_COMERCIAL = 2;
+    if (colaborador.Setor !== SETOR_COMERCIAL) {
+      return res.status(200).json([]);
+    }
+
+    const queryClientes = "SELECT ID_Cliente, Nome_Cliente FROM Cliente ORDER BY Nome_Cliente ASC";
+    const [clientes] = await db.promise().query(queryClientes);
+
+    res.status(200).json(clientes);
+
+  } catch (err) {
+    console.error("Erro ao listar clientes para dropdown:", err);
+    res.status(500).json({ mensagem: "Erro interno ao listar clientes." });
+  }
 }

@@ -8,7 +8,6 @@ export const criarCertPartEvento = async (req, res) => {
       return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
     }
 
-    // Verifica se já existe registro para este colaborador e evento
     const [existing] = await db.promise().query(
       'SELECT * FROM Certificado_Participacao WHERE ID_Colaborador = ? AND ID_Evento = ?',
       [id_colaborador, id_evento]
@@ -18,7 +17,6 @@ export const criarCertPartEvento = async (req, res) => {
       return res.status(200).json({ mensagem: 'Certificado já registrado.' });
     }
 
-    // Insere novo certificado
     await db.promise().query(
       'INSERT INTO Certificado_Participacao (ID_Colaborador, ID_Evento, Data_Part, Duracao_Part, Descricao_Part) VALUES (?, ?, ?, ?, ?)',
       [id_colaborador, id_evento, Data_Part, Duracao_Part, Descricao_Part]

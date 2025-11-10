@@ -29,7 +29,6 @@ button {
     background: #f9f9f9;
 }
 
-/* Forçar quebra de página no PDF quando necessário */
 .page-break {
     page-break-before: always;
 }

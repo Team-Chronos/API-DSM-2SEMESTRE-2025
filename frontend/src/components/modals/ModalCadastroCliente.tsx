@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { formatarTelefone } from "../../utils/formatacoes";
+import { useAuth } from "../../context/AuthContext";
 
 interface ModalCadastroClienteProps {
   show: boolean;
@@ -10,6 +11,7 @@ interface ModalCadastroClienteProps {
 }
 
 export const ModalCadastroCliente = ({ show, onClose, onSuccess }: ModalCadastroClienteProps) => {
+  const { user } = useAuth();
   const [form, setForm] = useState({
     nome: "",
     email: "",
@@ -32,38 +34,42 @@ export const ModalCadastroCliente = ({ show, onClose, onSuccess }: ModalCadastro
     });
   }
 
-  const handleChange = (e: React.ChangeEvent<React.ChangeEvent<HTMLInputElement>["target"] | React.ChangeEvent<HTMLSelectElement>["target"] | React.ChangeEvent<HTMLTextAreaElement>["target"]> & { target: { name: string; value: string } }) => {
-    switch (e.target.name) {
-      case "telefone":
-        e.target.value = formatarTelefone(e.target.value)
-        break
-    }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    if (e.target.name === "telefone") e.target.value = formatarTelefone(e.target.value);
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      form.telefone = form.telefone.replace(/\D/g, '')
-      await axios.post("http://localhost:3000/api/clientes", form);
+      form.telefone = form.telefone.replace(/\D/g, "");
+      await axios.post("http://localhost:3000/api/clientes", {
+        ...form,
+        criadoPor: user?.id,
+      });
       onSuccess();
       onClose();
-      limparForm()
+      limparForm();
     } catch (err: any) {
       alert(err.response?.data?.message || "Erro ao cadastrar cliente");
     }
   };
 
   return (
-    <Modal show={show} centered onHide={() => {
-      limparForm();
-      onClose();
-    }}>
+    <Modal
+      show={show}
+      centered
+      onHide={() => {
+        limparForm();
+        onClose();
+      }}
+    >
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
           <Modal.Title>Cadastro de Cliente</Modal.Title>
         </Modal.Header>
-
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>Nome</Form.Label>
@@ -95,11 +101,10 @@ export const ModalCadastroCliente = ({ show, onClose, onSuccess }: ModalCadastro
               placeholder="Email"
               value={form.email}
               onChange={handleChange}
-              autoComplete="none"
+              autoComplete="off"
               required
             />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Telefone</Form.Label>
             <Form.Control
@@ -111,7 +116,6 @@ export const ModalCadastroCliente = ({ show, onClose, onSuccess }: ModalCadastro
               maxLength={15}
             />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Cidade*</Form.Label>
             <Form.Control
@@ -119,24 +123,19 @@ export const ModalCadastroCliente = ({ show, onClose, onSuccess }: ModalCadastro
               name="cidade"
               value={form.cidade}
               onChange={handleChange}
-              placeholder="Cidade do cliente" 
-  
+              placeholder="Cidade do cliente"
             />
           </Form.Group>
-
-
           <Form.Group className="mb-3">
             <Form.Label>Segmento*</Form.Label>
             <Form.Control
               type="text"
-              name="segmento" 
+              name="segmento"
               value={form.segmento}
               onChange={handleChange}
               placeholder="Ex: Varejo, Indústria, Logística"
-              
             />
           </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Atividade</Form.Label>
             <Form.Control
@@ -144,18 +143,19 @@ export const ModalCadastroCliente = ({ show, onClose, onSuccess }: ModalCadastro
               name="atividade"
               value={form.atividade}
               onChange={handleChange}
-              placeholder="atividade"
+              placeholder="Atividade"
               required
             />
           </Form.Group>
-
         </Modal.Body>
-
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => {
-            limparForm();
-            onClose();
-          }}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              limparForm();
+              onClose();
+            }}
+          >
             Cancelar
           </Button>
           <Button variant="primary" type="submit">

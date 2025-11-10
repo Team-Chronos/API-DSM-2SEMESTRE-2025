@@ -1,7 +1,6 @@
 #barra-lateral {
   background-image: linear-gradient(var(--azul) 40%, black);
   color: white;
-  /* height: 100vh;  */
   padding: 1rem;
   width: 15%;
   min-width: 250px;

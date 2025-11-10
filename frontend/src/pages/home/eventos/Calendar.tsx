@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "../../../css/calendar.css";
-import type { Evento } from "../../../utils/tipos";
 import { normalizarTexto } from "../../../utils/formatacoes";
+import { ModalCadastroTarefa } from "../../../components/modals/ModalCadastroTarefa";
+import { useAuth } from "../../../context/AuthContext";
 
 interface DiaSemana {
   numero: number;
@@ -11,12 +12,22 @@ interface DiaSemana {
   isToday: boolean;
 }
 
+interface Tarefa {
+  ID_Agenda: number;
+  Titulo: string;
+  Data_Hora_Inicio: string;
+  Data_Hora_Fim: string | null;
+  Prioridade: string;
+  Nome_Cliente: string | null;
+}
+
 export const Calendar = () => {
-  const [busca, setBusca] = useState<string>("");
-  const [filtroData, setFiltroData] = useState<string>("");
-  const [eventos, setEventos] = useState<Evento[]>([]);
-  const [eventosFiltrados, setEventosFiltrados] = useState<Evento[]>([]);
-  const [, setHoraAtualIndex] = useState<number | null>(null);
+  const { user } = useAuth();
+  const [busca, setBusca] = useState("");
+  const [filtroData, setFiltroData] = useState("");
+  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
+  const [tarefasFiltradas, setTarefasFiltradas] = useState<Tarefa[]>([]);
+  const [modalAberto, setModalAberto] = useState(false);
 
   const formatarDataLocal = (date: Date): string => {
     const ano = date.getFullYear();
@@ -34,14 +45,11 @@ export const Calendar = () => {
     const today = new Date();
     const startOfWeek = new Date(today);
     startOfWeek.setDate(today.getDate());
-
     const weekDays: DiaSemana[] = [];
     for (let i = 0; i < 5; i++) {
       const currentDate = new Date(startOfWeek);
       currentDate.setDate(startOfWeek.getDate() + i);
-      const isToday =
-        formatarDataLocal(currentDate) === formatarDataLocal(today);
-
+      const isToday = formatarDataLocal(currentDate) === formatarDataLocal(today);
       weekDays.push({
         numero: currentDate.getDate(),
         nome: getDayName(currentDate.getDay()),
@@ -56,55 +64,41 @@ export const Calendar = () => {
     (5 + i).toString().padStart(2, "0")
   );
 
-  useEffect(() => {
-    const fetchEventos = async () => {
-      try {
-        const response = await axios.get<Evento[]>(
-          "http://localhost:3000/api/eventos/"
-        );
-        setEventos(response.data);
-        setEventosFiltrados(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar eventos:", error);
-      }
-    };
-    fetchEventos();
-  }, []);
+  const carregarTarefas = async () => {
+    if (!user?.id) return;
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/agenda/vendedor/${user.id}`
+      );
+      setTarefas(response.data);
+    } catch {
+      setTarefas([]);
+    }
+  };
 
   useEffect(() => {
-    let filtrados = eventos;
+    carregarTarefas();
+  }, [user]);
 
+  useEffect(() => {
+    let filtrados = tarefas;
+    
     if (filtroData) {
       filtrados = filtrados.filter(
-        (ev) => ev.Data_Evento.split("T")[0] === filtroData
+        (t) => t.Data_Hora_Inicio.split("T")[0] === filtroData
       );
     }
-
+    
     if (busca.trim()) {
+      const buscaNorm = normalizarTexto(busca);
       filtrados = filtrados.filter(
-        (ev) =>
-          normalizarTexto(ev.Nome_Evento).includes(busca) ||
-          normalizarTexto(ev.Local_Evento).includes(busca)
+        (t) =>
+          normalizarTexto(t.Titulo).includes(buscaNorm) ||
+          normalizarTexto(t.Nome_Cliente || "").includes(buscaNorm)
       );
     }
-
-    setEventosFiltrados(filtrados);
-  }, [filtroData, busca, eventos]);
-
-  useEffect(() => {
-    const atualizarHora = () => {
-      const horaAtual = new Date().getHours();
-      if (horaAtual >= 5 && horaAtual <= 20) {
-        setHoraAtualIndex(horaAtual - 5);
-      } else {
-        setHoraAtualIndex(null);
-      }
-    };
-
-    atualizarHora();
-    const intervalo = setInterval(atualizarHora, 60000);
-    return () => clearInterval(intervalo);
-  }, []);
+    setTarefasFiltradas(filtrados);
+  }, [filtroData, busca, tarefas]);
 
   const dias: DiaSemana[] = filtroData
     ? [
@@ -117,14 +111,24 @@ export const Calendar = () => {
       ]
     : getCurrentWeekDays();
 
+  const prioridadeClass = (prio: string) => {
+    const p = (prio || "").toLowerCase();
+    if (p.includes("baixa")) return "prio-baixa";
+    if (p.includes("média") || p.includes("media")) return "prio-media";
+    if (p.includes("alta")) return "prio-alta";
+    if (p.includes("urgente")) return "prio-urgente";
+    return "prio-media";
+  };
+
   return (
-    <div className="calendar-container">
+    <div id="divEventos" className="calendar-container">
       <div className="search-bar">
+        <button onClick={() => setModalAberto(true)}>+ Novo Lembrete</button>
         <input
           type="text"
-          placeholder="Pesquisar evento..."
+          placeholder="Buscar lembrete ou cliente..."
           value={busca}
-          onChange={(e) => setBusca(normalizarTexto(e.target.value))}
+          onChange={(e) => setBusca(e.target.value)}
         />
         <input
           type="date"
@@ -140,7 +144,6 @@ export const Calendar = () => {
           Limpar
         </button>
       </div>
-
       <table className="calendar-table">
         <thead>
           <tr className="header-row">
@@ -156,7 +159,6 @@ export const Calendar = () => {
             ))}
           </tr>
         </thead>
-
         <tbody>
           <tr className="calendar-body-row">
             <td className="hour-labels-cell">
@@ -166,12 +168,11 @@ export const Calendar = () => {
                 </div>
               ))}
             </td>
-
             {dias.map((dia) => {
-              const eventosDoDia = eventosFiltrados.filter(
-                (ev) => formatarDataLocal(new Date(ev.Data_Evento)) === dia.data
+              const tarefasDoDia = tarefasFiltradas.filter(
+                (t) =>
+                  formatarDataLocal(new Date(t.Data_Hora_Inicio)) === dia.data
               );
-
               return (
                 <td
                   key={`cell-${dia.numero}`}
@@ -183,60 +184,41 @@ export const Calendar = () => {
                       key={`line-${dia.numero}-${hora}`}
                     ></div>
                   ))}
+                  
+                  {tarefasDoDia.map((t) => {
+                    const inicio = new Date(t.Data_Hora_Inicio);
+                    const fim = t.Data_Hora_Fim
+                      ? new Date(t.Data_Hora_Fim)
+                      : new Date(inicio.getTime() + 60 * 60 * 1000);
 
-                  {eventosDoDia.map((ev) => {
-                    const duracaoEmHoras = parseFloat(
-                      String(ev.Duracao_Evento).replace(",", ".")
-                    );
+                    const totalStartMinutes = inicio.getHours() * 60 + inicio.getMinutes();
+                    const totalEndMinutes = fim.getHours() * 60 + fim.getMinutes();
 
-                    const duracaoValidaHoras = isNaN(duracaoEmHoras)
-                      ? 0
-                      : duracaoEmHoras;
-                    const duracaoTotalMinutos = duracaoValidaHoras * 60;
-
-                    const dataEvento = new Date(ev.Data_Evento);
-                    const startHour = dataEvento.getHours();
-                    const startMinute = dataEvento.getMinutes();
-
-                    const totalStartMinutes = startHour * 60 + startMinute;
-                    const calendarStartMinutes = 5 * 60;
-
-                    const topOffset = totalStartMinutes - calendarStartMinutes;
-                    const eventHeight = duracaoTotalMinutos;
-
-                    const dataFim = new Date(
-                      dataEvento.getTime() + duracaoTotalMinutos * 60000
-                    );
+                    const topOffset = totalStartMinutes - 5 * 60;
+                    const eventHeight = totalEndMinutes - totalStartMinutes;
 
                     const style = {
-                      top: `${topOffset}px`,
-                      height: `${eventHeight}px`,
+                      top: `${Math.max(0, topOffset)}px`,
+                      height: `${Math.max(24, eventHeight)}px`,
                     };
-
-                    const horaInicioStr = dataEvento.toLocaleTimeString(
-                      "pt-BR",
-                      {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }
-                    );
-
-                    const horaFimStr = !isNaN(dataFim.getTime())
-                      ? dataFim.toLocaleTimeString("pt-BR", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      : "??";
+                    
+                    const prioridade = prioridadeClass(t.Prioridade || "");
+                    const horaInicioStr = inicio.toLocaleTimeString("pt-BR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    });
 
                     return (
                       <div
-                        key={ev.ID_Evento}
-                        className="event-card"
+                        key={t.ID_Agenda}
+                        className={`event-card ${prioridade}`}
                         style={style}
                       >
-                        <strong className="title">{ev.Nome_Evento}</strong>
-                        <p>{ev.Local_Evento}</p>
-                        <small className="time">{`${horaInicioStr} - ${horaFimStr}`}</small>
+                        <strong className="title">{t.Titulo}</strong>
+                        {t.Nome_Cliente && (
+                          <p className="client-name">{t.Nome_Cliente}</p>
+                        )}
+                        <small className="time">{horaInicioStr}</small>
                       </div>
                     );
                   })}
@@ -246,6 +228,11 @@ export const Calendar = () => {
           </tr>
         </tbody>
       </table>
+      <ModalCadastroTarefa
+        isOpen={modalAberto}
+        onClose={() => setModalAberto(false)}
+        onTarefaCriada={carregarTarefas}
+      />
     </div>
   );
 };
