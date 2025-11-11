@@ -314,6 +314,34 @@ create table checklistVeiculoAgregado(
     foreign key (id_responsavel_vistoria) references responsaveisVistoria (id_responsavel)
 );
 
+Create Table ChecklistPredial(
+	CheckPredio int not null primary key,
+    NomeFuncPredio varchar(50),
+    DataPredio date,
+    LixoCozinha enum("sim,nao"),
+    LixoReciclavel enum("sim,nao"),
+    CozinhaOrganizada enum("sim,nao"),
+    LuzesCozinha enum("sim,nao"),
+    CadeadoPortao2 enum("sim,nao"),
+    CadeadoPortao1 enum("sim,nao"),
+    TorneirasFechadas enum("sim,nao"),
+    LixoBanheiro enum("sim,nao"),
+    PortaBanheiro enum("sim,nao"),
+    BebedouroDesligado enum("sim,nao"),
+    ChavesChaveiro enum("sim,nao"),
+    TVCameras enum("sim,nao"),
+    TVDashboard enum("sim,nao"),
+    ArCondicionado enum("sim,nao"),
+    LuzesOperacional enum("sim,nao"),
+    LuzesArmazem enum("sim,nao"),
+    ConePCD enum("sim,nao"),
+    Alarme enum("sim,nao"),
+    PortaArmazem enum("sim,nao"),
+    CadeadoCorrentes enum("sim,nao"),
+    MotorRuidos text,
+    SituacaoAtip text
+);
+
 INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
 ('Gerente', 'Gestor'), ('Coordenador', 'Gestor'),
 ('Assistente', 'Colaborador'), ('Analista', 'Colaborador');
@@ -374,3 +402,4 @@ INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (1, 'Remoto
 -- Rode este comando no seu banco de dados
 ALTER TABLE Certificado_Participacao
 ADD COLUMN Arquivo_PDF VARCHAR(255) NULL;
+

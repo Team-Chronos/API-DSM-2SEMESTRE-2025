@@ -2,6 +2,7 @@
   color: white;
   background-color: var(--azul-escuro);
   border-radius: 0;
+  border: none;
 
   padding: .65rem;
 }
