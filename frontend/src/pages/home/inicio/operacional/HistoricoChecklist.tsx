@@ -2,6 +2,7 @@ import { useState } from "react"
 import type { HistoricoTabs } from "../../../../utils/tipos"
 import "../../../../css/historicoChecklist.css"
 import { HistoricoVeiculoAgregado } from "./tables/HistoricoVeiculoAgregado"
+import { HistoricoFechamentoPredial } from "./tables/HistoricoFechamentoPredial"
 
 export function HistoricoChecklist(){
   const [ activeTab, setActiveTab ] = useState<HistoricoTabs>("Veículo Agregado")
@@ -13,11 +14,16 @@ export function HistoricoChecklist(){
           <button className={`historicoTab btn ${activeTab === "Veículo Agregado" ? "active" : ""}`} onClick={() => setActiveTab("Veículo Agregado")}>
             Veículo Agregado
           </button>
+          <button className={`historicoTab btn ${activeTab === "Fechamento Predial" ? "active" : ""}`} onClick={() => setActiveTab("Fechamento Predial")}>
+            Fechamento Predial
+          </button>
         </div>
         <div className={`mt-4`}>
-          {activeTab === "Veículo Agregado" && (
+          {activeTab === "Veículo Agregado" ? (
             <HistoricoVeiculoAgregado />
-          )}
+          ) : activeTab === "Fechamento Predial" ? (
+            <HistoricoFechamentoPredial />
+          ) : null}
         </div>
       </div>
     </>
