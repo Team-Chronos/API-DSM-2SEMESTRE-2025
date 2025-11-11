@@ -314,32 +314,32 @@ create table checklistVeiculoAgregado(
     foreign key (id_responsavel_vistoria) references responsaveisVistoria (id_responsavel)
 );
 
-Create Table ChecklistPredial(
-	CheckPredio int not null primary key,
-    NomeFuncPredio varchar(50),
-    DataPredio date,
-    LixoCozinha enum("sim,nao"),
-    LixoReciclavel enum("sim,nao"),
-    CozinhaOrganizada enum("sim,nao"),
-    LuzesCozinha enum("sim,nao"),
-    CadeadoPortao2 enum("sim,nao"),
-    CadeadoPortao1 enum("sim,nao"),
-    TorneirasFechadas enum("sim,nao"),
-    LixoBanheiro enum("sim,nao"),
-    PortaBanheiro enum("sim,nao"),
-    BebedouroDesligado enum("sim,nao"),
-    ChavesChaveiro enum("sim,nao"),
-    TVCameras enum("sim,nao"),
-    TVDashboard enum("sim,nao"),
-    ArCondicionado enum("sim,nao"),
-    LuzesOperacional enum("sim,nao"),
-    LuzesArmazem enum("sim,nao"),
-    ConePCD enum("sim,nao"),
-    Alarme enum("sim,nao"),
-    PortaArmazem enum("sim,nao"),
-    CadeadoCorrentes enum("sim,nao"),
-    MotorRuidos text,
-    SituacaoAtip text
+CREATE TABLE ChecklistPredial (
+  CheckPredio INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  NomeFuncPredio VARCHAR(50),
+  DataPredio DATETIME default current_timestamp,
+  LixoCozinha ENUM('Sim','Não'),
+  LixoReciclavel ENUM('Sim','Não'),
+  CozinhaOrganizada ENUM('Sim','Não'),
+  LuzesCozinha ENUM('Sim','Não'),
+  CadeadoPortao2 ENUM('Sim','Não'),
+  CadeadoPortao1 ENUM('Sim','Não'),
+  TorneirasFechadas ENUM('Sim','Não'),
+  LixoBanheiro ENUM('Sim','Não'),
+  PortaBanheiro ENUM('Sim','Não'),
+  BebedouroDesligado ENUM('Sim','Não'),
+  ChavesChaveiro ENUM('Sim','Não'),
+  TVCameras ENUM('Sim','Não'),
+  TVDashboard ENUM('Sim','Não'),
+  ArCondicionado ENUM('Sim','Não'),
+  LuzesOperacional ENUM('Sim','Não'),
+  LuzesArmazem ENUM('Sim','Não'),
+  ConePCD ENUM('Sim','Não'),
+  Alarme ENUM('Sim','Não'),
+  PortaArmazem ENUM('Sim','Não'),
+  CadeadoCorrentes ENUM('Sim','Não'),
+  MotorRuidos TEXT,
+  SituacaoAtip TEXT
 );
 
 INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
@@ -403,3 +403,4 @@ INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (1, 'Remoto
 ALTER TABLE Certificado_Participacao
 ADD COLUMN Arquivo_PDF VARCHAR(255) NULL;
 
+	
