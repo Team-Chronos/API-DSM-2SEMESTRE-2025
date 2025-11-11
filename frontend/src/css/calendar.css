@@ -211,3 +211,193 @@
   border-bottom: 1px solid #f7f7f7;
   box-sizing: border-box;
 }
+
+#divEventos .calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+#divEventos .navigation-controls,
+#divEventos .view-controls {
+  display: flex;
+  gap: 8px;
+}
+
+#divEventos .current-view-label {
+  text-align: center;
+  flex-grow: 1;
+}
+
+#divEventos .current-view-label h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+#divEventos .navigation-controls button,
+#divEventos .view-controls button {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#divEventos .navigation-controls button:hover,
+#divEventos .view-controls button:hover {
+  background: #e0e0e0;
+}
+#divEventos .view-controls button.active {
+  background: var(--azul);
+  color: white;
+  border-color: var(--azul-escuro);
+  font-weight: 600;
+}
+
+#divEventos .calendar-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+#divEventos .calendar-table {
+  width: 100%;
+  min-width: 1000px;
+  table-layout: auto;
+}
+#divEventos .day-header {
+  min-width: 110px;
+  width: 110px;
+}
+
+#divEventos .hour-header,
+#divEventos .hour-labels-cell {
+  width: 50px;
+  min-width: 50px;
+  position: sticky;
+  left: 0;
+  z-index: 20;
+  background-color: #fff;
+}
+
+#divEventos .hour-header {
+  z-index: 21;
+}
+
+#divEventos .event-cell {
+  min-width: 110px;
+  width: 110px;
+}
+
+#divEventos .calendar-view-area {
+  width: 95%;
+  position: relative;
+}
+
+#divEventos .monthly-grid-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+
+#divEventos .monthly-grid-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 2px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+#divEventos .grid-header-cell {
+  padding: 10px 5px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #555;
+}
+
+#divEventos .monthly-grid-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+#divEventos .grid-day-cell {
+  min-height: 120px;
+  border-right: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 4px;
+  position: relative;
+  overflow-y: auto;
+}
+
+#divEventos .grid-day-cell:nth-child(7n) {
+  border-right: none;
+}
+#divEventos .grid-day-cell:nth-last-child(-n + 7) {
+  border-bottom: none;
+}
+
+#divEventos .grid-day-cell .day-number {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  padding: 2px 4px;
+}
+
+#divEventos .grid-day-cell.today {
+  background-color: #f1f1ff;
+}
+#divEventos .grid-day-cell.today .day-number {
+  background-color: var(--azul);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+#divEventos .grid-day-cell.not-current-month {
+  background-color: #fafafa;
+}
+#divEventos .grid-day-cell.not-current-month .day-number {
+  color: #aaa;
+}
+#divEventos .grid-day-cell.not-current-month .event-chip {
+  opacity: 0.6;
+}
+
+#divEventos .day-events {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 2px;
+}
+
+#divEventos .event-chip {
+  background-color: var(--azul);
+  color: white;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#divEventos .event-chip:hover {
+  background-color: var(--azul-escuro);
+}
