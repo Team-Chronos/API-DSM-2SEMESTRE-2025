@@ -18,7 +18,7 @@ export function Operacional(){
       <div className={`historicoChecklists d-flex mb-4 py-3 justify-content-center`} onClick={() => navigate("/historicoCheckLists")}>Visualizar Histórico</div>
       <div className={`checklists d-flex flex-column row-gap-4`}>
         <div role="button" className={`btn-azul checklist py-2 ps-4 pe-3`} onClick={() => setShowModalVeiAgreg(true)}>Checklist de veículo agregado</div>
-        <div role="button" className={`btn-azul checklist py-2 ps-4 pe-3`} onClick={() => setShowModalPredial(true)}>Checklist de abertura predial</div>
+        <div role="button" className={`btn-azul checklist py-2 ps-4 pe-3`} onClick={() => setShowModalPredial(true)}>Checklist de fechamento predial</div>
       </div>
       
       <ModalChecklistVeiAgreg
