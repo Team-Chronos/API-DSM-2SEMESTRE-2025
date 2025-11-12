@@ -3,6 +3,9 @@ import axios from "axios";
 import "../../../css/calendar.css";
 import type { Evento } from "../../../utils/tipos";
 import { normalizarTexto } from "../../../utils/formatacoes";
+import { ModalCadastroTarefa } from "../../../components/modals/ModalCadastroTarefa";
+import { ModalDetalhesTarefa } from "../../../components/modals/ModalDetalhesTarefa";
+import { useAuth } from "../../../context/AuthContext";
 
 interface DiaSemana {
   numero: number;
@@ -11,7 +14,20 @@ interface DiaSemana {
   isToday: boolean;
 }
 
+export interface Tarefa {
+  ID_Agenda: number;
+  Titulo: string;
+  Descricao: string | null;
+  Data_Hora_Inicio: string;
+  Data_Hora_Fim: string | null;
+  Local_Evento: string | null;
+  Prioridade: string;
+  ID_Cliente: number | null;
+  Nome_Cliente: string | null;
+}
+
 type ViewMode = "daily" | "weekly" | "monthly";
+type AgendaTab = "pessoal" | "geral";
 
 interface GridDay {
   date: Date;
@@ -33,15 +49,38 @@ const getDayName = (dayIndex: number): string => {
   return days[dayIndex];
 };
 
+const prioridadeClass = (prio: string) => {
+  const p = (prio || "").toLowerCase();
+  if (p.includes("baixa")) return "prio-baixa";
+  if (p.includes("média") || p.includes("media")) return "prio-media";
+  if (p.includes("alta")) return "prio-alta";
+  if (p.includes("urgente")) return "prio-urgente";
+  return "prio-media";
+};
+
 export const Calendar = () => {
+  const { user } = useAuth();
   const [busca, setBusca] = useState<string>("");
   const [filtroData, setFiltroData] = useState<string>("");
+  
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [eventosFiltrados, setEventosFiltrados] = useState<Evento[]>([]);
+  
+  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
+  const [tarefasFiltradas, setTarefasFiltradas] = useState<Tarefa[]>([]);
+  
   const [, setHoraAtualIndex] = useState<number | null>(null);
-
   const [view, setView] = useState<ViewMode>("monthly");
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const [activeTab, setActiveTab] = useState<AgendaTab>('geral');
+  
+  const [modalCadastroAberto, setModalCadastroAberto] = useState(false);
+  const [modalDetalhesAberto, setModalDetalhesAberto] = useState(false);
+
+  const [tarefaSelecionada, setTarefaSelecionada] = useState<Tarefa | null>(null);
+  const [tarefaParaEditar, setTarefaParaEditar] = useState<Tarefa | null>(null);
+
 
   const horas = Array.from({ length: 16 }, (_, i) =>
     (5 + i).toString().padStart(2, "0")
@@ -178,7 +217,6 @@ export const Calendar = () => {
           "http://localhost:3000/api/eventos/"
         );
         setEventos(response.data);
-        setEventosFiltrados(response.data);
       } catch (error) {
         console.error("Erro ao buscar eventos:", error);
       }
@@ -186,16 +224,30 @@ export const Calendar = () => {
     fetchEventos();
   }, []);
 
+  const carregarTarefas = async () => {
+    if (!user?.id) return;
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/agenda/vendedor/${user.id}`
+      );
+      setTarefas(response.data);
+    } catch {
+      setTarefas([]);
+    }
+  };
+
+  useEffect(() => {
+    carregarTarefas();
+  }, [user]);
+
   useEffect(() => {
     let filtrados = eventos;
-
     if (filtroData) {
       filtrados = filtrados.filter(
         (ev) => ev.Data_Evento.split("T")[0] === filtroData
       );
     }
-
-    if (busca.trim()) {
+    if (busca.trim() && activeTab === 'geral') {
       const buscaNormalizada = normalizarTexto(busca);
       filtrados = filtrados.filter(
         (ev) =>
@@ -203,9 +255,26 @@ export const Calendar = () => {
           normalizarTexto(ev.Local_Evento).includes(buscaNormalizada)
       );
     }
-
     setEventosFiltrados(filtrados);
-  }, [filtroData, busca, eventos]);
+  }, [filtroData, busca, eventos, activeTab]);
+
+  useEffect(() => {
+    let filtrados = tarefas;
+    if (filtroData) {
+      filtrados = filtrados.filter(
+        (t) => t.Data_Hora_Inicio.split("T")[0] === filtroData
+      );
+    }
+    if (busca.trim() && activeTab === 'pessoal') {
+      const buscaNorm = normalizarTexto(busca);
+      filtrados = filtrados.filter(
+        (t) =>
+          normalizarTexto(t.Titulo).includes(buscaNorm) ||
+          normalizarTexto(t.Nome_Cliente || "").includes(buscaNorm)
+      );
+    }
+    setTarefasFiltradas(filtrados);
+  }, [filtroData, busca, tarefas, activeTab]);
 
   useEffect(() => {
     const atualizarHora = () => {
@@ -222,13 +291,61 @@ export const Calendar = () => {
     return () => clearInterval(intervalo);
   }, []);
 
+  const handleAbrirDetalhes = (tarefa: Tarefa) => {
+    setTarefaSelecionada(tarefa);
+    setModalDetalhesAberto(true);
+  };
+
+  const handleFecharDetalhes = () => {
+    setModalDetalhesAberto(false);
+    setTarefaSelecionada(null);
+  };
+
+  const handleAbrirEdicao = (tarefa: Tarefa) => {
+    setTarefaParaEditar(tarefa);
+    setModalDetalhesAberto(false);
+    setModalCadastroAberto(true);
+  };
+
+  const handleFecharCadastro = () => {
+    setModalCadastroAberto(false);
+    setTarefaParaEditar(null);
+  };
+
+  const handleExcluirTarefa = async (tarefa: Tarefa) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/agenda/${tarefa.ID_Agenda}`);
+      handleFecharDetalhes();
+      carregarTarefas();
+    } catch (error) {
+      console.error("Erro ao excluir tarefa:", error);
+    }
+  };
+
+  const handleTarefaCriada = () => {
+    carregarTarefas();
+    handleFecharCadastro();
+  };
+  
+  const handleAbrirNovoLembrete = () => {
+    setTarefaParaEditar(null);
+    setModalCadastroAberto(true);
+  };
+
   const renderCalendarView = () => {
+    const diasTimeline = getDaysForTimelineView();
+    const propsComuns = {
+      onTarefaClick: handleAbrirDetalhes,
+    };
+
     if (filtroData) {
       return (
         <TimelineView
-          dias={getDaysForTimelineView()}
+          dias={diasTimeline}
           horas={horas}
-          eventosFiltrados={eventosFiltrados}
+          eventosFiltrados={activeTab === 'geral' ? eventosFiltrados : []}
+          tarefasFiltradas={activeTab === 'pessoal' ? tarefasFiltradas : []}
+          {...propsComuns}
         />
       );
     }
@@ -238,16 +355,20 @@ export const Calendar = () => {
       case "weekly":
         return (
           <TimelineView
-            dias={getDaysForTimelineView()}
+            dias={diasTimeline}
             horas={horas}
-            eventosFiltrados={eventosFiltrados}
+            eventosFiltrados={activeTab === 'geral' ? eventosFiltrados : []}
+            tarefasFiltradas={activeTab === 'pessoal' ? tarefasFiltradas : []}
+            {...propsComuns}
           />
         );
       case "monthly":
         return (
           <MonthlyGridView
             currentDate={currentDate}
-            eventos={eventosFiltrados}
+            eventos={activeTab === 'geral' ? eventosFiltrados : []}
+            tarefas={activeTab === 'pessoal' ? tarefasFiltradas : []}
+            {...propsComuns}
           />
         );
       default:
@@ -257,10 +378,32 @@ export const Calendar = () => {
 
   return (
     <div className="calendar-container">
+      <div className="agenda-tabs">
+        <button
+          className={`tab-btn ${activeTab === 'geral' ? 'active' : ''}`}
+          onClick={() => setActiveTab('geral')}
+        >
+          Agenda Geral
+        </button>
+        <button
+          className={`tab-btn ${activeTab === 'pessoal' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pessoal')}
+        >
+          Agenda Pessoal
+        </button>
+      </div>
+
       <div className="search-bar">
+        {activeTab === 'pessoal' && (
+          <button onClick={handleAbrirNovoLembrete}>+ Novo Lembrete</button>
+        )}
         <input
           type="text"
-          placeholder="Pesquisar evento..."
+          placeholder={
+            activeTab === 'pessoal'
+              ? "Buscar lembrete ou cliente..."
+              : "Pesquisar evento..."
+          }
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
         />
@@ -322,6 +465,21 @@ export const Calendar = () => {
       </div>
 
       <div className="calendar-view-area">{renderCalendarView()}</div>
+
+      <ModalCadastroTarefa
+        isOpen={modalCadastroAberto}
+        onClose={handleFecharCadastro}
+        onTarefaCriada={handleTarefaCriada}
+        tarefaParaEditar={tarefaParaEditar}
+      />
+
+      <ModalDetalhesTarefa
+        isOpen={modalDetalhesAberto}
+        onClose={handleFecharDetalhes}
+        tarefa={tarefaSelecionada}
+        onEdit={handleAbrirEdicao}
+        onDelete={handleExcluirTarefa}
+      />
     </div>
   );
 };
@@ -330,9 +488,11 @@ interface TimelineViewProps {
   dias: DiaSemana[];
   horas: string[];
   eventosFiltrados: Evento[];
+  tarefasFiltradas: Tarefa[];
+  onTarefaClick: (tarefa: Tarefa) => void;
 }
 
-const TimelineView = ({ dias, horas, eventosFiltrados }: TimelineViewProps) => {
+const TimelineView = ({ dias, horas, eventosFiltrados, tarefasFiltradas, onTarefaClick }: TimelineViewProps) => {
   return (
     <div className="calendar-scroll-container">
       <table className="calendar-table">
@@ -364,6 +524,10 @@ const TimelineView = ({ dias, horas, eventosFiltrados }: TimelineViewProps) => {
             {dias.map((dia) => {
               const eventosDoDia = eventosFiltrados.filter(
                 (ev) => formatarDataLocal(new Date(ev.Data_Evento)) === dia.data
+              );
+
+              const tarefasDoDia = tarefasFiltradas.filter(
+                (t) => formatarDataLocal(new Date(t.Data_Hora_Inicio)) === dia.data
               );
 
               return (
@@ -426,6 +590,46 @@ const TimelineView = ({ dias, horas, eventosFiltrados }: TimelineViewProps) => {
                       </div>
                     );
                   })}
+
+                  {tarefasDoDia.map((t) => {
+                    const inicio = new Date(t.Data_Hora_Inicio);
+                    const fim = t.Data_Hora_Fim
+                      ? new Date(t.Data_Hora_Fim)
+                      : new Date(inicio.getTime() + 60 * 60 * 1000);
+
+                    const totalStartMinutes = inicio.getHours() * 60 + inicio.getMinutes();
+                    const totalEndMinutes = fim.getHours() * 60 + fim.getMinutes();
+                    
+                    const calendarStartMinutes = 5 * 60;
+                    const topOffset = Math.max(0, totalStartMinutes - calendarStartMinutes);
+                    const eventHeight = totalEndMinutes - totalStartMinutes;
+
+                    const style = {
+                      top: `${Math.max(0, topOffset)}px`,
+                      height: `${Math.max(24, eventHeight)}px`,
+                    };
+                    
+                    const prioridade = prioridadeClass(t.Prioridade || "");
+                    const horaInicioStr = inicio.toLocaleTimeString("pt-BR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    });
+
+                    return (
+                      <div
+                        key={t.ID_Agenda}
+                        className={`event-card ${prioridade}`}
+                        style={style}
+                        onClick={() => onTarefaClick(t)}
+                      >
+                        <strong className="title">{t.Titulo}</strong>
+                        {t.Nome_Cliente && (
+                          <p className="client-name">{t.Nome_Cliente}</p>
+                        )}
+                        <small className="time">{horaInicioStr}</small>
+                      </div>
+                    );
+                  })}
                 </td>
               );
             })}
@@ -439,9 +643,11 @@ const TimelineView = ({ dias, horas, eventosFiltrados }: TimelineViewProps) => {
 interface MonthlyGridViewProps {
   currentDate: Date;
   eventos: Evento[];
+  tarefas: Tarefa[];
+  onTarefaClick: (tarefa: Tarefa) => void;
 }
 
-const MonthlyGridView = ({ currentDate, eventos }: MonthlyGridViewProps) => {
+const MonthlyGridView = ({ currentDate, eventos, tarefas, onTarefaClick }: MonthlyGridViewProps) => {
   const [gridDays, setGridDays] = useState<GridDay[]>([]);
   const weekDayNames = [
     "Domingo",
@@ -540,6 +746,11 @@ const MonthlyGridView = ({ currentDate, eventos }: MonthlyGridViewProps) => {
               formatarDataLocal(new Date(ev.Data_Evento)) === day.dateString
           );
 
+          const tarefasDoDia = tarefas.filter(
+            (t) =>
+              formatarDataLocal(new Date(t.Data_Hora_Inicio)) === day.dateString
+          );
+
           return (
             <div
               key={day.dateString}
@@ -550,8 +761,17 @@ const MonthlyGridView = ({ currentDate, eventos }: MonthlyGridViewProps) => {
               <div className="day-number">{day.dayOfMonth}</div>
               <div className="day-events">
                 {eventosDoDia.map((ev) => (
-                  <div key={ev.ID_Evento} className="event-chip">
+                  <div key={`ev-${ev.ID_Evento}`} className="event-chip">
                     {ev.Nome_Evento}
+                  </div>
+                ))}
+                {tarefasDoDia.map((t) => (
+                  <div 
+                    key={`t-${t.ID_Agenda}`} 
+                    className={`event-chip ${prioridadeClass(t.Prioridade)}`}
+                    onClick={() => onTarefaClick(t)}
+                  >
+                    {t.Titulo}
                   </div>
                 ))}
               </div>
