@@ -98,7 +98,7 @@ export const criarChecklist = async (req, res) => {
         }
 
         const query = `
-            INSERT INTO Checklist (
+            INSERT INTO ChecklistManutencao (
                 Responsavel, Data_Verificacao, Piso_ADM, Piso_Operacional, Piso_Galpao, Piso_Refeitorio,
                 Forro_ADM, Forro_Operacional, Forro_Galpao, Forro_Refeitorio, Instalacoes_Eletricas, Protecao_Raios,
                 ArCond_ADM, ArCond_Diretoria, ArCond_Reuniao, ArCond_Operacional,
@@ -147,7 +147,7 @@ export const criarChecklist = async (req, res) => {
 export const listarChecklists = async (req, res) => {
     try {
         const query = `
-            SELECT * FROM Checklist
+            SELECT * FROM ChecklistManutencao
             ORDER BY Data_Verificacao DESC
         `;
         const [checklists] = await db.promise().query(query);
@@ -176,7 +176,7 @@ export const obterChecklistPorId = async (req, res) => {
 
     try {
         const [rows] = await db.promise().query(
-            "SELECT * FROM Checklist WHERE ID_Checklist = ?",
+            "SELECT * FROM ChecklistManutencao WHERE ID_Checklist = ?",
             [id]
         );
 
@@ -206,7 +206,7 @@ export const excluirChecklist = async (req, res) => {
 
     try {
         const [result] = await db.promise().query(
-            "DELETE FROM Checklist WHERE ID_Checklist = ?",
+            "DELETE FROM ChecklistManutencao WHERE ID_Checklist = ?",
             [id]
         );
 

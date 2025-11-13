@@ -96,6 +96,54 @@ CREATE TABLE Certificado_Participacao (
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_Colaborador) ON DELETE CASCADE
 );
 
+CREATE TABLE Checklist (
+    ID_Checklist INT PRIMARY KEY AUTO_INCREMENT,
+    Responsavel VARCHAR(100) NOT NULL,
+    Data_Verificacao DATETIME NOT NULL,
+    Piso_ADM TEXT,
+    Piso_Operacional TEXT,
+    Piso_Galpao TEXT,
+    Piso_Refeitorio TEXT,
+    Forro_ADM TEXT,
+    Forro_Operacional TEXT,
+    Forro_Galpao TEXT,
+    Forro_Refeitorio TEXT,
+    Instalacoes_Eletricas TEXT,
+    Protecao_Raios TEXT,
+    ArCond_ADM BOOLEAN DEFAULT FALSE,
+    ArCond_Diretoria BOOLEAN DEFAULT FALSE,
+    ArCond_Reuniao BOOLEAN DEFAULT FALSE,
+    ArCond_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_ADM BOOLEAN DEFAULT FALSE,
+    Lampadas_Diretoria BOOLEAN DEFAULT FALSE,
+    Lampadas_Reuniao BOOLEAN DEFAULT FALSE,
+    Lampadas_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_Galpao BOOLEAN DEFAULT FALSE,
+    Lampadas_Refeitorio BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroFem BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroMasc BOOLEAN DEFAULT FALSE,
+    Macanetas_OK BOOLEAN DEFAULT FALSE,
+    Mesas_Protecao_OK BOOLEAN DEFAULT FALSE,
+    Condicoes_Paleteiras TEXT,
+    Organizacao_Local TEXT,
+    Cameras_OK BOOLEAN DEFAULT FALSE,
+    Balanca_Condicao TEXT,
+    Data_Afericao_Balanca DATE,
+    Condicoes_Mictorios TEXT,
+    Data_Limpeza_Bebedouro DATE,
+    Data_Prox_Dedetizacao DATE,
+    Data_Ult_Recarga_Extintores DATE,
+    Data_Prox_Recarga_Extintores DATE,
+    Data_Limpeza_Caixa DATE,
+    Data_Prox_Limpeza DATE,
+    Cadeiras_Ruim BOOLEAN DEFAULT FALSE,
+    Cadeiras_Detalhe TEXT,
+    Observacoes TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
 CREATE OR REPLACE VIEW vw_participacao AS
 SELECT
   "RELATÓRIO DE APROVEITAMENTO" AS tipo_documento,
@@ -250,8 +298,7 @@ CREATE TABLE notificacoes_personalizadas (
     FOREIGN KEY (criado_por) REFERENCES Colaboradores(ID_colaborador)
 );
 
--- TABELA CHECKLIST CORRIGIDA (SEM FOREIGN KEY PROBLEMÁTICA)
-CREATE TABLE Checklist (
+CREATE TABLE ChecklistManutencao (
     ID_Checklist INT PRIMARY KEY AUTO_INCREMENT,
     Responsavel VARCHAR(100) NOT NULL,
     Data_Verificacao DATETIME NOT NULL,
@@ -296,7 +343,6 @@ CREATE TABLE Checklist (
     Observacoes TEXT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    -- REMOVIDA A FOREIGN KEY: FOREIGN KEY (Responsavel) REFERENCES Colaboradores(Nome_Col)
 );
 
 

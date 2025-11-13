@@ -14,6 +14,8 @@ import interacaoRoutes from './src/routes/interacaoRoutes.js'
 import relatorioRoutes from './src/routes/relatorioRoutes.js'
 import checklistVeiculoAgregadoRoutes from './src/routes/checklistVeiculoAgregadoRoutes.js'
 import checklistPredialRoutes from './src/routes/checklistPredialRoutes.js'
+import checklistRoutes from './src/routes/checklistRoutes.js';
+
 
 import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
 import agendaRoutes from './src/routes/agendaRoutes.js';
@@ -49,6 +51,8 @@ app.use('/api/checklist', checklistRoutes);
 
 app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
+app.use('/api/checklist', checklistRoutes);
+
 
 app.use('/api/clientes', clienteRoutes)
 app.use('/api/relatorios', relatorioRoutes)

@@ -1305,7 +1305,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
   );
 };
 
-export default function ChecklistPage() {
+ function ChecklistPage() {
   const [checklists, setChecklists] = useState<Checklist[]>([]);
   const [loading, setLoading] = useState<LoadingState>({
     page: true,
@@ -1763,3 +1763,5 @@ export default function ChecklistPage() {
     </div>
   );
 }
+
+ export default ChecklistPage;
