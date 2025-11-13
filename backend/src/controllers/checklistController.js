@@ -3,8 +3,17 @@ import db from '../config/db.js';
 const converterParaPascalCase = (obj) => {
     const converted = {};
     for (const [key, value] of Object.entries(obj)) {
-        const pascalKey = key.split('_')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        let pascalKey = key.split('_')
+            .map(word => {
+                const siglas = ['adm', 'ok'];
+                if (siglas.includes(word.toLowerCase())) {
+                    return word.toUpperCase();
+                }
+                if (word.toLowerCase() === 'fem') return 'Fem';
+                if (word.toLowerCase() === 'masc') return 'Masc';
+                if (word.toLowerCase() === 'arcond') return 'ArCond';
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            })
             .join('_');
         converted[pascalKey] = value;
     }
