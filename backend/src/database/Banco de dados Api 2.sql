@@ -306,6 +306,93 @@ INSERT INTO Setor (Nome_Setor, Descricao) VALUES
 ('Comercial', 'Vendas e relacionamento'),
 ('Operacional', 'Execução das atividades');
 
+create table responsaveisVistoria(
+    id_responsavel int primary key,
+    foreign key (id_responsavel) references Colaboradores(ID_colaborador)
+);
+
+create table checklistVeiculoAgregado(
+	ID_cva int primary key auto_increment,
+    nome_motorista varchar(255) not null,
+    cpf varchar(11) not null,
+    placa_veiculo varchar(7) not null,
+    tipo_veiculo varchar(127) not null,
+    nivel_oleo enum("sim", "não", "na") not null,
+    vazamento_oleo enum("sim", "não", "na") not null,
+    nivel_agua enum("sim", "não", "na") not null,
+    foto_motor varchar(255) not null, #tem foto de referencia
+    foto_etiqueta_troca_oleo varchar(255), #tbm tem
+    pne_liso enum("sim", "não") not null,
+    pte_liso enum("sim", "não") not null,
+    ptd_liso enum("sim", "não") not null,
+    pdd_liso enum("sim", "não") not null,
+    pne_foto varchar(255) not null, # 1
+    pte_foto varchar(255) not null, # 2
+    ptd_foto varchar(255) not null, # 3
+    pdd_foto varchar(255) not null, # 4
+    parabrisa_perfeito enum("sim", "não", "na") not null,
+    cabine_externa_limpa enum("sim", "não", "na") not null,
+    veiculo_externo_limpo enum("sim", "não", "na") not null,
+    sem_amassado_ferrugem enum("sim", "não", "na") not null,
+    assoalho_conservado enum("sim", "não", "na") not null,
+    faixas_refletivas enum("sim", "não", "na") not null,
+    parabrisa_funcionando enum("sim", "não", "na") not null,
+    buzina_funciona enum("sim", "não", "na") not null,
+    farol_alto enum("sim", "não", "na") not null,
+    farol_baixo enum("sim", "não", "na") not null,
+    setas_dianteiras enum("sim", "não", "na") not null,
+    setas_traseiras enum("sim", "não", "na") not null,
+    pisca_alerta enum("sim", "não", "na") not null,
+    luz_freio enum("sim", "não", "na") not null,
+    luz_re enum("sim", "não", "na") not null,
+    sirene_re enum("sim", "não", "na") not null,
+    extintor enum("sim", "não", "na") not null,
+    step enum("sim", "não", "na") not null,
+    triangulo enum("sim", "não", "na") not null,
+    macaco enum("sim", "não", "na") not null,
+    chave_roda enum("sim", "não", "na") not null,
+    capacete_seguranca enum("sim", "não", "na") not null,
+    colete_seguranca enum("sim", "não", "na") not null,
+    bota_seguranca enum("sim", "não", "na") not null,
+    foto_frente varchar(255) not null, #tem foto de referencia 1
+    foto_lateral_direita varchar(255) not null, # 2
+    foto_lateral_esquerda varchar(255) not null, # 3
+    foto_traseira varchar(255) not null, # 4
+    observacoes text,
+    id_responsavel_vistoria int,
+    nome_responsavel_vistoria varchar(255),
+    criado_em datetime default current_timestamp,
+    foreign key (id_responsavel_vistoria) references responsaveisVistoria (id_responsavel)
+);
+
+CREATE TABLE ChecklistPredial (
+  CheckPredio INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  NomeFuncPredio VARCHAR(50),
+  DataPredio DATETIME default current_timestamp,
+  LixoCozinha ENUM('Sim','Não'),
+  LixoReciclavel ENUM('Sim','Não'),
+  CozinhaOrganizada ENUM('Sim','Não'),
+  LuzesCozinha ENUM('Sim','Não'),
+  CadeadoPortao2 ENUM('Sim','Não'),
+  CadeadoPortao1 ENUM('Sim','Não'),
+  TorneirasFechadas ENUM('Sim','Não'),
+  LixoBanheiro ENUM('Sim','Não'),
+  PortaBanheiro ENUM('Sim','Não'),
+  BebedouroDesligado ENUM('Sim','Não'),
+  ChavesChaveiro ENUM('Sim','Não'),
+  TVCameras ENUM('Sim','Não'),
+  TVDashboard ENUM('Sim','Não'),
+  ArCondicionado ENUM('Sim','Não'),
+  LuzesOperacional ENUM('Sim','Não'),
+  LuzesArmazem ENUM('Sim','Não'),
+  ConePCD ENUM('Sim','Não'),
+  Alarme ENUM('Sim','Não'),
+  PortaArmazem ENUM('Sim','Não'),
+  CadeadoCorrentes ENUM('Sim','Não'),
+  MotorRuidos TEXT,
+  SituacaoAtip TEXT
+);
+
 INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
 ('Gerente', 'Gestor'), ('Coordenador', 'Gestor'),
 ('Assistente', 'Colaborador'), ('Analista', 'Colaborador');
@@ -318,22 +405,8 @@ INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Carg
 ('lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
 ('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
 
--- INSERTS PARA A TABELA CHECKLIST (2 REGISTROS)
-INSERT INTO Checklist (
-    Responsavel, Data_Verificacao, Piso_ADM, Piso_Operacional, Piso_Galpao, Piso_Refeitorio,
-    Forro_ADM, Forro_Operacional, Forro_Galpao, Forro_Refeitorio, Instalacoes_Eletricas, Protecao_Raios,
-    Condicoes_Paleteiras, Organizacao_Local, Balanca_Condicao, Condicoes_Mictorios, Observacoes
-) VALUES 
-(
-    'João Victor Moura', '2024-01-15 09:00:00', 'Bom estado', 'Regular', 'Ótimo', 'Bom',
-    'Sem problemas', 'Necessita limpeza', 'Perfeito', 'Regular', 'Funcionando normalmente', 'Ativo',
-    'Em boas condições', 'Organizado', 'Precisa calibrar', 'Limpos', 'Verificação geral realizada'
-),
-(
-    'Rafael Sette', '2024-01-16 14:30:00', 'Ótimo', 'Bom estado', 'Regular', 'Ótimo',
-    'Perfeito', 'Sem problemas', 'Bom estado', 'Perfeito', 'Tudo funcionando', 'Ativo',
-    'Condições normais', 'Muito organizado', 'Calibrada', 'Limpos e funcionais', 'Tudo em ordem'
-);
+insert into responsaveisVistoria values
+(1), (2), (3);
 
 INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao, Criado_Por) VALUES
 ('Workshop Gestão', '2025-11-20 09:00:00', '4h', 'Auditório P.', 2, 'Workshop de gestão.', 1),
@@ -381,5 +454,4 @@ INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (1, 'Remoto
 ALTER TABLE Certificado_Participacao
 ADD COLUMN Arquivo_PDF VARCHAR(255) NULL;
 
-select * from Checklist;
-
+	

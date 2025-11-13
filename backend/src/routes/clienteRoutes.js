@@ -5,7 +5,8 @@ import {
     listarClientePorId, 
     listarCidades,
     listarSegmentos,
-    atualizarEtapaCliente 
+    atualizarEtapaCliente,
+    listarClientesParaDropdown
 } from '../controllers/clienteController.js'; 
 
 const router = express.Router();
@@ -13,6 +14,9 @@ const router = express.Router();
 router.get('/', listarClientes);
 router.get('/cidades', listarCidades);
 router.get('/segmentos', listarSegmentos); 
+
+router.get('/dropdown/:idColaborador', listarClientesParaDropdown);
+
 router.get('/:id', listarClientePorId);
 router.post('/', criarCliente);
 router.put('/:id/etapa', atualizarEtapaCliente);

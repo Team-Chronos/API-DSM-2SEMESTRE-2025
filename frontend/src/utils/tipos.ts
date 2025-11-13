@@ -86,3 +86,5 @@ export const tp_setor = {
   2: "Comercial",
   3: "Operacional"
 }
+
+export type HistoricoTabs = "Veículo Agregado" | "Fechamento Predial"

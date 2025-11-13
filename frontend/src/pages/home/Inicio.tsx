@@ -2,10 +2,12 @@ import type { JSX } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Administrativo } from "./inicio/Administrativo"
 import { Comercial } from "./inicio/Comercial";
+import { Operacional } from "./inicio/Operacional";
 
 const setorComponents: Record<number, JSX.Element> = {
   1: <Administrativo />,
   2: <Comercial />,
+  3: <Operacional />
 };
 
 export const Inicio = () => {
