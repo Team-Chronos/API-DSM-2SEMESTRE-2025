@@ -15,6 +15,7 @@ import relatorioRoutes from './src/routes/relatorioRoutes.js'
 import checklistVeiculoAgregadoRoutes from './src/routes/checklistVeiculoAgregadoRoutes.js'
 import checklistPredialRoutes from './src/routes/checklistPredialRoutes.js'
 import checklistRoutes from './src/routes/checklistRoutes.js';
+import checklistVeiculoFrotaRoutes from "./src/routes/checklistVeiculoFrotaRoutes.js"
 
 
 import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
@@ -81,6 +82,7 @@ app.post('/confirmarEvento', (req, res) => {
 app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes)
 
 app.use("/api/checklistPredios", checklistPredialRoutes)
+app.use("/api/checklistVeiculoFrota", checklistVeiculoFrotaRoutes)
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);

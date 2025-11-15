@@ -345,7 +345,6 @@ CREATE TABLE ChecklistManutencao (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
 -- INSERTS INICIAIS
 INSERT INTO Setor (Nome_Setor, Descricao) VALUES 
 ('Administrativo', 'Operações administrativas'),
@@ -411,6 +410,35 @@ create table checklistVeiculoAgregado(
     foreign key (id_responsavel_vistoria) references responsaveisVistoria (id_responsavel)
 );
 
+create table motorista(
+	id_motorista int primary key auto_increment,
+    nome_motorista varchar(100) not null
+);
+
+create table checklistVeiculoFrota(
+	id_cvf int primary key auto_increment,
+    id_motorista int,
+    placa varchar(7) not null,
+    km_inicial int not null,
+    km_final int not null,
+    destino varchar(255) not null,
+    abastecimento enum("sim", "não") not null,
+    comprovante_enviado enum("sim", "não") not null,
+    oleo_motor enum("sim", "não") not null,
+    reservatorio_agua enum("sim", "não") not null,
+    sistema_eletrico enum("sim", "não") not null,
+    estado_pneus enum("sim", "não") not null,
+    limpeza_bau_sider_cabine enum("sim", "não") not null,
+    lubrificacao_suspensoes enum("sim", "não") not null,
+	macaco enum("sim", "não") not null,
+    chave_roda enum("sim", "não") not null,
+    documento_vigente enum("sim", "não") not null,
+    data_encerramento_atividade datetime not null,
+    observacoes text,
+	criado_em datetime default current_timestamp,
+    foreign key (id_motorista) references motorista (id_motorista)
+);
+
 CREATE TABLE ChecklistPredial (
   CheckPredio INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   NomeFuncPredio VARCHAR(50),
@@ -471,20 +499,6 @@ INSERT INTO Agregados (genero, nome, cpf, nascimento, cidadeNascimento, telefone
 ('Feminino', 'Ana Pereira', '55566677788', '1992-07-22', 'Rio de Janeiro', '21988887777', 'ana.pereira@email.com', 'Av. Teste, 20, Rio de Janeiro', 'MER2B22', 'Yamaha', 'Factor 150'),
 ('Masculino', 'José Santos', '99988877766', '1978-11-01', 'Belo Horizonte', '31977776666', 'jose.santos@email.com', 'Praça Modelo, 30, Belo Horizonte', 'SUL3C33', 'Honda', 'Biz 125');
 
-INSERT  INTO Historico_Interacao (ID_Cliente, ID_Colaborador, Data_Interacao, Forma_Contato, Titulo, Descricao, Resultado, Proxima_Acao, Data_Proxima_Acao, Prioridade, Status) VALUES
-(1, 3, '2024-12-01 10:00:00', 'Telefone', 'Follow-up', 'Pedido alterações.', 'Negociação', 'Revisar proposta', '2024-12-05 14:00:00', 'Alta', 'Realizada'),
-(2, 3, '2024-12-02 14:30:00', 'Reunião', 'Apresentação', 'Interesse positivo.', 'Positivo', 'Enviar proposta', '2024-12-06 09:00:00', 'Alta', 'Realizada'),
-(3, 4, '2024-12-03 11:00:00', 'Email', 'Catálogo', 'Enviado.', 'Aguardando', 'Follow-up', '2024-12-10 10:00:00', 'Media', 'Realizada'),
-(1, 3, '2024-12-04 16:00:00', 'WhatsApp', 'Confirmação', 'Dados OK.', 'Confirmado', 'Emitir proposta', '2024-12-05 08:00:00', 'Urgente', 'Realizada'),
-(4, 3, '2024-12-04 09:00:00', 'Visita', 'Visita Técnica', 'Necessidades mapeadas.', 'Mapeado', 'Elaborar solução', '2024-12-12 15:00:00', 'Alta', 'Realizada');
-
-INSERT  INTO Agenda (ID_Colaborador, Titulo, Descricao, Data_Hora_Inicio, Data_Hora_Fim, Local_Evento, ID_Cliente, Tipo_Contato, Prioridade) VALUES
-(1, 'Reunião Cliente 1', 'Serviços', '2024-12-01 09:00:00', '2024-12-01 10:30:00', 'Sala 1', 1, 'Reunião', 'Alta'),
-(2, 'Follow-up Cliente 2', 'Proposta', '2024-12-02 14:00:00', '2024-12-02 14:30:00', NULL, 2, 'Telefone', 'Média'),
-(1, 'Visita Cliente 3', 'Necessidades', '2024-12-03 10:00:00', '2024-12-03 12:00:00', 'Cliente', 3, 'Visita', 'Alta'),
-(3, 'Demo Cliente 4', 'Nova linha', '2024-12-04 15:00:00', '2024-12-04 16:30:00', 'Sala Demo', 4, 'Reunião', 'Alta'),
-(4, 'Negociação Cliente 5', 'Contrato', '2024-12-05 11:00:00', '2024-12-05 12:00:00', 'Sala 2', 5, 'Reunião', 'Urgente');
-
 INSERT INTO Relatorio (Nome_Relatorio, Tipo_Relatorio, Gerado_Por) VALUES
 ('Relatorio_Eventos_202412.pdf', 'eventos', 1),
 ('Relatorio_Comercial_Q4.xlsx', 'clientes', 2);
@@ -500,4 +514,16 @@ INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (1, 'Remoto
 ALTER TABLE Certificado_Participacao
 ADD COLUMN Arquivo_PDF VARCHAR(255) NULL;
 
-	
+INSERT  INTO Historico_Interacao (ID_Cliente, ID_Colaborador, Data_Interacao, Forma_Contato, Titulo, Descricao, Resultado, Proxima_Acao, Data_Proxima_Acao, Prioridade, Status) VALUES
+(1, 3, '2024-12-01 10:00:00', 'Telefone', 'Follow-up', 'Pedido alterações.', 'Negociação', 'Revisar proposta', '2024-12-05 14:00:00', 'Alta', 'Realizada'),
+(2, 3, '2024-12-02 14:30:00', 'Reunião', 'Apresentação', 'Interesse positivo.', 'Positivo', 'Enviar proposta', '2024-12-06 09:00:00', 'Alta', 'Realizada'),
+(3, 4, '2024-12-03 11:00:00', 'Email', 'Catálogo', 'Enviado.', 'Aguardando', 'Follow-up', '2024-12-10 10:00:00', 'Media', 'Realizada'),
+(1, 3, '2024-12-04 16:00:00', 'WhatsApp', 'Confirmação', 'Dados OK.', 'Confirmado', 'Emitir proposta', '2024-12-05 08:00:00', 'Urgente', 'Realizada'),
+(4, 3, '2024-12-04 09:00:00', 'Visita', 'Visita Técnica', 'Necessidades mapeadas.', 'Mapeado', 'Elaborar solução', '2024-12-12 15:00:00', 'Alta', 'Realizada');
+
+INSERT  INTO Agenda (ID_Colaborador, Titulo, Descricao, Data_Hora_Inicio, Data_Hora_Fim, Local_Evento, ID_Cliente, Tipo_Contato, Prioridade) VALUES
+(1, 'Reunião Cliente 1', 'Serviços', '2024-12-01 09:00:00', '2024-12-01 10:30:00', 'Sala 1', 1, 'Reunião', 'Alta'),
+(2, 'Follow-up Cliente 2', 'Proposta', '2024-12-02 14:00:00', '2024-12-02 14:30:00', NULL, 2, 'Telefone', 'Média'),
+(1, 'Visita Cliente 3', 'Necessidades', '2024-12-03 10:00:00', '2024-12-03 12:00:00', 'Cliente', 3, 'Visita', 'Alta'),
+(3, 'Demo Cliente 4', 'Nova linha', '2024-12-04 15:00:00', '2024-12-04 16:30:00', 'Sala Demo', 4, 'Reunião', 'Alta'),
+(4, 'Negociação Cliente 5', 'Contrato', '2024-12-05 11:00:00', '2024-12-05 12:00:00', 'Sala 2', 5, 'Reunião', 'Urgente');
