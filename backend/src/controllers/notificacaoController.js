@@ -1,5 +1,5 @@
 import db from '../config/db.js';
-import NotificacaoObserver from './notificacaoObserver.js';
+import NotificacaoObserver from '../observers/notificacaoObserver.js';
 
 export const criarNotificacaoPersonalizada = async (req, res) => {
     try {
@@ -47,7 +47,7 @@ export const criarNotificacaoPersonalizada = async (req, res) => {
         }
 
     } catch (error) {
-        console.error("❌ Erro ao criar notificação personalizada:", error);
+        console.error("Erro ao criar notificação personalizada:", error);
         res.status(500).json({ mensagem: "Erro interno ao criar notificação." });
     }
 };
@@ -102,7 +102,7 @@ export const listarNotificacoes = async (req, res) => {
         res.status(200).json(notificacoesProcessadas);
 
     } catch (error) {
-        console.error(" Erro ao listar notificações:", error);
+        console.error("Erro ao listar notificações:", error);
         res.status(500).json({ mensagem: "Erro interno ao listar notificações." });
     }
 };
@@ -138,7 +138,7 @@ export const notificacaoRapida = async (req, res) => {
         }
 
     } catch (error) {
-        console.error(" Erro ao enviar notificação rápida:", error);
+        console.error("Erro ao enviar notificação rápida:", error);
         res.status(500).json({ mensagem: "Erro interno ao enviar notificação." });
     }
 };
@@ -174,7 +174,7 @@ export const notificarTodos = async (req, res) => {
         }
 
     } catch (error) {
-        console.error(" Erro ao notificar todos:", error);
+        console.error("Erro ao notificar todos:", error);
         res.status(500).json({ mensagem: "Erro interno ao enviar notificação." });
     }
 };
@@ -199,7 +199,7 @@ export const obterNotificacaoPorId = async (req, res) => {
         res.status(200).json(notificacoes[0]);
 
     } catch (error) {
-        console.error(" Erro ao buscar notificação:", error);
+        console.error("Erro ao buscar notificação:", error);
         res.status(500).json({ mensagem: "Erro interno ao buscar notificação." });
     }
 };
@@ -218,7 +218,96 @@ export const obterDestinatariosDisponiveis = async (req, res) => {
         res.status(200).json(colaboradores);
 
     } catch (error) {
-        console.error(" Erro ao buscar destinatários:", error);
+        console.error("Erro ao buscar destinatários:", error);
         res.status(500).json({ mensagem: "Erro interno ao buscar destinatários." });
+    }
+};
+
+export const obterEstatisticas = async (req, res) => {
+    try {
+        const estatisticas = await NotificacaoObserver.obterEstatisticas();
+        
+        if (estatisticas) {
+            res.status(200).json(estatisticas);
+        } else {
+            res.status(500).json({ mensagem: "Erro ao obter estatísticas" });
+        }
+
+    } catch (error) {
+        console.error("Erro ao obter estatísticas:", error);
+        res.status(500).json({ mensagem: "Erro interno ao obter estatísticas." });
+    }
+};
+
+export const cancelarNotificacao = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const resultado = await NotificacaoObserver.cancelarNotificacao(id);
+
+        if (resultado.success) {
+            res.status(200).json({ mensagem: resultado.mensagem });
+        } else {
+            res.status(400).json({ mensagem: resultado.mensagem });
+        }
+
+    } catch (error) {
+        console.error("Erro ao cancelar notificação:", error);
+        res.status(500).json({ mensagem: "Erro interno ao cancelar notificação." });
+    }
+};
+
+export const reenviarNotificacao = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const resultado = await NotificacaoObserver.reenviarNotificacao(id);
+
+        if (resultado.success) {
+            res.status(200).json({ mensagem: resultado.mensagem });
+        } else {
+            res.status(400).json({ mensagem: resultado.mensagem });
+        }
+
+    } catch (error) {
+        console.error("Erro ao reenviar notificação:", error);
+        res.status(500).json({ mensagem: "Erro interno ao reenviar notificação." });
+    }
+};
+
+export const dashboardNotificacoes = async (req, res) => {
+    try {
+        const [ultimasNotificacoes] = await db.promise().query(`
+            SELECT np.*, c.Nome_Col as criador_nome 
+            FROM notificacoes_personalizadas np
+            LEFT JOIN Colaboradores c ON np.criado_por = c.ID_colaborador
+            ORDER BY np.criado_em DESC 
+            LIMIT 10
+        `);
+
+        const estatisticas = await NotificacaoObserver.obterEstatisticas();
+
+        const [notificacoesPorStatus] = await db.promise().query(`
+            SELECT status, COUNT(*) as quantidade 
+            FROM notificacoes_personalizadas 
+            GROUP BY status
+        `);
+
+        const [notificacoesPorPrioridade] = await db.promise().query(`
+            SELECT prioridade, COUNT(*) as quantidade 
+            FROM notificacoes_personalizadas 
+            GROUP BY prioridade
+        `);
+
+        res.status(200).json({
+            estatisticas,
+            ultimasNotificacoes,
+            porStatus: notificacoesPorStatus,
+            porPrioridade: notificacoesPorPrioridade
+        });
+
+    } catch (error) {
+        console.error("Erro ao obter dashboard:", error);
+        res.status(500).json({ mensagem: "Erro interno ao obter dashboard." });
     }
 };

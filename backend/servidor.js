@@ -2,23 +2,25 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { listarCertificados } from "./src/controllers/certificadoController.js";
+
 import eventoRoutes from './src/routes/eventoRoutes.js';
 import authRoutes from './src/routes/authRoutes.js';
 import colaboradorRoutes from './src/routes/colaboradorRoutes.js';
 import agregadoRoutes from './src/routes/agregadoRoutes.js';
-import './src/routes/notificacaoObserver.js'; 
+import interacaoRoutes from './src/routes/interacaoRoutes.js';
 import participacaoEventoRoutes from './src/routes/participacaoEventoRoutes.js';
 import certificadoPartRoutes from './src/routes/certificadoPartRoutes.js';
-import clienteRoutes from './src/routes/clienteRoutes.js'
-import interacaoRoutes from './src/routes/interacaoRoutes.js'
-import relatorioRoutes from './src/routes/relatorioRoutes.js'
-import checklistVeiculoAgregadoRoutes from './src/routes/checklistVeiculoAgregadoRoutes.js'
-import checklistPredialRoutes from './src/routes/checklistPredialRoutes.js'
+import clienteRoutes from './src/routes/clienteRoutes.js';
+import relatorioRoutes from './src/routes/relatorioRoutes.js';
 import checklistRoutes from './src/routes/checklistRoutes.js';
-
-
+import checklistVeiculoAgregadoRoutes from './src/routes/checklistVeiculoAgregadoRoutes.js';
+import checklistPredialRoutes from './src/routes/checklistPredialRoutes.js';
 import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
 import agendaRoutes from './src/routes/agendaRoutes.js';
+
+import notificacaoRoutes from './src/routes/notificacoesRoutes.js';
+import notificacaoObserver from './src/observers/notificacaoObserver.js';
+
 import db from './src/config/db.js';
 import cors from 'cors';
 
@@ -41,29 +43,36 @@ app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
 app.use('/api/interacoes', interacaoRoutes);
-
 app.use('/api/agenda', agendaRoutes);
 
-app.use('/api/certificadoParticipacao', certificadoPartRoutes)
+app.use('/api/certificadoParticipacao', certificadoPartRoutes);
 app.use('/api', modalidadeRoutes);
 
 app.use('/api/checklist', checklistRoutes);
-
 app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
-app.use('/api/checklist', checklistRoutes);
 
+app.use('/api/clientes', clienteRoutes);
+app.use('/api/relatorios', relatorioRoutes);
 
-app.use('/api/clientes', clienteRoutes)
-app.use('/api/relatorios', relatorioRoutes)
-app.use('/api/certificadoParticipacao', certificadoPartRoutes);
+app.use('/api/notificacoes', notificacaoRoutes);
+
+app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes);
+app.use("/api/checklistPredios", checklistPredialRoutes);
+
+notificacaoObserver.iniciar().then(() => {
+    console.log(' NotificacaoObserver iniciado com sucesso');
+}).catch(error => {
+    console.error(' Erro ao iniciar NotificacaoObserver:', error);
+});
+
 app.get("/api/certificados", listarCertificados);
+
 app.get('/api/setores', async (req, res) => {
     try {
         const [setores] = await db.promise().query('SELECT * FROM Setor');
         res.json(setores);
     } catch (error) {
-        console.error('Erro ao buscar setores:', error);
         res.status(500).json({ mensagem: 'Erro ao buscar setores' });
     }
 });
@@ -71,17 +80,25 @@ app.get('/api/setores', async (req, res) => {
 app.post('/confirmarEvento', (req, res) => {
     const { resposta, justificativa } = req.body;
 
-    console.log('Resposta recebida do cliente:');
-    console.log(`- Decisão: ${resposta}`); 
-    console.log(`- Justificativa: ${justificativa}`); 
+    console.log("Decisão:", resposta);
+    console.log("Justificativa:", justificativa);
 
     res.status(200).json({ mensagem: 'Resposta registrada com sucesso no servidor!' });
 });
 
-app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes)
-
-app.use("/api/checklistPredios", checklistPredialRoutes)
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'online',
+        timestamp: new Date().toISOString(),
+        services: {
+            notifications: 'active',
+            database: 'connected'
+        }
+    });
+});
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Notificações: http://localhost:${PORT}/api/notificacoes`);
+    console.log(`Health Check: http://localhost:${PORT}/api/health`);
 });
