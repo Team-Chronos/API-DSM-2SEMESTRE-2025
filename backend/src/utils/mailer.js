@@ -14,6 +14,7 @@ const transporter = nodemailer.createTransport({
 
 console.log('Inicializando sistema de email...');
 
+
 transporter.verify()
   .then(() => {
     console.log(' CONEXÃO COM GMAIL BEM-SUCEDIDA!');
