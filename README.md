@@ -49,13 +49,14 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 |  10  |    Média   | Como um colaborador, eu quero marcar um evento ou treinamento como "concluído" após sua realização, para manter meu histórico de participação atualizado.                                                       |       1      |    1   |   ✅   |
 |  11  |    Média   | Como um colaborador, eu quero acessar um documento padrão gerado automaticamente após um evento, contendo data, duração e um campo para descrever o conhecimento adquirido, para registrar meu desenvolvimento. |       3      |    1   |   ✅   |
 |  12  |    Média   | Como um gerente de vendas, eu quero visualizar e classificar os clientes em um funil de vendas (Prospects, Inicial, Potencial, Manutenção, Em Negociação, Follow Up) para gerenciar o processo comercial.       |       2      |    2   |   ✅   |
-|  13  |    Média   | Como um vendedor, eu quero agendar tarefas e receber lembretes para próximos contatos com clientes, para não perder oportunidades de negócio.                                                                   |       8      |    2   |        |
-|  14  |    Média   | Como um operador, eu quero preencher o checklist de "Abertura e fechamento da empresa" (sim/não) para registrar o cumprimento dos procedimentos diários.                                                        |       5      |    3   |        |
-|  15  |    Média   | Como um operador, eu quero preencher o "Checklist de Agregado", inserindo dados do motorista, do veículo e fotos para formlizar a vistoria.                                                                     |       4      |    3   |        |
-|  16  |    Média   | Como um operador, eu quero preencher o "Checklist de veículo da frota" (sim/não) para registrar a conformidade dos veículos.                                                                                    |       4      |    3   |        |
-|  17  |    Média   | Como um responsável pela manutenção, eu quero preencher o checklist de "Manutenção predial" (excelente/bom/precisa reparo) para registrar as condições das instalações.                                         |       4      |    3   |        |
-|  18  |    Baixa   | Como um gestor, eu quero consultar os eventos pendentes de confirmação e os já realizados pelos colaboradores, para ter um controle sobre a participação da equipe.                                             |       6      |    3   |        |
+|  13  |    Média   | Como um vendedor, eu quero agendar tarefas e receber lembretes para próximos contatos com clientes, para não perder oportunidades de negócio.                                                                   |       8      |    3   |   ✅   |
+|  14  |    Média   | Como um operador, eu quero preencher o checklist de "Abertura e fechamento da empresa" (sim/não) para registrar o cumprimento dos procedimentos diários.                                                        |       5      |    3   |   ✅   |
+|  15  |    Média   | Como um operador, eu quero preencher o "Checklist de Agregado", inserindo dados do motorista, do veículo e fotos para formlizar a vistoria.                                                                     |       4      |    3   |   ✅   |
+|  16  |    Média   | Como um operador, eu quero preencher o "Checklist de veículo da frota" (sim/não) para registrar a conformidade dos veículos.                                                                                    |       4      |    3   |   ✅   |
+|  17  |    Média   | Como um responsável pela manutenção, eu quero preencher o checklist de "Manutenção predial" (excelente/bom/precisa reparo) para registrar as condições das instalações.                                         |       4      |    3   |   ✅   |
+|  18  |    Baixa   | Como um gestor, eu quero consultar os eventos pendentes de confirmação e os já realizados pelos colaboradores, para ter um controle sobre a participação da equipe.                                             |       6      |    3   |   ✅   |
 |  19  |    Baixa   | Como um administrador, eu quero visualizar a localização de um colaborador para que eu possa saber quem está disponível para alocação de tarefas.                                                               |       3      |    1   |   ✅   |
+|  20  |    Alta    | Como um colaborador do comercial, eu quero cadastrar uma nova cotação com os dados do cliente, para que eu possa acompanhar minhas propostas e negociar com os clientes de forma organizada.                    |       7      |    3   |   ⏳   |
 
 ---
 
@@ -89,8 +90,8 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | ------------------------------------------------ |
 | 🔖 **SPRINT 1** | 08/09 - 28/09 ✅ | [Sprint 1](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%201) |
-| 🔖 **SPRINT 2** | 06/10 - 26/10 | [Sprint 2](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%202) |
-| 🔖 **SPRINT 3** | 03/11 - 23/11 |                                                  |
+| 🔖 **SPRINT 2** | 06/10 - 26/10 ✅ | [Sprint 2](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%202) |
+| 🔖 **SPRINT 3** | 03/11 - 23/11 ⏳ | [Sprint 3](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs/sprint%203) |
 
 ## 💻 Tecnologias <a id="tecnologias"></a>
 
@@ -104,6 +105,7 @@ A plataforma Newe CRM consiste em um sistema que visa a centralização de dados
  <a href="https://www.atlassian.com/software/jira"><img src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white"/></a>
  <a href="https://www.mysql.com"><img alt="Static Badge" src="https://img.shields.io/badge/mysql-325f74?style=for-the-badge&logo=mysql&logoColor=white"></a>
  <a href="https://github.com/"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/></a>
+ <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-white?style=for-the-badge&logo=react&logoColor=white&color=%23087ea4"/></a>
 </h4>
 
 ## 🎓 Equipe <a id="equipe"></a>
