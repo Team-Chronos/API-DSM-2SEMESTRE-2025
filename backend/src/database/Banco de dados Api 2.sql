@@ -652,6 +652,32 @@ VALUES
 (0.0035, false, false, 150.00, 'Faturamento Mensal mais 15 dias', false);
 
 
+CREATE TABLE wexpress_cotacoes (
+    id SERIAL PRIMARY KEY,
+    origem_uf VARCHAR(2) NOT NULL,
+    origem_cidade VARCHAR(100) NOT NULL,
+    destino_uf VARCHAR(2) NOT NULL,
+    destino_cidade VARCHAR(100) NOT NULL,
+    remetente VARCHAR(200),
+    peso_carga DECIMAL(10,2) NOT NULL,
+    valor_carga DECIMAL(15,2) NOT NULL,
+    tipo_carga VARCHAR(200),
+    pedagio DECIMAL(10,2),
+    distancia_km DECIMAL(10,2) NOT NULL,
+    veiculo_id INTEGER NOT NULL REFERENCES wexpress(id) ON DELETE RESTRICT,
+    imposto DECIMAL(15,2) NOT NULL,
+    custo DECIMAL(15,2) NOT NULL,
+    frete DECIMAL(15,2) NOT NULL,
+    total DECIMAL(15,2) NOT NULL,
+    liquido DECIMAL(15,2) NOT NULL,
+    margem DECIMAL(10,5) NOT NULL,
+    
+    drop_servico BOOLEAN DEFAULT FALSE,
+    
+    criado_em datetime DEFAULT current_timestamp
+);
+
+
 CREATE TABLE weair_lead_time (
     id SERIAL PRIMARY KEY,
     iata CHAR(3) NOT NULL,
