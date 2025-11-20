@@ -14,6 +14,7 @@ import interacaoRoutes from './src/routes/interacaoRoutes.js'
 import relatorioRoutes from './src/routes/relatorioRoutes.js'
 import checklistVeiculoAgregadoRoutes from './src/routes/checklistVeiculoAgregadoRoutes.js'
 import checklistPredialRoutes from './src/routes/checklistPredialRoutes.js'
+import cotacaoRoutes from "./src/routes/cotacaoRoutes.js"
 
 import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
 import agendaRoutes from './src/routes/agendaRoutes.js';
@@ -75,6 +76,8 @@ app.post('/confirmarEvento', (req, res) => {
 app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes)
 
 app.use("/api/checklistPredios", checklistPredialRoutes)
+
+app.use("/api/cotacao", cotacaoRoutes)
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
