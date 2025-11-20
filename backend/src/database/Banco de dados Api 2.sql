@@ -342,6 +342,369 @@ CREATE TABLE ChecklistPredial (
   SituacaoAtip TEXT
 );
 
+CREATE TABLE weair_convencional (
+    id SERIAL PRIMARY KEY,
+    servico VARCHAR(50) NOT NULL,
+    cita CHAR(3) NOT NULL,     -- Código IATA
+    destino VARCHAR(100) NOT NULL,
+    frete_minimo DECIMAL(10,2) NOT NULL,
+    valor_kilo_excedente DECIMAL(10,5) NOT NULL,
+    peso_minimo INT NOT NULL
+);
+
+INSERT INTO weair_convencional (servico, cita, destino, frete_minimo, valor_kilo_excedente, peso_minimo) VALUES
+('NEWE CONVENCIONAL', 'AJU', 'Aracaju', 257.30, 11.62, 10),
+('NEWE CONVENCIONAL', 'JPA', 'João Pessoa', 257.30, 13.42, 10),
+('NEWE CONVENCIONAL', 'SLZ', 'São Luís', 257.30, 13.42, 10),
+('NEWE CONVENCIONAL', 'THE', 'Teresina', 257.30, 13.42, 10),
+('NEWE CONVENCIONAL', 'FOR', 'Fortaleza', 257.30, 13.42, 10),
+('NEWE CONVENCIONAL', 'PMW', 'Palmas', 257.30, 11.62, 10),
+('NEWE CONVENCIONAL', 'REC', 'Recife', 257.30, 13.42, 10),
+('NEWE CONVENCIONAL', 'SSA', 'Salvador', 257.30, 11.62, 10),
+('NEWE CONVENCIONAL', 'SDU', 'Rio de Janeiro (Santos Dumont)', 257.30, 9.51, 10),
+('NEWE CONVENCIONAL', 'GIG', 'Rio de Janeiro (Galeão)', 257.30, 9.51, 10),
+('NEWE CONVENCIONAL', 'PLU', 'Belo Horizonte (Pampulha)', 257.30, 9.51, 10),
+('NEWE CONVENCIONAL', 'CNF', 'Confins', 257.30, 9.51, 10),
+('NEWE CONVENCIONAL', 'BSB', 'Brasília', 257.30, 10.43, 10),
+('NEWE CONVENCIONAL', 'CGR', 'Campo Grande', 257.30, 10.43, 10),
+('NEWE CONVENCIONAL', 'CWB', 'Curitiba', 257.30, 9.51, 10),
+('NEWE CONVENCIONAL', 'FLN', 'Florianópolis', 257.30, 9.51, 10),
+('NEWE CONVENCIONAL', 'GYN', 'Goiania', 257.30, 10.43, 10),
+('NEWE CONVENCIONAL', 'POA', 'Porto Alegre', 257.30, 10.43, 10),
+('NEWE CONVENCIONAL', 'CGB', 'Cuiabá', 257.30, 11.62, 10),
+('NEWE CONVENCIONAL', 'VIX', 'Vitória', 257.30, 10.43, 10),
+('NEWE CONVENCIONAL', 'BVB', 'Boa Vista', 257.30, 16.90, 10),
+('NEWE CONVENCIONAL', 'IMP', 'Imperatriz', 257.30, 16.90, 10),
+('NEWE CONVENCIONAL', 'MAB', 'Marabá', 257.30, 16.90, 10),
+('NEWE CONVENCIONAL', 'MCP', 'Macapá', 257.30, 16.90, 10),
+('NEWE CONVENCIONAL', 'PVH', 'Porto Velho', 257.30, 16.90, 10),
+('NEWE CONVENCIONAL', 'RBR', 'Rio Branco', 257.30, 16.90, 10),
+('NEWE CONVENCIONAL', 'STM', 'Santarém', 257.30, 16.90, 10),
+('NEWE CONVENCIONAL', 'MCZ', 'Maceió', 257.30, 11.62, 10),
+('NEWE CONVENCIONAL', 'NAT', 'Natal', 257.30, 13.42, 10),
+('NEWE CONVENCIONAL', 'BEL', 'Belém', 257.30, 16.90, 10),
+('NEWE CONVENCIONAL', 'MAO', 'Manaus', 257.30, 16.90, 10);
+
+
+CREATE TABLE weair_expresso (
+    id SERIAL PRIMARY KEY,
+    servico VARCHAR(50) NOT NULL,
+    destino VARCHAR(50) NOT NULL,
+    frete_minimo DECIMAL(10,2) NOT NULL,
+    valor_kilo_excedente DECIMAL(10,5) NOT NULL,
+    peso_minimo INT NOT NULL
+);
+
+INSERT INTO weair_expresso (servico, destino, frete_minimo, valor_kilo_excedente, peso_minimo) VALUES
+('NEWE EXPRESS', 'AJU', 283.50, 12.80, 10),
+('NEWE EXPRESS', 'JPA', 283.50, 14.78, 10),
+('NEWE EXPRESS', 'SLZ', 283.50, 14.78, 10),
+('NEWE EXPRESS', 'THE', 283.50, 14.78, 10),
+('NEWE EXPRESS', 'FOR', 283.50, 14.78, 10),
+('NEWE EXPRESS', 'PMW', 283.50, 12.80, 10),
+('NEWE EXPRESS', 'REC', 283.50, 14.78, 10),
+('NEWE EXPRESS', 'SSA', 283.50, 12.80, 10),
+('NEWE EXPRESS', 'SDU', 283.50, 10.61, 10),
+('NEWE EXPRESS', 'GIG', 283.50, 10.61, 10),
+('NEWE EXPRESS', 'PLU', 283.50, 10.61, 10),
+('NEWE EXPRESS', 'CNF', 283.50, 10.61, 10),
+('NEWE EXPRESS', 'BSB', 283.50, 11.63, 10),
+('NEWE EXPRESS', 'CGR', 283.50, 11.63, 10),
+('NEWE EXPRESS', 'CWB', 283.50, 10.61, 10),
+('NEWE EXPRESS', 'FLN', 283.50, 10.61, 10),
+('NEWE EXPRESS', 'GYN', 283.50, 11.63, 10),
+('NEWE EXPRESS', 'JOI', 283.50, 10.61, 10),
+('NEWE EXPRESS', 'POA', 283.50, 11.63, 10),
+('NEWE EXPRESS', 'CGB', 283.50, 12.80, 10),
+('NEWE EXPRESS', 'VIX', 283.50, 11.63, 10),
+('NEWE EXPRESS', 'BVB', 283.50, 17.31, 10),
+('NEWE EXPRESS', 'IMP', 283.50, 17.31, 10),
+('NEWE EXPRESS', 'MAB', 283.50, 17.31, 10),
+('NEWE EXPRESS', 'MCP', 283.50, 17.31, 10),
+('NEWE EXPRESS', 'PVH', 283.50, 17.31, 10),
+('NEWE EXPRESS', 'RBR', 283.50, 17.31, 10),
+('NEWE EXPRESS', 'STM', 283.50, 17.31, 10),
+('NEWE EXPRESS', 'MCZ', 283.50, 12.80, 10),
+('NEWE EXPRESS', 'NAT', 283.50, 14.78, 10),
+('NEWE EXPRESS', 'BEL', 283.50, 17.31, 10),
+('NEWE EXPRESS', 'MAO', 283.50, 17.31, 10);
+
+
+CREATE TABLE weair_generalidades (
+    id SERIAL PRIMARY KEY,
+    coleta_horario_descricao TEXT,
+    coleta_horario_valor DECIMAL(10,2),
+    coleta_emergencia_descricao TEXT,
+    coleta_emergencia_valor DECIMAL(10,2),
+    seguro DECIMAL(10,5),
+    gris DECIMAL(10,5),
+    veiculo_ded_50km_desc TEXT,
+    veiculo_ded_50km_valor DECIMAL(10,2),
+    retira_aeroporto TEXT,
+    veiculo_ded_km_desc TEXT,
+    veiculo_ded_km_valor DECIMAL(10,2),
+    observacoes TEXT
+);
+
+INSERT INTO weair_generalidades (
+    coleta_horario_descricao,
+    coleta_horario_valor,
+    coleta_emergencia_descricao,
+    coleta_emergencia_valor,
+    seguro,
+    gris,
+    veiculo_ded_50km_desc,
+    veiculo_ded_50km_valor,
+    retira_aeroporto,
+    veiculo_ded_km_desc,
+    veiculo_ded_km_valor,
+    observacoes
+)
+VALUES (
+    'Coleta com antecedência de 4 horas dentro do horário comercial',
+    150.00,
+
+    'Coleta Emergência 24 horas',
+    280.00,
+
+    0.007,
+    0.0008,
+
+    'Veículo Dedicado Entrega no Destino até 50Km (Fiorino)',
+    480.00,
+
+    'Carga Retira Aeroporto sem Custos',
+
+    'Veículo Dedicado Interior Valor por Km',
+    4.50,
+
+    'Exceto Regiões Rural, Indígena e Fluvial.'
+);
+
+
+CREATE TABLE weair_proximo_voo (
+    id SERIAL PRIMARY KEY,
+    peso_ate VARCHAR(20) NOT NULL,
+    valor DECIMAL(12,4) NOT NULL
+);
+
+INSERT INTO weair_proximo_voo (peso_ate, valor) VALUES
+(0.5, 164.81),
+(1.0, 201.44),
+(1.5, 222.66),
+(2.0, 222.66),
+(2.5, 318.06),
+(3.0, 318.06),
+(3.5, 413.50),
+(4.0, 413.50),
+(4.5, 459.47),
+(5.0, 459.47),
+(5.5, 505.37),
+(6.0, 505.37),
+(6.5, 551.32),
+(7.0, 551.32),
+(7.5, 597.27),
+(8.0, 597.27),
+(8.5, 643.20),
+(9.0, 643.20),
+(9.5, 689.15),
+(10.0, 689.15),
+(10.5, 830.26),
+(11.0, 830.26),
+(11.5, 885.88),
+(12.0, 885.88),
+(12.5, 941.50),
+(13.0, 941.50),
+(13.5, 997.10),
+(14.0, 997.10),
+(14.5, 1052.69),
+(15.0, 1052.69),
+(15.5, 957.20),
+(16.0, 957.20),
+(16.5, 1005.21),
+(17.0, 1005.21),
+(17.5, 1053.24),
+(18.0, 1053.24),
+(18.5, 1101.28),
+(19.0, 1101.28),
+(19.5, 1149.32),
+(20.0, 1149.32),
+(20.5, 1197.34),
+(21.0, 1197.34),
+(21.5, 1245.38),
+(22.0, 1245.38),
+(22.5, 1293.41),
+(23.0, 1293.41),
+(23.5, 1305.57),
+(24.0, 1305.57),
+(24.5, 1335.35),
+(25.0, 1335.35),
+(25.5, 1362.64),
+(26.0, 1362.64),
+(26.5, 1389.95),
+(27.0, 1389.95),
+(27.5, 1422.23),
+(28.0, 1422.23),
+(28.5, 1447.06),
+(29.0, 1447.06),
+(29.5, 1476.82),
+(30.0, 1476.82);
+
+
+CREATE TABLE weair_proximo_voo_generalidades (
+    id SERIAL PRIMARY KEY,
+    valor_atualizado DECIMAL(10,2),
+    coleta_horario_descricao TEXT,
+    coleta_horario_valor DECIMAL(10,2),
+    coleta_emergencia_descricao TEXT,
+    coleta_emergencia_valor DECIMAL(10,2),
+    seguro DECIMAL(10,5),
+    gris DECIMAL(10,5),
+    veiculo_ded_50km_desc TEXT,
+    veiculo_ded_50km_valor DECIMAL(10,2),
+    retira_aeroporto TEXT,
+    veiculo_ded_km_desc TEXT,
+    veiculo_ded_km_valor DECIMAL(10,2),
+    observacoes TEXT
+);
+
+INSERT INTO weair_proximo_voo_generalidades (
+    valor_atualizado,
+    coleta_horario_descricao,
+    coleta_horario_valor,
+    coleta_emergencia_descricao,
+    coleta_emergencia_valor,
+    seguro,
+    gris,
+    veiculo_ded_50km_desc,
+    veiculo_ded_50km_valor,
+    retira_aeroporto,
+    veiculo_ded_km_desc,
+    veiculo_ded_km_valor,
+    observacoes
+)
+VALUES (
+    33.95,
+
+    'Coleta com antecedência de 4 horas dentro do horário comercial',
+    150.00,
+
+    'Coleta Emergência 24 horas',
+    280.00,
+
+    0.007,
+    0.0008,
+
+    'Veículo Dedicado Entrega no Destino até 50Km (Fiorino)',
+    480.00,
+
+    'Carga Retira Aeroporto sem Custos',
+
+    'Veículo Dedicado Interior Valor por Km',
+    4.50,
+
+    'Exceto Regiões Rural, Indígena e Fluvial.'
+);
+
+
+CREATE TABLE wexpress (
+    id SERIAL PRIMARY KEY,
+    veiculo VARCHAR(50) NOT NULL,
+    capacidade_peso VARCHAR(50) NOT NULL,
+    frete_minimo DECIMAL(10,2) NOT NULL,
+    km_minimo INT NOT NULL,
+    km_excedente DECIMAL(10,2) NOT NULL,
+    diaria_veiculo DECIMAL(10,2) NOT NULL,
+    seguro_com_ddr DECIMAL(10,5),
+    seguro_sem_ddr DECIMAL(10,5),
+    gris DECIMAL(10,5)
+);
+
+INSERT INTO wexpress 
+(veiculo, capacidade_peso, frete_minimo, km_minimo, km_excedente, diaria_veiculo, 
+ seguro_com_ddr, seguro_sem_ddr, gris)
+VALUES
+('Fiorino', '0 a 550', 398.00, 154, 2.60, 220.00, 0.0010, 0.0010, 0.0008),
+('Van', '600 a 1200', 655.00, 145, 3.55, 300.00, 0.0010, 0.0010, 0.0008),
+('VUC', '1200 a 3000', 980.00, 200, 5.00, 390.00, 0.0010, 0.0010, 0.0008),
+('03/04', '3000 a 6000', 1417.76, 200, 6.00, 500.00, 0.0010, 0.0010, 0.0008),
+('Truck', '6000 a 14000', 2904.79, 175, 8.33, 700.00, 0.0010, 0.0010, 0.0008),
+('Carreta 2 eixos', '14000 a 33000', 3304.95, 175, 12.82, 1800.00, 0.0010, 0.0010, 0.0008),
+('Carreta 3 eixos', '33000 a 41000', 3672.15, 175, 13.50, 1800.00, 0.0010, 0.0010, 0.0008),
+('Carreta Cavalo Trucado', '41000 a 45000', 4637.30, 175, 10.99, 1800.00, 0.0010, 0.0010, 0.0008),
+('Carreta Prancha', '45000 a 50000', 3970.67, 175, 15.52, 1800.00, 0.0010, 0.0010, 0.0008);
+
+
+CREATE TABLE wexpress_generalidades (
+    id SERIAL PRIMARY KEY,
+    advalorem_rj DECIMAL(10,5),
+    batedor_incluso BOOLEAN,
+    tap_incluso BOOLEAN,
+    drop_valor DECIMAL(10,2),
+    faturamento TEXT,
+    escolta_incluso BOOLEAN
+);
+
+INSERT INTO wexpress_generalidades 
+(advalorem_rj, batedor_incluso, tap_incluso, drop_valor, faturamento, escolta_incluso)
+VALUES
+(0.0035, false, false, 150.00, 'Faturamento Mensal mais 15 dias', false);
+
+
+CREATE TABLE weair_lead_time (
+    id SERIAL PRIMARY KEY,
+    iata CHAR(3) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    convencional INT,
+    expresso INT,
+    proximo_voo INT,
+    conexao BOOLEAN
+);
+
+INSERT INTO weair_lead_time (iata, cidade, uf, convencional, expresso, proximo_voo, conexao) VALUES
+('AJU','Aracaju','SE',4,3,1,false),
+('BEL','Belém','PA',5,3,1,false),
+('BNU','Blumenau','SC',3,3,1,false),
+('BSB','Brasília','DF',3,3,1,false),
+('BVB','Boa Vista','RR',7,4,2,true),
+('CGB','Cuiaba','MT',5,3,1,false),
+('CGR','Campo Grande','MS',5,3,1,false),
+('CWB','Curitiba','PR',3,3,1,false),
+('CXJ','Caxias do Sul','RS',3,2,1,false),
+('FLN','Florianópolis','SC',3,2,1,false),
+('FOR','Fortaleza','CE',4,3,1,false),
+('GIG','Rio de Janeiro (Galeão)','RJ',3,2,1,false),
+('GYN','Goiania','GO',4,3,1,false),
+('IMP','Imperatriz','MA',4,NULL,1,false),
+('IOS','Ilhéus','BA',4,3,1,false),
+('JOI','Joinville','SC',3,2,1,false),
+('JPA','João Pessoa','PB',4,4,1,false),
+('LDB','Londrina','PR',3,3,1,false),
+('MAB','Marabá','PA',6,4,2,true),
+('MAO','Manaus','AM',6,4,1,false),
+('MCP','Macapá','AP',7,3,2,true),
+('MGF','Maringá','PR',3,3,1,false),
+('NAT','Natal','RN',4,3,1,false),
+('NVT','Navegantes','SC',3,3,1,false),
+('PMW','Palmas','TO',4,3,1,false),
+('POA','Porto Alegre','RS',3,3,1,false),
+('PVH','Porto Velho','RO',7,4,2,true),
+('RBR','Rio Branco','AC',7,4,2,true),
+('REC','Recife','PE',5,3,1,false),
+('SDU','Rio de Janeiro (Santos Dumont)','RJ',3,3,1,false),
+('SLZ','São Luís','MA',5,4,1,false),
+('SSA','Salvador','BA',3,3,1,false),
+('STM','Santarém','PA',6,4,2,true),
+('THE','Teresina','PI',5,4,1,false),
+('UDI','Uberlândia','MG',3,3,1,false),
+('VIX','Vitória','ES',3,3,1,false),
+('CNF','Belo Horizonte','MG',3,3,1,false),
+('PLU','Belo Horizonte (Pampulha)','MG',3,3,1,false),
+('MCZ','Maceió','AL',4,3,1,false),
+('LFR','Lauro de Freitas','BA',4,3,1,false);
+
+
 INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
 ('Gerente', 'Gestor'), ('Coordenador', 'Gestor'),
 ('Assistente', 'Colaborador'), ('Analista', 'Colaborador');
