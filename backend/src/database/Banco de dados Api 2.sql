@@ -610,7 +610,8 @@ VALUES (
 CREATE TABLE wexpress (
     id SERIAL PRIMARY KEY,
     veiculo VARCHAR(50) NOT NULL,
-    capacidade_peso VARCHAR(50) NOT NULL,
+    peso_min int NOT NULL,
+    peso_max int NOT NULL,
     frete_minimo DECIMAL(10,2) NOT NULL,
     km_minimo INT NOT NULL,
     km_excedente DECIMAL(10,2) NOT NULL,
@@ -621,18 +622,18 @@ CREATE TABLE wexpress (
 );
 
 INSERT INTO wexpress 
-(veiculo, capacidade_peso, frete_minimo, km_minimo, km_excedente, diaria_veiculo, 
+(veiculo, peso_min, peso_max, frete_minimo, km_minimo, km_excedente, diaria_veiculo, 
  seguro_com_ddr, seguro_sem_ddr, gris)
 VALUES
-('Fiorino', '0 a 550', 398.00, 154, 2.60, 220.00, 0.0010, 0.0010, 0.0008),
-('Van', '600 a 1200', 655.00, 145, 3.55, 300.00, 0.0010, 0.0010, 0.0008),
-('VUC', '1200 a 3000', 980.00, 200, 5.00, 390.00, 0.0010, 0.0010, 0.0008),
-('03/04', '3000 a 6000', 1417.76, 200, 6.00, 500.00, 0.0010, 0.0010, 0.0008),
-('Truck', '6000 a 14000', 2904.79, 175, 8.33, 700.00, 0.0010, 0.0010, 0.0008),
-('Carreta 2 eixos', '14000 a 33000', 3304.95, 175, 12.82, 1800.00, 0.0010, 0.0010, 0.0008),
-('Carreta 3 eixos', '33000 a 41000', 3672.15, 175, 13.50, 1800.00, 0.0010, 0.0010, 0.0008),
-('Carreta Cavalo Trucado', '41000 a 45000', 4637.30, 175, 10.99, 1800.00, 0.0010, 0.0010, 0.0008),
-('Carreta Prancha', '45000 a 50000', 3970.67, 175, 15.52, 1800.00, 0.0010, 0.0010, 0.0008);
+('Fiorino', 0, 550, 398.00, 154, 2.60, 220.00, 0.0010, 0.0010, 0.0008),
+('Van', 600, 1200, 655.00, 145, 3.55, 300.00, 0.0010, 0.0010, 0.0008),
+('VUC', 1200, 3000, 980.00, 200, 5.00, 390.00, 0.0010, 0.0010, 0.0008),
+('03/04', 3000, 6000, 1417.76, 200, 6.00, 500.00, 0.0010, 0.0010, 0.0008),
+('Truck', 6000, 14000, 2904.79, 175, 8.33, 700.00, 0.0010, 0.0010, 0.0008),
+('Carreta 2 eixos', 14000, 33000, 3304.95, 175, 12.82, 1800.00, 0.0010, 0.0010, 0.0008),
+('Carreta 3 eixos', 33000, 41000, 3672.15, 175, 13.50, 1800.00, 0.0010, 0.0010, 0.0008),
+('Carreta Cavalo Trucado', 41000, 45000, 4637.30, 175, 10.99, 1800.00, 0.0010, 0.0010, 0.0008),
+('Carreta Prancha', 45000, 50000, 3970.67, 175, 15.52, 1800.00, 0.0010, 0.0010, 0.0008);
 
 
 CREATE TABLE wexpress_generalidades (
