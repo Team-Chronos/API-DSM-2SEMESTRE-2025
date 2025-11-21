@@ -1,5 +1,6 @@
 import db from '../config/db.js';
 import NotificacaoObserver from '../observers/notificacaoObserver.js';
+import notificacaoObserver from '../observers/notificacaoObserver.js';
 
 export const criarNotificacaoPersonalizada = async (req, res) => {
     try {
@@ -76,21 +77,32 @@ export const listarNotificacoes = async (req, res) => {
         const [notificacoes] = await db.promise().query(query);
         
         const notificacoesProcessadas = notificacoes.map(notificacao => {
-            let destinatariosFormatados = 'Erro ao processar';
+            let destinatariosFormatados = 'Destinatário específico';
             
             try {
-                if (notificacao.destinatarios === 'todos' || notificacao.destinatarios === '"todos"') {
-                    destinatariosFormatados = 'Todos os colaboradores';
-                } else {
-                    const destinatariosArray = JSON.parse(notificacao.destinatarios);
-                    if (Array.isArray(destinatariosArray)) {
-                        destinatariosFormatados = `${destinatariosArray.length} colaborador(es)`;
+                if (!notificacao.destinatarios) {
+                    destinatariosFormatados = 'Nenhum destinatário';
+                } else if (typeof notificacao.destinatarios === 'string') {
+                    if (notificacao.destinatarios.includes('todos') || notificacao.destinatarios === '"todos"') {
+                        destinatariosFormatados = 'Todos os colaboradores';
                     } else {
-                        destinatariosFormatados = 'Destinatário específico';
+                        try {
+                            const parsed = JSON.parse(notificacao.destinatarios);
+                            if (Array.isArray(parsed)) {
+                                destinatariosFormatados = `${parsed.length} colaborador(es)`;
+                            } else if (parsed === 'todos') {
+                                destinatariosFormatados = 'Todos os colaboradores';
+                            }
+                        } catch {
+                            destinatariosFormatados = 'Destinatário específico';
+                        }
                     }
+                } else if (Array.isArray(notificacao.destinatarios)) {
+                    destinatariosFormatados = `${notificacao.destinatarios.length} colaborador(es)`;
                 }
             } catch (error) {
                 console.error('Erro ao processar destinatários:', error);
+                destinatariosFormatados = 'Erro ao processar';
             }
 
             return {
@@ -225,7 +237,7 @@ export const obterDestinatariosDisponiveis = async (req, res) => {
 
 export const obterEstatisticas = async (req, res) => {
     try {
-        const estatisticas = await NotificacaoObserver.obterEstatisticas();
+        const estatisticas = await notificacaoObserver.obterEstatisticas();
         
         if (estatisticas) {
             res.status(200).json(estatisticas);
@@ -243,12 +255,13 @@ export const cancelarNotificacao = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const resultado = await NotificacaoObserver.cancelarNotificacao(id);
+        const query = 'UPDATE notificacoes_personalizadas SET status = "cancelada" WHERE id = ? AND status = "pendente"';
+        const [result] = await db.promise().query(query, [id]);
 
-        if (resultado.success) {
-            res.status(200).json({ mensagem: resultado.mensagem });
+        if (result.affectedRows > 0) {
+            res.status(200).json({ mensagem: "Notificação cancelada com sucesso!" });
         } else {
-            res.status(400).json({ mensagem: resultado.mensagem });
+            res.status(400).json({ mensagem: "Notificação não encontrada ou já processada" });
         }
 
     } catch (error) {
@@ -261,12 +274,13 @@ export const reenviarNotificacao = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const resultado = await NotificacaoObserver.reenviarNotificacao(id);
+        const query = 'UPDATE notificacoes_personalizadas SET status = "pendente", enviado_em = NULL WHERE id = ?';
+        const [result] = await db.promise().query(query, [id]);
 
-        if (resultado.success) {
-            res.status(200).json({ mensagem: resultado.mensagem });
+        if (result.affectedRows > 0) {
+            res.status(200).json({ mensagem: "Notificação será reenviada em breve!" });
         } else {
-            res.status(400).json({ mensagem: resultado.mensagem });
+            res.status(400).json({ mensagem: "Notificação não encontrada" });
         }
 
     } catch (error) {
@@ -285,7 +299,7 @@ export const dashboardNotificacoes = async (req, res) => {
             LIMIT 10
         `);
 
-        const estatisticas = await NotificacaoObserver.obterEstatisticas();
+        const estatisticas = await notificacaoObserver.obterEstatisticas();
 
         const [notificacoesPorStatus] = await db.promise().query(`
             SELECT status, COUNT(*) as quantidade 
