@@ -128,8 +128,7 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
         liquido: valorFrete.liquido,
         margem: valorFrete.margem,
       };
-
-      console.log(payload)
+      
       const res = await api.post("/cotacao", payload);
 
       alert("Cotação cadastrada com sucesso!");
