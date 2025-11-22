@@ -67,7 +67,7 @@ export const Sidebar = ({ onLogout }: SidebarProps) => {
 
           <li
             id="btn-logout"
-            className="text-danger align-self-center d-flex align-items-center px-2 py-1"
+            className="align-self-center d-flex align-items-center px-2 py-1"
             style={{ cursor: "pointer" }}
             onClick={onLogout}
           >

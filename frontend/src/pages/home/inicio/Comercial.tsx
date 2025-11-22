@@ -3,8 +3,9 @@ import { ComercialDashboard } from "./comercial/ComercialDashboard";
 import { ClientesList } from "./comercial/ClientesList";
 import { RelatorioList } from "./comercial/RelatorioList";
 import { ModalDestaqueClientes } from "../../../components/modals/ModalDestaqueClientes";
-import "../../../css/Comercial.css"
+import "../../../css/Comercial.css";
 import { ModalEtapas } from "../../../components/modals/ModalEtapas";
+import { CotacoesList } from "./comercial/cotacoes";
 export const Comercial = () => {
   const [view, setView] = useState("dashboard");
 
@@ -27,7 +28,16 @@ export const Comercial = () => {
         <ClientesList />
       </div>
     );
-  } else if (view === "relatorio") {
+  }  else if (view === "cotacoes") {
+    return (
+      <div>
+        <button className="btn-voltar" onClick={() => setView("dashboard")}>
+          &larr; Voltar ao Dashboard
+        </button>
+        <CotacoesList />
+      </div>
+    );
+  }else if (view === "relatorio") {
     return (
       <div>
         <button className="btn-voltar" onClick={() => setView("dashboard")}>
@@ -51,6 +61,9 @@ export const Comercial = () => {
           <button className="btn-azul" onClick={() => setView("etapas")}>Etapas</button>
           <button className="btn-azul" onClick={() => setView("clientes")}>
             Clientes
+          </button>
+           <button className="btn-azul" onClick={() => setView("cotacoes")}>
+            Cotações
           </button>
           <button className="btn-azul botao-separado" onClick={() => setView("relatorio")}>Gerar relatórios</button>
         </nav>

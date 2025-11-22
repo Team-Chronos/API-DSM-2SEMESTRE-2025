@@ -254,100 +254,98 @@ CREATE TABLE ChecklistManutencao (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Agregados (
-    id_agregado INT AUTO_INCREMENT PRIMARY KEY,
-    genero ENUM('Masculino', 'Feminino', 'Outro') NOT NULL,
-    nome VARCHAR(150) NOT NULL,
-    cnpj CHAR(14) NULL,
-    cpf CHAR(11) NULL,
-    nascimento DATE NULL,
-    cidadeNascimento VARCHAR(100) NULL,
-    telefone VARCHAR(20) NULL,
-    email VARCHAR(150) NULL,
-    rg VARCHAR(20) NULL,
-    emissaoRG DATE NULL,
-    orgaoExp VARCHAR(20) NULL,
-    pai VARCHAR(150) NULL,
-    mae VARCHAR(150) NULL,
-    pis VARCHAR(15) NULL,
-    cep CHAR(8) NULL,
-    endereco VARCHAR(255) NULL,
-    nomeProprietario VARCHAR(150) NULL,
-    placa VARCHAR(10) NULL,
-    marca VARCHAR(50) NULL,
-    modelo VARCHAR(100) NULL,
-    cor VARCHAR(30) NULL,
-    anoFabricacao YEAR NULL,
-    cilindrada INT NULL,
-    bauSuporte BOOLEAN DEFAULT FALSE,
-    seguro BOOLEAN DEFAULT FALSE,
-    valorMinSaida DECIMAL(10,2) NULL,
-    valorKmRodado DECIMAL(10,2) NULL,
-    cursoMotoFrete BOOLEAN DEFAULT FALSE,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT uc_cpf UNIQUE (cpf),
-    CONSTRAINT uc_cnpj UNIQUE (cnpj),
-    CONSTRAINT uc_rg UNIQUE (rg)
+-- INSERTS INICIAIS
+INSERT INTO Setor (Nome_Setor, Descricao) VALUES 
+('Administrativo', 'Operações administrativas'),
+('Comercial', 'Vendas e relacionamento'),
+('Operacional', 'Execução das atividades');
+
+create table responsaveisVistoria(
+    id_responsavel int primary key,
+    foreign key (id_responsavel) references Colaboradores(ID_colaborador)
 );
 
-CREATE TABLE responsaveisVistoria (
-    id_responsavel INT PRIMARY KEY,
-    FOREIGN KEY (id_responsavel) REFERENCES Colaboradores(ID_colaborador)
+create table checklistVeiculoAgregado(
+	ID_cva int primary key auto_increment,
+    nome_motorista varchar(255) not null,
+    cpf varchar(11) not null,
+    placa_veiculo varchar(7) not null,
+    tipo_veiculo varchar(127) not null,
+    nivel_oleo enum("sim", "não", "na") not null,
+    vazamento_oleo enum("sim", "não", "na") not null,
+    nivel_agua enum("sim", "não", "na") not null,
+    foto_motor varchar(255) not null, #tem foto de referencia
+    foto_etiqueta_troca_oleo varchar(255), #tbm tem
+    pne_liso enum("sim", "não") not null,
+    pte_liso enum("sim", "não") not null,
+    ptd_liso enum("sim", "não") not null,
+    pdd_liso enum("sim", "não") not null,
+    pne_foto varchar(255) not null, # 1
+    pte_foto varchar(255) not null, # 2
+    ptd_foto varchar(255) not null, # 3
+    pdd_foto varchar(255) not null, # 4
+    parabrisa_perfeito enum("sim", "não", "na") not null,
+    cabine_externa_limpa enum("sim", "não", "na") not null,
+    veiculo_externo_limpo enum("sim", "não", "na") not null,
+    sem_amassado_ferrugem enum("sim", "não", "na") not null,
+    assoalho_conservado enum("sim", "não", "na") not null,
+    faixas_refletivas enum("sim", "não", "na") not null,
+    parabrisa_funcionando enum("sim", "não", "na") not null,
+    buzina_funciona enum("sim", "não", "na") not null,
+    farol_alto enum("sim", "não", "na") not null,
+    farol_baixo enum("sim", "não", "na") not null,
+    setas_dianteiras enum("sim", "não", "na") not null,
+    setas_traseiras enum("sim", "não", "na") not null,
+    pisca_alerta enum("sim", "não", "na") not null,
+    luz_freio enum("sim", "não", "na") not null,
+    luz_re enum("sim", "não", "na") not null,
+    sirene_re enum("sim", "não", "na") not null,
+    extintor enum("sim", "não", "na") not null,
+    step enum("sim", "não", "na") not null,
+    triangulo enum("sim", "não", "na") not null,
+    macaco enum("sim", "não", "na") not null,
+    chave_roda enum("sim", "não", "na") not null,
+    capacete_seguranca enum("sim", "não", "na") not null,
+    colete_seguranca enum("sim", "não", "na") not null,
+    bota_seguranca enum("sim", "não", "na") not null,
+    foto_frente varchar(255) not null, #tem foto de referencia 1
+    foto_lateral_direita varchar(255) not null, # 2
+    foto_lateral_esquerda varchar(255) not null, # 3
+    foto_traseira varchar(255) not null, # 4
+    observacoes text,
+    id_responsavel_vistoria int,
+    nome_responsavel_vistoria varchar(255),
+    criado_em datetime default current_timestamp,
+    foreign key (id_responsavel_vistoria) references responsaveisVistoria (id_responsavel)
 );
 
-CREATE TABLE checklistVeiculoAgregado (
-    ID_cva INT PRIMARY KEY AUTO_INCREMENT,
-    nome_motorista VARCHAR(255) NOT NULL,
-    cpf VARCHAR(11) NOT NULL,
-    placa_veiculo VARCHAR(7) NOT NULL,
-    tipo_veiculo VARCHAR(127) NOT NULL,
-    nivel_oleo ENUM("sim", "não", "na") NOT NULL,
-    vazamento_oleo ENUM("sim", "não", "na") NOT NULL,
-    nivel_agua ENUM("sim", "não", "na") NOT NULL,
-    foto_motor VARCHAR(255) NOT NULL,
-    foto_etiqueta_troca_oleo VARCHAR(255),
-    pne_liso ENUM("sim", "não") NOT NULL,
-    pte_liso ENUM("sim", "não") NOT NULL,
-    ptd_liso ENUM("sim", "não") NOT NULL,
-    pdd_liso ENUM("sim", "não") NOT NULL,
-    pne_foto VARCHAR(255) NOT NULL,
-    pte_foto VARCHAR(255) NOT NULL,
-    ptd_foto VARCHAR(255) NOT NULL,
-    pdd_foto VARCHAR(255) NOT NULL,
-    parabrisa_perfeito ENUM("sim", "não", "na") NOT NULL,
-    cabine_externa_limpa ENUM("sim", "não", "na") NOT NULL,
-    veiculo_externo_limpo ENUM("sim", "não", "na") NOT NULL,
-    sem_amassado_ferrugem ENUM("sim", "não", "na") NOT NULL,
-    assoalho_conservado ENUM("sim", "não", "na") NOT NULL,
-    faixas_refletivas ENUM("sim", "não", "na") NOT NULL,
-    parabrisa_funcionando ENUM("sim", "não", "na") NOT NULL,
-    buzina_funciona ENUM("sim", "não", "na") NOT NULL,
-    farol_alto ENUM("sim", "não", "na") NOT NULL,
-    farol_baixo ENUM("sim", "não", "na") NOT NULL,
-    setas_dianteiras ENUM("sim", "não", "na") NOT NULL,
-    setas_traseiras ENUM("sim", "não", "na") NOT NULL,
-    pisca_alerta ENUM("sim", "não", "na") NOT NULL,
-    luz_freio ENUM("sim", "não", "na") NOT NULL,
-    luz_re ENUM("sim", "não", "na") NOT NULL,
-    sirene_re ENUM("sim", "não", "na") NOT NULL,
-    extintor ENUM("sim", "não", "na") NOT NULL,
-    step ENUM("sim", "não", "na") NOT NULL,
-    triangulo ENUM("sim", "não", "na") NOT NULL,
-    macaco ENUM("sim", "não", "na") NOT NULL,
-    chave_roda ENUM("sim", "não", "na") NOT NULL,
-    capacete_seguranca ENUM("sim", "não", "na") NOT NULL,
-    colete_seguranca ENUM("sim", "não", "na") NOT NULL,
-    bota_seguranca ENUM("sim", "não", "na") NOT NULL,
-    foto_frente VARCHAR(255) NOT NULL,
-    foto_lateral_direita VARCHAR(255) NOT NULL,
-    foto_lateral_esquerda VARCHAR(255) NOT NULL,
-    foto_traseira VARCHAR(255) NOT NULL,
-    observacoes TEXT,
-    id_responsavel_vistoria INT,
-    nome_responsavel_vistoria VARCHAR(255),
-    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_responsavel_vistoria) REFERENCES responsaveisVistoria(id_responsavel)
+create table motorista(
+	id_motorista int primary key auto_increment,
+    nome_motorista varchar(100) not null
+);
+
+create table checklistVeiculoFrota(
+	id_cvf int primary key auto_increment,
+    id_motorista int,
+    placa varchar(7) not null,
+    km_inicial int not null,
+    km_final int not null,
+    destino varchar(255) not null,
+    abastecimento enum("sim", "não") not null,
+    comprovante_enviado enum("sim", "não") not null,
+    oleo_motor enum("sim", "não") not null,
+    reservatorio_agua enum("sim", "não") not null,
+    sistema_eletrico enum("sim", "não") not null,
+    estado_pneus enum("sim", "não") not null,
+    limpeza_bau_sider_cabine enum("sim", "não") not null,
+    lubrificacao_suspensoes enum("sim", "não") not null,
+	macaco enum("sim", "não") not null,
+    chave_roda enum("sim", "não") not null,
+    documento_vigente enum("sim", "não") not null,
+    data_encerramento_atividade datetime not null,
+    observacoes text,
+	criado_em datetime default current_timestamp,
+    foreign key (id_motorista) references motorista (id_motorista)
 );
 
 CREATE TABLE ChecklistPredial (
@@ -477,10 +475,8 @@ INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Carg
 ('rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
 ('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
 
--- Responsáveis por Vistoria
 INSERT INTO responsaveisVistoria VALUES (1), (2), (3);
 
--- Eventos
 INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao, Criado_Por) VALUES
 ('Workshop Gestão', '2025-11-20 09:00:00', '4h', 'Auditório P.', 2, 'Workshop de gestão.', 1),
 ('Treinamento Oper', '2025-11-22 14:00:00', '3h', 'Sala T2', 1, 'Treinamento operacional.', 1),
@@ -498,14 +494,22 @@ INSERT INTO Agregados (genero, nome, cpf, nascimento, cidadeNascimento, telefone
 ('Feminino', 'Ana Pereira', '55566677788', '1992-07-22', 'Rio de Janeiro', '21988887777', 'ana.pereira@email.com', 'Av. Teste, 20, Rio de Janeiro', 'MER2B22', 'Yamaha', 'Factor 150'),
 ('Masculino', 'José Santos', '99988877766', '1978-11-01', 'Belo Horizonte', '31977776666', 'jose.santos@email.com', 'Praça Modelo, 30, Belo Horizonte', 'SUL3C33', 'Honda', 'Biz 125');
 
-INSERT INTO Cliente (Nome_Cliente, Telefone_Cliente, Email_Cliente, Segmento, Etapa, atividade, Cidade, depart_responsavel, Criado_Por) VALUES
-('Empresa ABC Ltda', '1122334455', 'contato@empresaabc.com', 'Logística', 'Prospects', 'Transporte', 'São Paulo', 'Comercial', 1),
-('Comércio XYZ', '1199887766', 'vendas@comercioxyz.com', 'Varejo', 'Negociação', 'Distribuição', 'Rio de Janeiro', 'Comercial', 2),
-('Indústria 123', '1133445566', 'compras@industria123.com', 'Industrial', 'Fechado', 'Matéria-prima', 'Belo Horizonte', 'Comercial', 1),
-('Serviços QRS', '1144556677', 'admin@servicosqrs.com', 'Serviços', 'Prospects', 'Terceirização', 'Curitiba', 'Comercial', 3),
-('Tech Solutions', '1155667788', 'projetos@techsolutions.com', 'Tecnologia', 'Negociação', 'Desenvolvimento', 'Campinas', 'Comercial', 2);
+INSERT INTO Relatorio (Nome_Relatorio, Tipo_Relatorio, Gerado_Por) VALUES
+('Relatorio_Eventos_202412.pdf', 'eventos', 1),
+('Relatorio_Comercial_Q4.xlsx', 'clientes', 2);
 
-INSERT INTO Historico_Interacao (ID_Cliente, ID_Colaborador, Data_Interacao, Forma_Contato, Titulo, Descricao, Resultado, Proxima_Acao, Data_Proxima_Acao, Prioridade, Status) VALUES
+INSERT INTO notificacoes_personalizadas (titulo, mensagem, destinatarios, prioridade, criado_por, tipo) VALUES
+('Bem-vindo', 'Sistema ativo.', '"todos"', 'media', 1, 'sistema'),
+('Manutenção', 'Sábado 08h-12h.', '"todos"', 'alta', 1, 'sistema');
+
+UPDATE Cliente SET Ultima_Interacao = NOW() WHERE ID_Cliente IN (1, 2, 3, 4); 
+
+INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (1, 'Remoto');
+
+ALTER TABLE Certificado_Participacao
+ADD COLUMN Arquivo_PDF VARCHAR(255) NULL;
+
+INSERT  INTO Historico_Interacao (ID_Cliente, ID_Colaborador, Data_Interacao, Forma_Contato, Titulo, Descricao, Resultado, Proxima_Acao, Data_Proxima_Acao, Prioridade, Status) VALUES
 (1, 3, '2024-12-01 10:00:00', 'Telefone', 'Follow-up', 'Pedido alterações.', 'Negociação', 'Revisar proposta', '2024-12-05 14:00:00', 'Alta', 'Realizada'),
 (2, 3, '2024-12-02 14:30:00', 'Reunião', 'Apresentação', 'Interesse positivo.', 'Positivo', 'Enviar proposta', '2024-12-06 09:00:00', 'Alta', 'Realizada'),
 (3, 4, '2024-12-03 11:00:00', 'Email', 'Catálogo', 'Enviado.', 'Aguardando', 'Follow-up', '2024-12-10 10:00:00', 'Media', 'Realizada'),
@@ -519,29 +523,5 @@ INSERT INTO Agenda (ID_Colaborador, Titulo, Descricao, Data_Hora_Inicio, Data_Ho
 (3, 'Demo Cliente 4', 'Nova linha', '2024-12-04 15:00:00', '2024-12-04 16:30:00', 'Sala Demo', 4, 'Reunião', 'Alta'),
 (4, 'Negociação Cliente 5', 'Contrato', '2024-12-05 11:00:00', '2024-12-05 12:00:00', 'Sala 2', 5, 'Reunião', 'Urgente');
 
--- Relatórios
-INSERT INTO Relatorio (Nome_Relatorio, Tipo_Relatorio, Gerado_Por) VALUES
-('Relatorio_Eventos_202412.pdf', 'eventos', 1),
-('Relatorio_Comercial_Q4.xlsx', 'clientes', 2);
-
--- Notificações Personalizadas
-INSERT INTO notificacoes_personalizadas (titulo, mensagem, destinatarios, prioridade, criado_por, tipo) VALUES
-('Bem-vindo', 'Sistema ativo.', 'todos', 'media', 1, 'sistema'),
-('Manutenção', 'Sábado 08h-12h.', 'todos', 'alta', 1, 'sistema');
-
-INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (1, 'Remoto');
-
-UPDATE Cliente SET Ultima_Interacao = NOW() WHERE ID_Cliente IN (1, 2, 3, 4, 5);
-
-INSERT INTO notificacoes_personalizadas 
-(titulo, mensagem, destinatarios, prioridade, criado_por, tipo, status) 
-VALUES 
-('Teste Sistema', 'Sistema de notificações funcionando!', '"todos"', 'media', 1, 'sistema', 'enviada');
-
-INSERT INTO Certificado_Participacao (ID_Colaborador, ID_Evento, Duracao_Part, Descricao_Part) VALUES
-(1, 1, '4 horas', 'Participação completa no workshop de gestão'),
-(2, 1, '4 horas', 'Participação completa no workshop de gestão'),
-(3, 1, '4 horas', 'Participação completa no workshop de gestão');
-
 ALTER TABLE Participacao_Evento 
-ADD COLUMN notificado TINYINT(1) DEFAULT 0;
+ADD COLUMN notificado_criador TINYINT(1) DEFAULT 0;

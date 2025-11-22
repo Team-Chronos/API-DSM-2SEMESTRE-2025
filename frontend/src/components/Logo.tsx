@@ -4,7 +4,7 @@ export const Logo = () => {
 			width: "fit-content"
     }}>
 			<span id="newe" className="mb-0" style={{
-				color: "var(--azul)",
+				color: "white",
 				fontSize: "40px",
 				fontWeight: "700"
 			}}>

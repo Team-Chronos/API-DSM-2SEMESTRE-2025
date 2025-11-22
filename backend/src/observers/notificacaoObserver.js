@@ -48,8 +48,13 @@ class NotificacaoObserver {
             const [colaboradores] = await db.promise().query('SELECT COALESCE(MAX(ID_colaborador), 0) as maxId FROM Colaboradores');
             this.ultimoColaboradorId = colaboradores[0].maxId;
             
-            const [agregados] = await db.promise().query('SELECT COALESCE(MAX(id_agregado), 0) as maxId FROM Agregados');
-            this.ultimoAgregadoId = agregados[0].maxId;
+            try {
+                const [agregados] = await db.promise().query('SELECT COALESCE(MAX(id_agregado), 0) as maxId FROM Agregados');
+                this.ultimoAgregadoId = agregados[0].maxId;
+            } catch (error) {
+                console.log(' Tabela Agregados não encontrada, continuando sem monitorar agregados...');
+                this.ultimoAgregadoId = 0;
+            }
 
             try {
                 const [tabelaExiste] = await db.promise().query(`
@@ -104,6 +109,19 @@ class NotificacaoObserver {
         try {
             console.log(' Verificando respostas de eventos...');
             
+            try {
+                await db.promise().query(`
+                    SELECT notificado FROM Participacao_Evento LIMIT 1
+                `);
+            } catch (error) {
+                console.log(' Coluna notificado não existe, criando...');
+                await db.promise().query(`
+                    ALTER TABLE Participacao_Evento 
+                    ADD COLUMN notificado TINYINT(1) DEFAULT 0
+                `);
+                console.log(' Coluna notificado criada com sucesso!');
+            }
+
             const [respostas] = await db.promise().query(`
                 SELECT pe.*, e.Nome_Evento, e.Criado_Por, c.Nome_Col as nome_participante,
                        criador.Nome_Col as nome_criador, criador.Email as email_criador,
@@ -252,119 +270,119 @@ class NotificacaoObserver {
     }
 
     static async notificarNovoEvento(eventoId) {
-    try {
-        console.log(` Notificando convidados sobre novo evento ID: ${eventoId}`);
-        
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        const [eventos] = await db.promise().query(`
-            SELECT * FROM Evento WHERE ID_Evento = ?
-        `, [eventoId]);
-
-        console.log(` Resultado da query: ${eventos.length} evento(s) encontrado(s)`);
-
-        if (eventos.length === 0) {
-            console.log(` Evento ID ${eventoId} não encontrado no banco`);
+        try {
+            console.log(` Notificando convidados sobre novo evento ID: ${eventoId}`);
             
-            const [eventos2] = await db.promise().query(`
-                SELECT ID_Evento, Nome_Evento FROM Evento 
-                WHERE ID_Evento = ?
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            const [eventos] = await db.promise().query(`
+                SELECT * FROM Evento WHERE ID_Evento = ?
             `, [eventoId]);
-            
-            console.log(` Segunda tentativa: ${eventos2.length} evento(s)`);
-            
-            if (eventos2.length === 0) {
+
+            console.log(` Resultado da query: ${eventos.length} evento(s) encontrado(s)`);
+
+            if (eventos.length === 0) {
+                console.log(` Evento ID ${eventoId} não encontrado no banco`);
+                
+                const [eventos2] = await db.promise().query(`
+                    SELECT ID_Evento, Nome_Evento FROM Evento 
+                    WHERE ID_Evento = ?
+                `, [eventoId]);
+                
+                console.log(` Segunda tentativa: ${eventos2.length} evento(s)`);
+                
+                if (eventos2.length === 0) {
+                    return { 
+                        success: false, 
+                        error: `Evento ID ${eventoId} não existe no banco`,
+                        enviados: 0,
+                        erros: 0
+                    };
+                }
+            }
+
+            const evento = eventos[0];
+            console.log(` Evento encontrado: "${evento.Nome_Evento}" (ID: ${evento.ID_Evento})`);
+
+            const [criadorInfo] = await db.promise().query(`
+                SELECT Nome_Col, Email FROM Colaboradores 
+                WHERE ID_colaborador = ?
+            `, [evento.Criado_Por]);
+
+            const nome_criador = criadorInfo.length > 0 ? criadorInfo[0].Nome_Col : 'Sistema';
+            const email_criador = criadorInfo.length > 0 ? criadorInfo[0].Email : null;
+
+            const [participantes] = await db.promise().query(`
+                SELECT c.ID_colaborador, c.Nome_Col, c.Email 
+                FROM Participacao_Evento pe
+                INNER JOIN Colaboradores c ON pe.ID_Colaborador = c.ID_colaborador
+                WHERE pe.ID_Evento = ?
+            `, [eventoId]);
+
+            console.log(` Participantes encontrados: ${participantes.length}`);
+
+            if (participantes.length === 0) {
+                console.log(' Nenhum participante encontrado para o evento');
                 return { 
-                    success: false, 
-                    error: `Evento ID ${eventoId} não existe no banco`,
+                    success: true, 
+                    message: 'Evento criado sem participantes',
                     enviados: 0,
                     erros: 0
                 };
             }
-        }
 
-        const evento = eventos[0];
-        console.log(` Evento encontrado: "${evento.Nome_Evento}" (ID: ${evento.ID_Evento})`);
+            console.log(`Enviando convites para ${participantes.length} participantes`);
 
-        const [criadorInfo] = await db.promise().query(`
-            SELECT Nome_Col, Email FROM Colaboradores 
-            WHERE ID_colaborador = ?
-        `, [evento.Criado_Por]);
+            let enviados = 0;
+            let erros = 0;
 
-        const nome_criador = criadorInfo.length > 0 ? criadorInfo[0].Nome_Col : 'Sistema';
-        const email_criador = criadorInfo.length > 0 ? criadorInfo[0].Email : null;
+            for (const participante of participantes) {
+                try {
+                    const eventoComCriador = {
+                        ...evento,
+                        nome_criador: nome_criador,
+                        email_criador: email_criador
+                    };
+                    
+                    await this.enviarEmailConviteEvento(eventoComCriador, participante);
+                    enviados++;
+                    console.log(` Email enviado para: ${participante.Email}`);
+                } catch (error) {
+                    console.error(` Falha ao enviar para ${participante.Email}:`, error.message);
+                    erros++;
+                }
+            }
 
-        const [participantes] = await db.promise().query(`
-            SELECT c.ID_colaborador, c.Nome_Col, c.Email 
-            FROM Participacao_Evento pe
-            INNER JOIN Colaboradores c ON pe.ID_Colaborador = c.ID_colaborador
-            WHERE pe.ID_Evento = ?
-        `, [eventoId]);
+            console.log(` Resultado final: ${enviados} sucessos, ${erros} erros`);
 
-        console.log(` Participantes encontrados: ${participantes.length}`);
+            if (enviados > 0) {
+                await this.criarNotificacao({
+                    titulo: ' Novo Evento Criado',
+                    mensagem: `Evento "${evento.Nome_Evento}" foi criado e convites enviados para ${enviados} participantes`,
+                    destinatarios: [evento.Criado_Por],
+                    prioridade: 'media',
+                    criado_por: 1,
+                    tipo: 'sistema'
+                });
+            }
 
-        if (participantes.length === 0) {
-            console.log(' Nenhum participante encontrado para o evento');
             return { 
                 success: true, 
-                message: 'Evento criado sem participantes',
+                message: `Convites enviados para ${enviados} participantes`,
+                enviados,
+                erros
+            };
+
+        } catch (error) {
+            console.error(' Erro ao notificar novo evento:', error);
+            return { 
+                success: false, 
+                error: error.message,
                 enviados: 0,
                 erros: 0
             };
         }
-
-        console.log(`Enviando convites para ${participantes.length} participantes`);
-
-        let enviados = 0;
-        let erros = 0;
-
-        for (const participante of participantes) {
-            try {
-                const eventoComCriador = {
-                    ...evento,
-                    nome_criador: nome_criador,
-                    email_criador: email_criador
-                };
-                
-                await this.enviarEmailConviteEvento(eventoComCriador, participante);
-                enviados++;
-                console.log(` Email enviado para: ${participante.Email}`);
-            } catch (error) {
-                console.error(` Falha ao enviar para ${participante.Email}:`, error.message);
-                erros++;
-            }
-        }
-
-        console.log(` Resultado final: ${enviados} sucessos, ${erros} erros`);
-
-        if (enviados > 0) {
-            await this.criarNotificacao({
-                titulo: ' Novo Evento Criado',
-                mensagem: `Evento "${evento.Nome_Evento}" foi criado e convites enviados para ${enviados} participantes`,
-                destinatarios: [evento.Criado_Por],
-                prioridade: 'media',
-                criado_por: 1,
-                tipo: 'sistema'
-            });
-        }
-
-        return { 
-            success: true, 
-            message: `Convites enviados para ${enviados} participantes`,
-            enviados,
-            erros
-        };
-
-    } catch (error) {
-        console.error(' Erro ao notificar novo evento:', error);
-        return { 
-            success: false, 
-            error: error.message,
-            enviados: 0,
-            erros: 0
-        };
     }
-}
 
     static async enviarEmailConviteEvento(evento, convidado) {
         try {
@@ -704,35 +722,36 @@ class NotificacaoObserver {
     }
 
     async verificarNovosEventos() {
-    try {
-        const [eventos] = await db.promise().query(
-            'SELECT * FROM Evento WHERE ID_Evento > ? ORDER BY ID_Evento ASC',
-            [this.ultimoEventoId]
-        );
+        try {
+            const [eventos] = await db.promise().query(
+                'SELECT * FROM Evento WHERE ID_Evento > ? ORDER BY ID_Evento ASC',
+                [this.ultimoEventoId]
+            );
 
-        for (const evento of eventos) {
-            console.log(` Novo evento detectado: "${evento.Nome_Evento}" (ID: ${evento.ID_Evento})`);
-            
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            try {
-                const resultado = await NotificacaoObserver.notificarNovoEvento(evento.ID_Evento);
+            for (const evento of eventos) {
+                console.log(` Novo evento detectado: "${evento.Nome_Evento}" (ID: ${evento.ID_Evento})`);
                 
-                if (resultado.success) {
-                    console.log(` Convites automáticos enviados: ${resultado.enviados} sucessos, ${resultado.erros} erros`);
-                } else {
-                    console.log(` Falha nos convites automáticos: ${resultado.error}`);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                try {
+                    const resultado = await NotificacaoObserver.notificarNovoEvento(evento.ID_Evento);
+                    
+                    if (resultado.success) {
+                        console.log(` Convites automáticos enviados: ${resultado.enviados} sucessos, ${resultado.erros} erros`);
+                    } else {
+                        console.log(` Falha nos convites automáticos: ${resultado.error}`);
+                    }
+                } catch (error) {
+                    console.error(` Erro crítico ao enviar convites para evento ${evento.ID_Evento}:`, error);
                 }
-            } catch (error) {
-                console.error(` Erro crítico ao enviar convites para evento ${evento.ID_Evento}:`, error);
+                
+                this.ultimoEventoId = evento.ID_Evento;
             }
-            
-            this.ultimoEventoId = evento.ID_Evento;
+        } catch (error) {
+            console.error(' Erro ao verificar novos eventos:', error);
         }
-    } catch (error) {
-        console.error(' Erro ao verificar novos eventos:', error);
     }
-}
+
     async verificarNovosColaboradores() {
         try {
             const [colaboradores] = await db.promise().query(
@@ -750,6 +769,17 @@ class NotificacaoObserver {
 
     async verificarNovosAgregados() {
         try {
+            const [tabelaExiste] = await db.promise().query(`
+                SELECT TABLE_NAME 
+                FROM INFORMATION_SCHEMA.TABLES 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                AND TABLE_NAME = 'agregados'
+            `);
+            
+            if (tabelaExiste.length === 0) {
+                return; 
+            }
+
             const [agregados] = await db.promise().query(
                 'SELECT * FROM Agregados WHERE id_agregado > ? ORDER BY id_agregado ASC',
                 [this.ultimoAgregadoId]
