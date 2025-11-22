@@ -1,7 +1,6 @@
 #barra-lateral {
-  background-image: linear-gradient(var(--azul) 40%, black);
+  background-color: var(--azul);
   color: white;
-  /* height: 100vh;  */
   padding: 1rem;
   width: 15%;
   min-width: 250px;
@@ -32,7 +31,9 @@
   column-gap: 22px;
   align-items: center;
 }
-
+#btn-logout{
+  color: rgb(255, 0, 0);
+}
 #barra-lateral nav > ul > li > .bi::before {
   font-size: 28px;
 }

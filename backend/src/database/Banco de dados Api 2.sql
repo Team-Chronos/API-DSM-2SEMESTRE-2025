@@ -92,6 +92,54 @@ CREATE TABLE Certificado_Participacao (
     FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_Colaborador) ON DELETE CASCADE
 );
 
+CREATE TABLE Checklist (
+    ID_Checklist INT PRIMARY KEY AUTO_INCREMENT,
+    Responsavel VARCHAR(100) NOT NULL,
+    Data_Verificacao DATETIME NOT NULL,
+    Piso_ADM TEXT,
+    Piso_Operacional TEXT,
+    Piso_Galpao TEXT,
+    Piso_Refeitorio TEXT,
+    Forro_ADM TEXT,
+    Forro_Operacional TEXT,
+    Forro_Galpao TEXT,
+    Forro_Refeitorio TEXT,
+    Instalacoes_Eletricas TEXT,
+    Protecao_Raios TEXT,
+    ArCond_ADM BOOLEAN DEFAULT FALSE,
+    ArCond_Diretoria BOOLEAN DEFAULT FALSE,
+    ArCond_Reuniao BOOLEAN DEFAULT FALSE,
+    ArCond_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_ADM BOOLEAN DEFAULT FALSE,
+    Lampadas_Diretoria BOOLEAN DEFAULT FALSE,
+    Lampadas_Reuniao BOOLEAN DEFAULT FALSE,
+    Lampadas_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_Galpao BOOLEAN DEFAULT FALSE,
+    Lampadas_Refeitorio BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroFem BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroMasc BOOLEAN DEFAULT FALSE,
+    Macanetas_OK BOOLEAN DEFAULT FALSE,
+    Mesas_Protecao_OK BOOLEAN DEFAULT FALSE,
+    Condicoes_Paleteiras TEXT,
+    Organizacao_Local TEXT,
+    Cameras_OK BOOLEAN DEFAULT FALSE,
+    Balanca_Condicao TEXT,
+    Data_Afericao_Balanca DATE,
+    Condicoes_Mictorios TEXT,
+    Data_Limpeza_Bebedouro DATE,
+    Data_Prox_Dedetizacao DATE,
+    Data_Ult_Recarga_Extintores DATE,
+    Data_Prox_Recarga_Extintores DATE,
+    Data_Limpeza_Caixa DATE,
+    Data_Prox_Limpeza DATE,
+    Cadeiras_Ruim BOOLEAN DEFAULT FALSE,
+    Cadeiras_Detalhe TEXT,
+    Observacoes TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
 CREATE OR REPLACE VIEW vw_participacao AS
 SELECT
   "RELATÓRIO DE APROVEITAMENTO" AS tipo_documento,
@@ -243,9 +291,56 @@ CREATE TABLE notificacoes_personalizadas (
     FOREIGN KEY (criado_por) REFERENCES Colaboradores(ID_colaborador)
 );
 
-CREATE TABLE responsaveisVistoria(
-    id_responsavel INT PRIMARY KEY,
-    FOREIGN KEY (id_responsavel) REFERENCES Colaboradores(ID_colaborador)
+CREATE TABLE ChecklistManutencao (
+    ID_Checklist INT PRIMARY KEY AUTO_INCREMENT,
+    Responsavel VARCHAR(100) NOT NULL,
+    Data_Verificacao DATETIME NOT NULL,
+    Piso_ADM TEXT,
+    Piso_Operacional TEXT,
+    Piso_Galpao TEXT,
+    Piso_Refeitorio TEXT,
+    Forro_ADM TEXT,
+    Forro_Operacional TEXT,
+    Forro_Galpao TEXT,
+    Forro_Refeitorio TEXT,
+    Instalacoes_Eletricas TEXT,
+    Protecao_Raios TEXT,
+    ArCond_ADM BOOLEAN DEFAULT FALSE,
+    ArCond_Diretoria BOOLEAN DEFAULT FALSE,
+    ArCond_Reuniao BOOLEAN DEFAULT FALSE,
+    ArCond_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_ADM BOOLEAN DEFAULT FALSE,
+    Lampadas_Diretoria BOOLEAN DEFAULT FALSE,
+    Lampadas_Reuniao BOOLEAN DEFAULT FALSE,
+    Lampadas_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_Galpao BOOLEAN DEFAULT FALSE,
+    Lampadas_Refeitorio BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroFem BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroMasc BOOLEAN DEFAULT FALSE,
+    Macanetas_OK BOOLEAN DEFAULT FALSE,
+    Mesas_Protecao_OK BOOLEAN DEFAULT FALSE,
+    Condicoes_Paleteiras TEXT,
+    Organizacao_Local TEXT,
+    Cameras_OK BOOLEAN DEFAULT FALSE,
+    Balanca_Condicao TEXT,
+    Data_Afericao_Balanca DATE,
+    Condicoes_Mictorios TEXT,
+    Data_Limpeza_Bebedouro DATE,
+    Data_Prox_Dedetizacao DATE,
+    Data_Ult_Recarga_Extintores DATE,
+    Data_Prox_Recarga_Extintores DATE,
+    Data_Limpeza_Caixa DATE,
+    Data_Prox_Limpeza DATE,
+    Cadeiras_Ruim BOOLEAN DEFAULT FALSE,
+    Cadeiras_Detalhe TEXT,
+    Observacoes TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+create table responsaveisVistoria(
+    id_responsavel int primary key,
+    foreign key (id_responsavel) references Colaboradores(ID_colaborador)
 );
 
 CREATE TABLE checklistVeiculoAgregado(
@@ -300,6 +395,35 @@ CREATE TABLE checklistVeiculoAgregado(
     nome_responsavel_vistoria VARCHAR(255),
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_responsavel_vistoria) REFERENCES responsaveisVistoria (id_responsavel)
+);
+
+create table motorista(
+	id_motorista int primary key auto_increment,
+    nome_motorista varchar(100) not null
+);
+
+create table checklistVeiculoFrota(
+	id_cvf int primary key auto_increment,
+    id_motorista int,
+    placa varchar(7) not null,
+    km_inicial int not null,
+    km_final int not null,
+    destino varchar(255) not null,
+    abastecimento enum("sim", "não") not null,
+    comprovante_enviado enum("sim", "não") not null,
+    oleo_motor enum("sim", "não") not null,
+    reservatorio_agua enum("sim", "não") not null,
+    sistema_eletrico enum("sim", "não") not null,
+    estado_pneus enum("sim", "não") not null,
+    limpeza_bau_sider_cabine enum("sim", "não") not null,
+    lubrificacao_suspensoes enum("sim", "não") not null,
+	macaco enum("sim", "não") not null,
+    chave_roda enum("sim", "não") not null,
+    documento_vigente enum("sim", "não") not null,
+    data_encerramento_atividade datetime not null,
+    observacoes text,
+	criado_em datetime default current_timestamp,
+    foreign key (id_motorista) references motorista (id_motorista)
 );
 
 CREATE TABLE ChecklistPredial (

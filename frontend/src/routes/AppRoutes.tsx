@@ -5,6 +5,7 @@ import { PrivateRoute } from "./PrivateRoute";
 import { ClienteDetalhes } from "../pages/home/inicio/comercial/ClienteDetalhes";
 import { SetorRoute } from "./SetorRoute";
 import { HistoricoChecklist } from "../pages/home/inicio/operacional/HistoricoChecklist";
+import ChecklistPage from "../components/modals/ModalChecklistPredial";
 
 const Home = lazy(() => import("../pages/Home").then(mod => ({ default: (mod as any).default ?? (mod as any).Home })));
 const Login = lazy(() => import("../pages/Login").then(mod => ({ default: (mod as any).default ?? (mod as any).Login })));
@@ -14,6 +15,7 @@ const Notificacoes = lazy(() => import("../pages/home/Notificacoes").then(mod =>
 const Certificados = lazy(() => import("../pages/home/Certificados").then(mod => ({ default: (mod as any).default ?? (mod as any).Certificados })));
 const Modalidade = lazy(() => import("../pages/home/Modalidade").then(mod => ({ default: (mod as any).default ?? (mod as any).Modalidade })));
 const Cotacao = lazy(() => import("../pages/home/inicio/comercial/cotacao").then(mod => ({ default: (mod as any).default ?? (mod as any).Cotacao })));
+const Checklist = lazy(() => import("../pages/home/Inicio").then(mod => ({ default: (mod as any).default ?? (mod as any).Checklist })));
 
 export const LoadingScreen = () => (
   <div className="d-flex justify-content-center align-items-center vh-100">
@@ -34,14 +36,19 @@ export const AppRoutes = () => {
 
             <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>}>
               <Route index element={<Inicio />} />
-              <Route element={<SetorRoute allowedRoles={[3]}></SetorRoute>}>
-                <Route index path="historicoChecklists" element={<HistoricoChecklist />} />
+              
+              {/* Rotas do Setor Operacional */}
+              <Route element={<SetorRoute allowedRoles={[3]} />}>
+                <Route path="historicoChecklists" element={<HistoricoChecklist />} />
+                <Route path="checklist" element={<ChecklistPage />} />
               </Route>
+
               <Route path="eventos" element={<Eventos />} />
               <Route path="notificacoes" element={<Notificacoes />} />
               <Route path="modalidade" element={<Modalidade />} />
               <Route path="certificados" element={<Certificados />} />
               <Route path="cotacao" element={<Cotacao />} />
+              <Route path="checklist" element={<Checklist />} />
 
               <Route path="comercial/cliente/:id" element={<ClienteDetalhes />} />
 

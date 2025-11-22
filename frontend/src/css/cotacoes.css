@@ -1,0 +1,179 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  
+}
+
+.cotacoes-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  
+}
+
+.cotacoes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  min-width: 280px;
+  max-width: 350px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 45px;
+  border: 1px solid #D0D0D0;
+  border-radius: 50px;
+  font-size: 14px;
+  background-color: #FFFFFF;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: #2B4DA8;
+}
+
+.search-icon-left {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  pointer-events: none;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-filtros,
+.btn-nova-cotacao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-nova-cotacao {
+  background-color: #2B4DA8;
+  color: #FFFFFF;
+}
+
+.btn-nova-cotacao:hover {
+  background-color: #234091;
+}
+
+.btn-filtros {
+  background-color: #2B4DA8;
+  color: #FFFFFF;
+}
+
+.btn-filtros:hover {
+  background-color: #234091;
+}
+
+.table-container {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(50,60,130,0.09);
+  overflow: hidden;
+  
+}
+
+.cotacoes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cotacoes-table thead {
+  background-color: #FAFAFA;
+  border-bottom: 1px solid #E8E8E8;
+}
+
+.cotacoes-table th {
+  padding: 16px 24px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cotacoes-table tbody tr {
+  border-bottom: 1px solid #F0F0F0;
+  transition: background-color 0.15s;
+}
+
+.cotacoes-table tbody tr:hover {
+  background-color: #FAFAFA;
+}
+
+.cotacoes-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.cotacoes-table td {
+  padding: 20px 24px;
+  font-size: 14px;
+  color: #000000;
+}
+
+.td-id {
+  font-weight: 400;
+  color: #000000;
+}
+
+.td-cliente {
+  font-weight: 400;
+  color: #000000;
+}
+
+.td-data {
+  color: #000000;
+  font-weight: 400;
+}
+
+.td-valor {
+  font-weight: 400;
+  color: #000000;
+}
+
+.td-status {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.status-aberta {
+  background-color: #C8E3F8;
+  color: #2563EB;
+}
+
+.status-aprovada {
+  background-color: #D4F4C4;
+  color: #16A34A;
+}
+
+.status-cancelada {
+  background-color: #FFCAB8;
+  color: #DC2626;
+}

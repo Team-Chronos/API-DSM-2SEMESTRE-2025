@@ -15,6 +15,9 @@ import relatorioRoutes from './src/routes/relatorioRoutes.js'
 import checklistVeiculoAgregadoRoutes from './src/routes/checklistVeiculoAgregadoRoutes.js'
 import checklistPredialRoutes from './src/routes/checklistPredialRoutes.js'
 import cotacaoRoutes from "./src/routes/cotacaoRoutes.js"
+import checklistRoutes from './src/routes/checklistRoutes.js';
+import checklistVeiculoFrotaRoutes from "./src/routes/checklistVeiculoFrotaRoutes.js"
+
 
 import modalidadeRoutes from './src/routes/modalidadeRoutes.js';
 import agendaRoutes from './src/routes/agendaRoutes.js';
@@ -46,8 +49,12 @@ app.use('/api/agenda', agendaRoutes);
 app.use('/api/certificadoParticipacao', certificadoPartRoutes)
 app.use('/api', modalidadeRoutes);
 
+app.use('/api/checklist', checklistRoutes);
+
 app.use('/api/agregados', agregadoRoutes);
 app.use('/api/participacaoEventos', participacaoEventoRoutes);
+app.use('/api/checklist', checklistRoutes);
+
 
 app.use('/api/clientes', clienteRoutes)
 app.use('/api/relatorios', relatorioRoutes)
@@ -76,6 +83,7 @@ app.post('/confirmarEvento', (req, res) => {
 app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes)
 
 app.use("/api/checklistPredios", checklistPredialRoutes)
+app.use("/api/checklistVeiculoFrota", checklistVeiculoFrotaRoutes)
 
 app.use("/api/cotacao", cotacaoRoutes)
 
