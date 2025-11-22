@@ -28,6 +28,8 @@ import { NotificacaoObserver } from './src/observers/notificacaoObserver.js';
 import db from './src/config/db.js';
 import cors from 'cors';
 
+import cotacaoRoutes from "./src/routes/cotacaoRoutes.js";
+
 const app = express();
 const PORT = 3000;
 
@@ -43,7 +45,6 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ROTAS PRINCIPAIS
 app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
@@ -62,12 +63,12 @@ app.use('/api/relatorios', relatorioRoutes);
 
 app.use('/api/notificacoes', notificacaoRoutes);
 
-// ROTAS ESPECÍFICAS
 app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes);
 app.use("/api/checklistPredios", checklistPredialRoutes);
 app.use("/api/checklistVeiculoFrota", checklistVeiculoFrotaRoutes);
 
-// ENVIO DE CONVITES
+app.use("/api/cotacao", cotacaoRoutes);
+
 app.post('/api/eventos/:id/enviar-convites', async (req, res) => {
     try {
         const eventoId = parseInt(req.params.id);
@@ -106,17 +107,14 @@ app.post('/api/eventos/:id/enviar-convites', async (req, res) => {
     }
 });
 
-// OBSERVER
 notificacaoObserver.iniciar().then(() => {
     console.log(' NotificacaoObserver iniciado com sucesso');
 }).catch(error => {
     console.error(' Erro ao iniciar NotificacaoObserver:', error);
 });
 
-// CERTIFICADOS
 app.get("/api/certificados", listarCertificados);
 
-// SETORES
 app.get('/api/setores', async (req, res) => {
     try {
         const [setores] = await db.promise().query('SELECT * FROM Setor');
@@ -126,7 +124,6 @@ app.get('/api/setores', async (req, res) => {
     }
 });
 
-// CONFIRMAR EVENTO
 app.post('/confirmarEvento', (req, res) => {
     const { resposta, justificativa } = req.body;
 
@@ -136,6 +133,9 @@ app.post('/confirmarEvento', (req, res) => {
     res.status(200).json({ mensagem: 'Resposta registrada com sucesso no servidor!' });
 });
 
+app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes);
+app.use("/api/checklistPredios", checklistPredialRoutes);
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
     console.log(`Notificações: http://localhost:3000/api/notificacoes`);
@@ -143,4 +143,5 @@ app.listen(PORT, () => {
     console.log(`Teste Sistema: http://localhost:3000/api/testar-sistema`);
     console.log(`Enviar Convites: POST http://localhost:3000/api/eventos/{id}/enviar-convites`);
     console.log(`Ver Eventos: http://localhost:3000/api/eventos-info`);
+    console.log(`Cotação: http://localhost:3000/api/cotacao`);
 });

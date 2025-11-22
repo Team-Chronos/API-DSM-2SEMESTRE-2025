@@ -5,9 +5,10 @@ import { RelatorioList } from "./comercial/RelatorioList";
 import { ModalDestaqueClientes } from "../../../components/modals/ModalDestaqueClientes";
 import "../../../css/Comercial.css";
 import { ModalEtapas } from "../../../components/modals/ModalEtapas";
-import { CotacoesList } from "./comercial/cotacoes";
+import { useNavigate } from "react-router-dom";
 export const Comercial = () => {
   const [view, setView] = useState("dashboard");
+  const navigate = useNavigate()
 
   if (view === "etapas") {
     return (
@@ -62,9 +63,7 @@ export const Comercial = () => {
           <button className="btn-azul" onClick={() => setView("clientes")}>
             Clientes
           </button>
-           <button className="btn-azul" onClick={() => setView("cotacoes")}>
-            Cotações
-          </button>
+          <button className="btn-azul" onClick={() => navigate("cotacao/")}>Cotações</button>
           <button className="btn-azul botao-separado" onClick={() => setView("relatorio")}>Gerar relatórios</button>
         </nav>
       </div>
