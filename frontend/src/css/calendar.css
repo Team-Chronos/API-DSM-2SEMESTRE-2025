@@ -582,9 +582,6 @@
   cursor: pointer;
 }
 
-/* ... (todo o seu CSS existente permanece aqui) ... */
-
-/* ==================== MODAL DE DETALHES (NOVO) ==================== */
 .modal-detalhes-overlay {
   position: fixed;
   inset: 0;
