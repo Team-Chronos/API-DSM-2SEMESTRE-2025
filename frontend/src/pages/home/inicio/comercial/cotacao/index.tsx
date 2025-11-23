@@ -12,7 +12,7 @@ interface Cotacao {
   origem_uf: string;
   destino_cidade: string;
   destino_uf: string;
-  created_at: string;
+  criado_em: string;
   total: number;
   status: string;
   cliente_id?: number;
@@ -25,7 +25,6 @@ export default function Cotacao() {
   const [showModalCotacao, setShowModalCotacao] = useState(false);
   const [showModalDetalhes, setShowModalDetalhes] = useState(false);
   const [cotacaoSelecionada, setCotacaoSelecionada] = useState<number | null>(null);
-  
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("TODOS");
   const [filtroOrigem, setFiltroOrigem] = useState("todos");
@@ -43,6 +42,8 @@ export default function Cotacao() {
     try {
       setLoading(true);
       const response = await axios.get("http://localhost:3000/api/cotacao");
+      
+      console.log("Dados recebidos do backend:", response.data);
       
       const cotacoesComStatus = response.data.map((cotacao: Cotacao) => ({
         ...cotacao,
@@ -113,7 +114,7 @@ export default function Cotacao() {
           valB = parseFloat(valB) || 0;
         }
 
-        if (sortConfig.key === 'created_at') {
+        if (sortConfig.key === 'criado_em') {
           valA = new Date(valA).getTime();
           valB = new Date(valB).getTime();
         }
@@ -186,12 +187,26 @@ export default function Cotacao() {
   };
 
   const formatarData = (dataString: string) => {
-    if (!dataString) return "N/A";
-    if (dataString.includes('-')) {
-      const data = new Date(dataString);
-      return data.toLocaleDateString('pt-BR');
+    console.log("Data na listagem:", dataString);
+    
+    if (!dataString || dataString === "0000-00-00 00:00:00") return "N/A";
+    
+    try {
+      const data = new Date(dataString.replace(' ', 'T'));
+      
+      if (isNaN(data.getTime())) {
+        return "Data inválida";
+      }
+      
+      return data.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    } catch (err) {
+      console.error("Erro ao formatar data:", err);
+      return "Erro";
     }
-    return dataString;
   };
 
   const formatarValor = (valor: number) => {
@@ -349,7 +364,7 @@ export default function Cotacao() {
                 <SortableHeader label="CLIENTE" columnKey="remetente" />
                 <SortableHeader label="ORIGEM" columnKey="origem_cidade" />
                 <SortableHeader label="DESTINO" columnKey="destino_cidade" />
-                <SortableHeader label="DATA" columnKey="created_at" />
+                <SortableHeader label="DATA" columnKey="criado_em" />
                 <SortableHeader label="VALOR" columnKey="total" />
                 <th>STATUS</th>
                 <th>AÇÕES</th>
@@ -366,7 +381,7 @@ export default function Cotacao() {
                   <td className="td-destino">
                     {cotacao.destino_cidade ? `${cotacao.destino_cidade}/${cotacao.destino_uf}` : "N/A"}
                   </td>
-                  <td className="td-data">{formatarData(cotacao.created_at)}</td>
+                  <td className="td-data">{formatarData(cotacao.criado_em)}</td>
                   <td className="td-valor">{formatarValor(cotacao.total)}</td>
                   <td className={`td-status ${getStatusClass(cotacao.status)}`}>
                     {cotacao.status || "ABERTA"}
@@ -397,7 +412,7 @@ export default function Cotacao() {
       <ModalCotacaoFrete
         show={showModalCotacao}
         onClose={() => setShowModalCotacao(false)}
-        onCotacaoCriada={fetchCotacoes} 
+        onCotacaoCriada={fetchCotacoes}
       />
 
       <ModalDetalhesCotacao

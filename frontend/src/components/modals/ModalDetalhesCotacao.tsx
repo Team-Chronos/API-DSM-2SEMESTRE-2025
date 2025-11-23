@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
-import { FaMapMarkerAlt, FaUser, FaSync, FaBoxes, FaDollarSign, FaCalendarAlt, FaRoute } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaUser, FaSync, FaBoxes, FaDollarSign, FaCalendarAlt, FaRoute, FaTruck } from 'react-icons/fa';
+import "../../css/detalhesCotacao.css";
 
 interface CotacaoDetalhes {
   id: number;
@@ -24,7 +25,7 @@ interface CotacaoDetalhes {
   frete: number;
   liquido: number;
   margem: number;
-  created_at: string;
+  criado_em: string;
 }
 
 interface Props {
@@ -49,8 +50,10 @@ export function ModalDetalhesCotacao({ show, onClose, cotacaoId, onAtualizar }: 
   const carregarDados = async () => {
     try {
       setLoading(true);
-
       const resCotacao = await axios.get(`http://localhost:3000/api/cotacao/${cotacaoId}`);
+
+      console.log("Dados da cotação individual:", resCotacao.data);
+
       setCotacao(resCotacao.data);
       setRemetenteEditado(resCotacao.data.remetente || "");
       setStatusSelecionado(resCotacao.data.status || "ABERTA");
@@ -61,6 +64,7 @@ export function ModalDetalhesCotacao({ show, onClose, cotacaoId, onAtualizar }: 
       setLoading(false);
     }
   };
+
 
   const handleSalvar = async () => {
     if (!remetenteEditado.trim()) {
@@ -106,148 +110,208 @@ export function ModalDetalhesCotacao({ show, onClose, cotacaoId, onAtualizar }: 
   };
 
   const formatarData = (dataString: string) => {
-    if (!dataString) return "N/A";
-    const data = new Date(dataString);
-    return data.toLocaleDateString('pt-BR');
+    console.log("Data recebida:", dataString);
+
+    if (!dataString || dataString === "0000-00-00 00:00:00") return "N/A";
+
+    try {
+      const data = new Date(dataString.replace(' ', 'T'));
+
+      if (isNaN(data.getTime())) {
+        return "Data inválida";
+      }
+
+      return data.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    } catch (err) {
+      console.error("Erro ao formatar data:", err);
+      return "Erro na data";
+    }
+  };
+
+
+  const getStatusClass = (status: string) => {
+    switch (status) {
+      case "APROVADA": return "status-aprovada";
+      case "FINALIZADA": return "status-finalizada";
+      case "CANCELADA": return "status-cancelada";
+      default: return "status-aberta";
+    }
   };
 
   if (loading || !cotacao) {
     return (
       <Modal show={show} onHide={onClose} size="lg" centered>
         <Modal.Body className="text-center py-5">
-          <p>Carregando...</p>
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Carregando...</span>
+          </div>
+          <p className="mt-3">Carregando detalhes...</p>
         </Modal.Body>
       </Modal>
     );
   }
 
   return (
-    <Modal show={show} onHide={onClose} size="lg" centered scrollable>
+    <Modal show={show} onHide={onClose} size="lg" centered scrollable className="modal-detalhes-cotacao">
       <Modal.Header closeButton>
-        <Modal.Title>Detalhes da Cotação #{cotacao.id}</Modal.Title>
+        <Modal.Title className="detalhes-titulo">
+          <FaTruck className="me-2" />
+          Cotação #{cotacao.id}
+        </Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
-        <Form>
-          <section className="mb-4">
-            <h5 className="fw-bold d-flex align-items-center gap-2">
-              <FaRoute /> Rota
-            </h5>
-            <div className="info-grid">
+      <Modal.Body className="detalhes-body">
+        <div className={`status-badge ${getStatusClass(statusSelecionado)}`}>
+          {statusSelecionado}
+        </div>
+
+        <section className="detalhes-section">
+          <div className="section-header">
+            <FaRoute className="section-icon" />
+            <h5>Informações da Rota</h5>
+          </div>
+          <div className="rota-card">
+            <div className="rota-item origem">
+              <FaMapMarkerAlt className="marker-icon" />
               <div>
-                <strong>Origem:</strong> {cotacao.origem_cidade}/{cotacao.origem_uf}
-              </div>
-              <div>
-                <strong>Destino:</strong> {cotacao.destino_cidade}/{cotacao.destino_uf}
-              </div>
-              <div>
-                <strong>Distância:</strong> {cotacao.distancia_km} km
-              </div>
-              <div>
-                <strong>Data:</strong> {formatarData(cotacao.created_at)}
+                <span className="rota-label">Origem</span>
+                <span className="rota-valor">{cotacao.origem_cidade}/{cotacao.origem_uf}</span>
               </div>
             </div>
-          </section>
+            <div className="rota-separador">
+              <div className="linha"></div>
+              <span className="distancia-badge">{cotacao.distancia_km} km</span>
+              <div className="linha"></div>
+            </div>
+            <div className="rota-item destino">
+              <FaMapMarkerAlt className="marker-icon" />
+              <div>
+                <span className="rota-label">Destino</span>
+                <span className="rota-valor">{cotacao.destino_cidade}/{cotacao.destino_uf}</span>
+              </div>
+            </div>
+          </div>
+          <div className="data-criacao">
+            <FaCalendarAlt className="me-2" />
+            Criada em {formatarData(cotacao.criado_em)}
+          </div>
+        </section>
 
-          <hr />
-
-          <section className="mb-4">
-            <h5 className="fw-bold d-flex align-items-center gap-2">
-              <FaUser /> Remetente (Cliente)
-            </h5>
+        <section className="detalhes-section">
+          <div className="section-header">
+            <FaUser className="section-icon" />
+            <h5>Remetente</h5>
+          </div>
+          <div className="input-card">
             <Form.Control
               type="text"
               placeholder="Nome do remetente"
               value={remetenteEditado}
               onChange={(e) => setRemetenteEditado(e.target.value)}
+              className="input-estilizado"
             />
-          </section>
+          </div>
+        </section>
 
-          <hr />
-
-          <section className="mb-4">
-            <h5 className="fw-bold d-flex align-items-center gap-2">
-              <FaSync /> Status
-            </h5>
+        <section className="detalhes-section">
+          <div className="section-header">
+            <FaSync className="section-icon" />
+            <h5>Status da Cotação</h5>
+          </div>
+          <div className="input-card">
             <Form.Select
               value={statusSelecionado}
               onChange={(e) => setStatusSelecionado(e.target.value)}
+              className="select-estilizado"
             >
               <option value="ABERTA">Aberta</option>
               <option value="APROVADA">Aprovada</option>
               <option value="CANCELADA">Cancelada</option>
               <option value="FINALIZADA">Finalizada</option>
             </Form.Select>
-          </section>
+          </div>
+        </section>
 
-          <hr />
-
-          <section className="mb-4">
-            <h5 className="fw-bold d-flex align-items-center gap-2">
-              <FaBoxes /> Carga
-            </h5>
-            <div className="info-grid">
-              <div>
-                <strong>Peso:</strong> {cotacao.peso_carga} kg
-              </div>
-              <div>
-                <strong>Valor:</strong> {formatarValor(cotacao.valor_carga)}
-              </div>
-              <div>
-                <strong>Tipo:</strong> {cotacao.tipo_carga || "N/A"}
-              </div>
-              <div>
-                <strong>DROP:</strong> {cotacao.drop_servico ? "Sim" : "Não"}
-              </div>
+        <section className="detalhes-section">
+          <div className="section-header">
+            <FaBoxes className="section-icon" />
+            <h5>Informações da Carga</h5>
+          </div>
+          <div className="info-grid-detalhes">
+            <div className="info-card-item">
+              <span className="info-card-label">Peso</span>
+              <span className="info-card-valor">{cotacao.peso_carga} kg</span>
             </div>
-          </section>
-
-          <hr />
-
-          <section className="mb-4">
-            <h5 className="fw-bold d-flex align-items-center gap-2">
-              <FaDollarSign /> Valores
-            </h5>
-            <div className="info-grid">
-              <div>
-                <strong>Frete:</strong> {formatarValor(cotacao.frete)}
-              </div>
-              <div>
-                <strong>Pedágio:</strong> {formatarValor(cotacao.pedagio)}
-              </div>
-              <div>
-                <strong>Imposto:</strong> {formatarValor(cotacao.imposto)}
-              </div>
-              <div>
-                <strong>Custo Total:</strong> {formatarValor(cotacao.custo)}
-              </div>
+            <div className="info-card-item">
+              <span className="info-card-label">Valor da Carga</span>
+              <span className="info-card-valor">{formatarValor(cotacao.valor_carga)}</span>
             </div>
-            <div className="mt-3 p-3 bg-light rounded">
-              <div className="d-flex justify-content-between">
-                <strong>Total do Frete:</strong>
-                <span className="text-success fs-5 fw-bold">{formatarValor(cotacao.total)}</span>
-              </div>
-              <div className="d-flex justify-content-between">
-                <strong>Valor Líquido:</strong>
-                <span className="text-primary">{formatarValor(cotacao.liquido)}</span>
-              </div>
-              <div className="d-flex justify-content-between">
-                <strong>Margem:</strong>
-                <span>{(cotacao.margem * 100).toFixed(2)}%</span>
-              </div>
+            <div className="info-card-item">
+              <span className="info-card-label">Tipo</span>
+              <span className="info-card-valor">{cotacao.tipo_carga || "N/A"}</span>
             </div>
-          </section>
-        </Form>
+            <div className="info-card-item">
+              <span className="info-card-label">Serviço DROP</span>
+              <span className={`badge-drop ${cotacao.drop_servico ? 'drop-sim' : 'drop-nao'}`}>
+                {cotacao.drop_servico ? "Sim" : "Não"}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section className="detalhes-section">
+          <div className="section-header">
+            <FaDollarSign className="section-icon" />
+            <h5>Detalhamento Financeiro</h5>
+          </div>
+          <div className="valores-detalhados">
+            <div className="valor-linha">
+              <span className="valor-label">Frete Base</span>
+              <span className="valor-numero">{formatarValor(cotacao.frete)}</span>
+            </div>
+            <div className="valor-linha">
+              <span className="valor-label">Pedágio</span>
+              <span className="valor-numero">{formatarValor(cotacao.pedagio)}</span>
+            </div>
+            <div className="valor-linha">
+              <span className="valor-label">Impostos e Taxas</span>
+              <span className="valor-numero">{formatarValor(cotacao.imposto)}</span>
+            </div>
+            <div className="valor-linha subtotal">
+              <span className="valor-label">Custo Total</span>
+              <span className="valor-numero">{formatarValor(cotacao.custo)}</span>
+            </div>
+          </div>
+
+          <div className="resumo-financeiro">
+            <div className="resumo-item total">
+              <span className="resumo-label">Total do Frete</span>
+              <span className="resumo-valor">{formatarValor(cotacao.total)}</span>
+            </div>
+            <div className="resumo-item liquido">
+              <span className="resumo-label">Valor Líquido</span>
+              <span className="resumo-valor">{formatarValor(cotacao.liquido)}</span>
+            </div>
+            <div className="resumo-item margem">
+              <span className="resumo-label">Margem de Lucro</span>
+              <span className="resumo-valor">{(cotacao.margem * 100).toFixed(2)}%</span>
+            </div>
+          </div>
+        </section>
       </Modal.Body>
 
-      <Modal.Footer>
-        <Button variant="danger" onClick={handleExcluir}>
+      <Modal.Footer className="detalhes-footer">
+        <Button variant="danger" onClick={handleExcluir} className="btn-excluir">
           Excluir Cotação
         </Button>
         <Button variant="secondary" onClick={onClose}>
           Fechar
         </Button>
-        <Button variant="primary" onClick={handleSalvar}>
+        <Button variant="primary" onClick={handleSalvar} className="btn-salvar">
           Salvar Alterações
         </Button>
       </Modal.Footer>

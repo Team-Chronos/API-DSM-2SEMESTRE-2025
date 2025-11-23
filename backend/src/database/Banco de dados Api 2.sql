@@ -1,5 +1,5 @@
-CREATE DATABASE Api_2;
-USE Api_2;
+CREATE DATABASE api_2;
+USE api_2;
 
 CREATE TABLE Setor (
     ID_Setor INT PRIMARY KEY AUTO_INCREMENT,
@@ -589,32 +589,33 @@ INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
 
 INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Cargo) VALUES
 ('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'João Victor Moura', 2, '12345678901', '11999999999', 1),
-('rafael@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rafael Sette', 1, '77777777777', '12988777777', 1),
+('rafael@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rafael Sette', 3, '77777777777', '12988777777', 1),
 ('rebeca@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rebeca Lima', 1, '99999999999', '11999999999', 1),
 ('rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
 ('lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
 ('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
 INSERT INTO Cliente (Nome_Cliente, Telefone_Cliente, Email_Cliente, Segmento, atividade, Cidade, depart_responsavel, Ultima_Interacao, Criado_Por) VALUES
-('Transportadora São Paulo Ltda', '11987654321', 'contato@transpsp.com.br', 'Logística', 'Transporte Rodoviário', 'São Paulo', 'Comercial', '2025-11-20 14:30:00', 1),
-('Indústria Metal Brasil S.A.', '11976543210', 'vendas@metalbrasil.com.br', 'Industrial', 'Fabricação de Peças', 'Guarulhos', 'Comercial', '2025-11-19 10:00:00', 2),
+('Transportadora São Paulo Ltda', '11987654321', 'contato@transpsp.com.br', 'Serviços', 'Transporte Rodoviário', 'São Paulo', 'Comercial', '2025-11-20 14:30:00', 1),
+('Indústria Metal Brasil S.A.', '11976543210', 'vendas@metalbrasil.com.br', 'Indústria', 'Fabricação de Peças', 'Guarulhos', 'Comercial', '2025-11-19 10:00:00', 2),
 ('Supermercado Central', '21987651234', 'compras@supercentral.com.br', 'Varejo', 'Supermercado', 'Rio de Janeiro', 'Comercial', NULL, 1),
-('Farmácia Saúde Total', '11965432187', 'farmacia@saudetotal.com.br', 'Farmacêutico', 'Drogaria', 'São Paulo', 'Comercial', '2025-11-15 16:00:00', 2),
-('Construtora Alicerce Forte', '11954321987', 'projetos@alicerceforte.com.br', 'Construção Civil', 'Obras', 'Campinas', 'Comercial', '2025-11-18 09:30:00', 1),
-('Tech Solutions Informática', '11943219876', 'ti@techsolutions.com.br', 'Tecnologia', 'TI e Software', 'São José dos Campos', 'Comercial', '2025-11-21 11:00:00', 2),
-('Distribuidora Alimentícia ABC', '11932198765', 'comercial@distribabc.com.br', 'Alimentos e Bebidas', 'Distribuição', 'Santos', 'Comercial', '2025-11-17 14:00:00', 1),
-('Fábrica de Móveis São João', '11921987654', 'vendas@moveissaojoao.com.br', 'Móveis', 'Fabricação', 'São Bernardo do Campo', 'Comercial', NULL, 2),
-('Clínica Médica Vida Plena', '11912876543', 'atendimento@vidaplena.com.br', 'Saúde', 'Clínica Médica', 'São Paulo', 'Comercial', '2025-11-20 15:30:00', 1),
-('AutoPeças Veloz', '11998765432', 'pecas@velocauto.com.br', 'Automotivo', 'Peças Automotivas', 'Osasco', 'Comercial', '2025-11-19 13:00:00', 2),
-('Padaria e Confeitaria Delícia', '11987654322', 'padaria@delicia.com.br', 'Alimentação', 'Panificação', 'São Paulo', 'Comercial', '2025-11-21 08:00:00', 1),
-('Escola Técnica Futuro', '11976543211', 'secretaria@escolafuturo.com.br', 'Educação', 'Ensino Técnico', 'São Paulo', 'Comercial', NULL, 2),
-('Loja de Roupas Fashion Style', '11965432188', 'loja@fashionstyle.com.br', 'Moda', 'Varejo de Roupas', 'São Paulo', 'Comercial', '2025-11-16 10:30:00', 1),
-('Gráfica Rápida Impressões', '11954321988', 'grafica@rapidaimpressoes.com.br', 'Gráfica', 'Impressão Gráfica', 'Barueri', 'Comercial', '2025-11-18 14:00:00', 2),
-('Pet Shop Amigo Fiel', '11943219877', 'petshop@amigofiel.com.br', 'Pet Shop', 'Produtos para Pets', 'São Paulo', 'Comercial', '2025-11-21 09:00:00', 1),
-('Laboratório Análises Clínicas', '11932198766', 'lab@analisesclinicas.com.br', 'Saúde', 'Laboratório', 'Santo André', 'Comercial', '2025-11-14 11:00:00', 2),
-('Importadora Global Trade', '11921987655', 'importacao@globaltrade.com.br', 'Importação', 'Comércio Exterior', 'São Paulo', 'Comercial', '2025-11-20 16:00:00', 1),
-('Hotel Conforto Plaza', '11912876544', 'reservas@confortoplaza.com.br', 'Hotelaria', 'Hospedagem', 'São Paulo', 'Comercial', NULL, 2),
-('Academia Corpo em Forma', '11998765433', 'academia@corpoemforma.com.br', 'Fitness', 'Academia', 'São Paulo', 'Comercial', '2025-11-21 07:00:00', 1),
-('Agência de Publicidade Criativa', '11987654323', 'agencia@criativa.com.br', 'Marketing', 'Publicidade', 'São Paulo', 'Comercial', '2025-11-19 15:00:00', 2);
+('Farmácia Saúde Total', '11965432187', 'farmacia@saudetotal.com.br', 'Varejo', 'Drogaria', 'São Paulo', 'Comercial', '2025-11-15 16:00:00', 2),
+('Construtora Alicerce Forte', '11954321987', 'projetos@alicerceforte.com.br', 'Indústria', 'Obras', 'Campinas', 'Comercial', '2025-11-18 09:30:00', 1),
+('Tech Solutions Informática', '11943219876', 'ti@techsolutions.com.br', 'Serviços', 'TI e Software', 'São José dos Campos', 'Comercial', '2025-11-21 11:00:00', 2),
+('Distribuidora Alimentícia ABC', '11932198765', 'comercial@distribabc.com.br', 'Varejo', 'Distribuição', 'Santos', 'Comercial', '2025-11-17 14:00:00', 1),
+('Fábrica de Móveis São João', '11921987654', 'vendas@moveissaojoao.com.br', 'Indústria', 'Fabricação', 'São Bernardo do Campo', 'Comercial', NULL, 2),
+('Clínica Médica Vida Plena', '11912876543', 'atendimento@vidaplena.com.br', 'Serviços', 'Clínica Médica', 'São Paulo', 'Comercial', '2025-11-20 15:30:00', 1),
+('AutoPeças Veloz', '11998765432', 'pecas@velocauto.com.br', 'Varejo', 'Peças Automotivas', 'Osasco', 'Comercial', '2025-11-19 13:00:00', 2),
+('Padaria e Confeitaria Delícia', '11987654322', 'padaria@delicia.com.br', 'Varejo', 'Panificação', 'São Paulo', 'Comercial', '2025-11-21 08:00:00', 1),
+('Escola Técnica Futuro', '11976543211', 'secretaria@escolafuturo.com.br', 'Serviços', 'Ensino Técnico', 'São Paulo', 'Comercial', NULL, 2),
+('Loja de Roupas Fashion Style', '11965432188', 'loja@fashionstyle.com.br', 'Varejo', 'Varejo de Roupas', 'São Paulo', 'Comercial', '2025-11-16 10:30:00', 1),
+('Gráfica Rápida Impressões', '11954321988', 'grafica@rapidaimpressoes.com.br', 'Serviços', 'Impressão Gráfica', 'Barueri', 'Comercial', '2025-11-18 14:00:00', 2),
+('Pet Shop Amigo Fiel', '11943219877', 'petshop@amigofiel.com.br', 'Varejo', 'Produtos para Pets', 'São Paulo', 'Comercial', '2025-11-21 09:00:00', 1),
+('Laboratório Análises Clínicas', '11932198766', 'lab@analisesclinicas.com.br', 'Serviços', 'Laboratório', 'Santo André', 'Comercial', '2025-11-14 11:00:00', 2),
+('Importadora Global Trade', '11921987655', 'importacao@globaltrade.com.br', 'Varejo', 'Comércio Exterior', 'São Paulo', 'Comercial', '2025-11-20 16:00:00', 1),
+('Hotel Conforto Plaza', '11912876544', 'reservas@confortoplaza.com.br', 'Serviços', 'Hospedagem', 'São Paulo', 'Comercial', NULL, 2),
+('Academia Corpo em Forma', '11998765433', 'academia@corpoemforma.com.br', 'Serviços', 'Academia', 'São Paulo', 'Comercial', '2025-11-21 07:00:00', 1),
+('Agência de Publicidade Criativa', '11987654323', 'agencia@criativa.com.br', 'Serviços', 'Publicidade', 'São Paulo', 'Comercial', '2025-11-19 15:00:00', 2);
+
 
 INSERT INTO responsaveisVistoria VALUES (1), (2), (3);
 

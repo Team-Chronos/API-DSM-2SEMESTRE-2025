@@ -62,25 +62,24 @@ export const Calendar = () => {
   const { user } = useAuth();
   const [busca, setBusca] = useState<string>("");
   const [filtroData, setFiltroData] = useState<string>("");
-  
+
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [eventosFiltrados, setEventosFiltrados] = useState<Evento[]>([]);
-  
+
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [tarefasFiltradas, setTarefasFiltradas] = useState<Tarefa[]>([]);
-  
+
   const [, setHoraAtualIndex] = useState<number | null>(null);
   const [view, setView] = useState<ViewMode>("monthly");
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const [activeTab, setActiveTab] = useState<AgendaTab>('geral');
-  
+  const [activeTab, setActiveTab] = useState<AgendaTab>("geral");
+
   const [modalCadastroAberto, setModalCadastroAberto] = useState(false);
   const [modalDetalhesAberto, setModalDetalhesAberto] = useState(false);
 
   const [tarefaSelecionada, setTarefaSelecionada] = useState<Tarefa | null>(null);
   const [tarefaParaEditar, setTarefaParaEditar] = useState<Tarefa | null>(null);
-
 
   const horas = Array.from({ length: 16 }, (_, i) =>
     (5 + i).toString().padStart(2, "0")
@@ -247,7 +246,7 @@ export const Calendar = () => {
         (ev) => ev.Data_Evento.split("T")[0] === filtroData
       );
     }
-    if (busca.trim() && activeTab === 'geral') {
+    if (busca.trim() && activeTab === "geral") {
       const buscaNormalizada = normalizarTexto(busca);
       filtrados = filtrados.filter(
         (ev) =>
@@ -265,7 +264,7 @@ export const Calendar = () => {
         (t) => t.Data_Hora_Inicio.split("T")[0] === filtroData
       );
     }
-    if (busca.trim() && activeTab === 'pessoal') {
+    if (busca.trim() && activeTab === "pessoal") {
       const buscaNorm = normalizarTexto(busca);
       filtrados = filtrados.filter(
         (t) =>
@@ -326,7 +325,7 @@ export const Calendar = () => {
     carregarTarefas();
     handleFecharCadastro();
   };
-  
+
   const handleAbrirNovoLembrete = () => {
     setTarefaParaEditar(null);
     setModalCadastroAberto(true);
@@ -343,8 +342,8 @@ export const Calendar = () => {
         <TimelineView
           dias={diasTimeline}
           horas={horas}
-          eventosFiltrados={activeTab === 'geral' ? eventosFiltrados : []}
-          tarefasFiltradas={activeTab === 'pessoal' ? tarefasFiltradas : []}
+          eventosFiltrados={activeTab === "geral" ? eventosFiltrados : []}
+          tarefasFiltradas={activeTab === "pessoal" ? tarefasFiltradas : []}
           {...propsComuns}
         />
       );
@@ -357,8 +356,8 @@ export const Calendar = () => {
           <TimelineView
             dias={diasTimeline}
             horas={horas}
-            eventosFiltrados={activeTab === 'geral' ? eventosFiltrados : []}
-            tarefasFiltradas={activeTab === 'pessoal' ? tarefasFiltradas : []}
+            eventosFiltrados={activeTab === "geral" ? eventosFiltrados : []}
+            tarefasFiltradas={activeTab === "pessoal" ? tarefasFiltradas : []}
             {...propsComuns}
           />
         );
@@ -366,8 +365,8 @@ export const Calendar = () => {
         return (
           <MonthlyGridView
             currentDate={currentDate}
-            eventos={activeTab === 'geral' ? eventosFiltrados : []}
-            tarefas={activeTab === 'pessoal' ? tarefasFiltradas : []}
+            eventos={activeTab === "geral" ? eventosFiltrados : []}
+            tarefas={activeTab === "pessoal" ? tarefasFiltradas : []}
             {...propsComuns}
           />
         );
@@ -380,27 +379,27 @@ export const Calendar = () => {
     <div className="calendar-container">
       <div className="agenda-tabs">
         <button
-          className={`tab-btn ${activeTab === 'geral' ? 'active' : ''}`}
-          onClick={() => setActiveTab('geral')}
+          className={`tab-btn ${activeTab === "geral" ? "active" : ""}`}
+          onClick={() => setActiveTab("geral")}
         >
           Agenda Geral
         </button>
         <button
-          className={`tab-btn ${activeTab === 'pessoal' ? 'active' : ''}`}
-          onClick={() => setActiveTab('pessoal')}
+          className={`tab-btn ${activeTab === "pessoal" ? "active" : ""}`}
+          onClick={() => setActiveTab("pessoal")}
         >
           Agenda Pessoal
         </button>
       </div>
 
       <div className="search-bar">
-        {activeTab === 'pessoal' && (
+        {activeTab === "pessoal" && (
           <button onClick={handleAbrirNovoLembrete}>+ Novo Lembrete</button>
         )}
         <input
           type="text"
           placeholder={
-            activeTab === 'pessoal'
+            activeTab === "pessoal"
               ? "Buscar lembrete ou cliente..."
               : "Pesquisar evento..."
           }
@@ -599,7 +598,7 @@ const TimelineView = ({ dias, horas, eventosFiltrados, tarefasFiltradas, onTaref
 
                     const totalStartMinutes = inicio.getHours() * 60 + inicio.getMinutes();
                     const totalEndMinutes = fim.getHours() * 60 + fim.getMinutes();
-                    
+
                     const calendarStartMinutes = 5 * 60;
                     const topOffset = Math.max(0, totalStartMinutes - calendarStartMinutes);
                     const eventHeight = totalEndMinutes - totalStartMinutes;
@@ -608,7 +607,7 @@ const TimelineView = ({ dias, horas, eventosFiltrados, tarefasFiltradas, onTaref
                       top: `${Math.max(0, topOffset)}px`,
                       height: `${Math.max(24, eventHeight)}px`,
                     };
-                    
+
                     const prioridade = prioridadeClass(t.Prioridade || "");
                     const horaInicioStr = inicio.toLocaleTimeString("pt-BR", {
                       hour: "2-digit",
@@ -766,8 +765,8 @@ const MonthlyGridView = ({ currentDate, eventos, tarefas, onTarefaClick }: Month
                   </div>
                 ))}
                 {tarefasDoDia.map((t) => (
-                  <div 
-                    key={`t-${t.ID_Agenda}`} 
+                  <div
+                    key={`t-${t.ID_Agenda}`}
                     className={`event-chip ${prioridadeClass(t.Prioridade)}`}
                     onClick={() => onTarefaClick(t)}
                   >

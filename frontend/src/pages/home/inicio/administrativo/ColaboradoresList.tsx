@@ -86,7 +86,12 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
     }
   };
 
-  const COLORS = ["#0d6efd", "#08f400ff", "#fffb07ff", "#6c757d"];
+  const cores = [
+  "#1E5F8C", 
+  "#4A90E2",  
+  "#0D4674", 
+  "#89C4F4"  
+];
 
   const RADIAN = Math.PI / 180;
   const renderLabelPercentual = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
@@ -137,7 +142,7 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
                     dataKey="value"
                   >
                     {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell key={`cell-${index}`} fill={cores[index % cores.length]} />
                     ))}
                   </Pie>
                   <Tooltip formatter={(value, name) => [value, name]} />

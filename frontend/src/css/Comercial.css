@@ -28,7 +28,6 @@
     gap: 15px;
     min-width: 220px; 
     margin-top: 200px;
-   
 }
 
 .btn-azul {
@@ -54,20 +53,4 @@
   margin-top: 30px;
 }
 
-.btn-voltar {
-    background-color: #f0f2f5;
-    color: #333;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 20px;
-    transition: background-color 0.2s ease;
-}
-
-.btn-voltar:hover {
-    background-color: #e9ecef;
-}
 
