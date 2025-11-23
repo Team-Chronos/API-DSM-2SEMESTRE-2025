@@ -23,6 +23,7 @@ export const registrarModalidade = async (req, res) => {
   try {
     await HistoricoModalidade.create({ colaboradorId, modalidade });
     res
+    
       .status(201)
       .json({ mensagem: "Modalidade registrada no histórico com sucesso!" });
   } catch (err) {
