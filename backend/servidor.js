@@ -8,7 +8,6 @@ import eventoRoutes from "./src/routes/eventoRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import colaboradorRoutes from "./src/routes/colaboradorRoutes.js";
 import agregadoRoutes from "./src/routes/agregadoRoutes.js";
-import "./src/routes/notificacaoObserver.js";
 import participacaoEventoRoutes from "./src/routes/participacaoEventoRoutes.js";
 import certificadoPartRoutes from "./src/routes/certificadoPartRoutes.js";
 import clienteRoutes from "./src/routes/clienteRoutes.js";
@@ -19,9 +18,13 @@ import checklistPredialRoutes from "./src/routes/checklistPredialRoutes.js";
 import cotacaoRoutes from "./src/routes/cotacaoRoutes.js";
 import checklistRoutes from "./src/routes/checklistRoutes.js";
 import checklistVeiculoFrotaRoutes from "./src/routes/checklistVeiculoFrotaRoutes.js";
-
 import modalidadeRoutes from "./src/routes/modalidadeRoutes.js";
 import agendaRoutes from "./src/routes/agendaRoutes.js";
+
+import notificacaoRoutes from './src/routes/notificacoesRoutes.js';
+import { NotificacaoObserver } from './src/observers/notificacaoObserver.js';
+import notificacaoObserver from './src/observers/notificacaoObserver.js'; 
+
 import db from "./src/config/db.js";
 import cors from "cors";
 
@@ -42,26 +45,27 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Configuração de todas as rotas
 app.use("/api/auth", authRoutes);
 app.use("/api/colaboradores", colaboradorRoutes);
 app.use("/api/eventos", eventoRoutes);
 app.use("/api/interacoes", interacaoRoutes);
-
 app.use("/api/agenda", agendaRoutes);
-
 app.use("/api/certificadoParticipacao", certificadoPartRoutes);
 app.use("/api", modalidadeRoutes);
-
 app.use("/api/checklist", checklistRoutes);
-
 app.use("/api/agregados", agregadoRoutes);
 app.use("/api/participacaoEventos", participacaoEventoRoutes);
-app.use("/api/checklist", checklistRoutes);
-
 app.use("/api/clientes", clienteRoutes);
 app.use("/api/relatorios", relatorioRoutes);
-app.use("/api/certificadoParticipacao", certificadoPartRoutes);
+app.use("/api/notificacoes", notificacaoRoutes);
+app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes);
+app.use("/api/checklistPredios", checklistPredialRoutes);
+app.use("/api/checklistVeiculoFrota", checklistVeiculoFrotaRoutes);
+app.use("/api/cotacao", cotacaoRoutes);
+
 app.get("/api/certificados", listarCertificados);
+
 app.get("/api/setores", async (req, res) => {
   try {
     const [setores] = await db.promise().query("SELECT * FROM Setor");
@@ -84,13 +88,86 @@ app.post("/confirmarEvento", (req, res) => {
     .json({ mensagem: "Resposta registrada com sucesso no servidor!" });
 });
 
-app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes);
+app.post('/api/eventos/:id/enviar-convites', async (req, res) => {
+    try {
+        const eventoId = parseInt(req.params.id);
+        console.log(`Enviando convites para evento: ${eventoId}`);
 
-app.use("/api/checklistPredios", checklistPredialRoutes);
-app.use("/api/checklistVeiculoFrota", checklistVeiculoFrotaRoutes);
+        if (!eventoId) {
+            return res.status(400).json({
+                success: false,
+                message: 'ID do evento é obrigatório'
+            });
+        }
 
-app.use("/api/cotacao", cotacaoRoutes);
+        const resultado = await NotificacaoObserver.notificarNovoEvento(eventoId);
 
-app.listen(PORT, () => {
+        if (resultado.success) {
+            res.json({
+                success: true,
+                message: resultado.message,
+                enviados: resultado.enviados,
+                erros: resultado.erros
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: resultado.error
+            });
+        }
+
+    } catch (error) {
+        console.error('Erro ao enviar convites:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro ao enviar convites',
+            error: error.message
+        });
+    }
+});
+
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/testar-sistema', (req, res) => {
+    res.json({ 
+        status: 'Sistema operacional',
+        database: 'Conectado',
+        notificacoes: 'Configurado'
+    });
+});
+
+app.get('/api/eventos-info', async (req, res) => {
+    try {
+        const [eventos] = await db.promise().query('SELECT ID_Evento as id, Nome_Evento as titulo FROM Evento'); // ✅ CORRIGIDO: Nome das colunas
+        res.json(eventos);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar eventos' });
+    }
+});
+
+async function inicializarObserver() {
+    try {
+        if (notificacaoObserver && typeof notificacaoObserver.iniciar === 'function') {
+            await notificacaoObserver.iniciar();
+            console.log(' Observador de notificações iniciado com sucesso');
+        } else {
+            console.log('  Observador de notificações não disponível');
+        }
+    } catch (error) {
+        console.error(' Erro ao iniciar observador de notificações:', error);
+    }
+}
+
+app.listen(PORT, async () => { 
   console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Notificações: http://localhost:3000/api/notificacoes`);
+  console.log(`Health Check: http://localhost:3000/api/health`);
+  console.log(`Teste Sistema: http://localhost:3000/api/testar-sistema`);
+  console.log(`Enviar Convites: POST http://localhost:3000/api/eventos/{id}/enviar-convites`);
+  console.log(`Ver Eventos: http://localhost:3000/api/eventos-info`);
+  console.log(`Cotação: http://localhost:3000/api/cotacao`);
+  
+  await inicializarObserver();
 });
