@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     if (confirm("Deseja sair?")) {
       localStorage.removeItem("token")
+      localStorage.removeItem("localidadeData")
       setUser(undefined)
       navigate("/login")
     }

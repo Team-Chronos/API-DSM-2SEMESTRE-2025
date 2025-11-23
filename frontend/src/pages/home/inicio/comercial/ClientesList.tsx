@@ -56,7 +56,7 @@ export const ClientesList = () => {
     }, [clientes]);
 
     const segmentosUnicos = useMemo(() => {
-        const segmentos = new Set(clientes.map(c => c.segmento_atuacao).filter(Boolean));
+        const segmentos = new Set(clientes.map(c => c.Segmento).filter(Boolean));
         return Array.from(segmentos).sort();
     }, [clientes]);
 
@@ -70,7 +70,7 @@ export const ClientesList = () => {
             clientesProcessados = clientesProcessados.filter((c) => c.depart_responsavel === filtroDepartamento);
         }
         if (filtroSegmento !== "todos") {
-            clientesProcessados = clientesProcessados.filter((c) => c.segmento_atuacao === filtroSegmento);
+            clientesProcessados = clientesProcessados.filter((c) => c.Segmento === filtroSegmento);
         }
 
         if (searchTerm) {
@@ -126,10 +126,10 @@ export const ClientesList = () => {
                 <thead>
                     <tr>
                         <SortableHeader label="Nome" columnKey="Nome_Cliente" />
-                        <SortableHeader label="Segmento" columnKey="segmento_atuacao" />
+                        <SortableHeader label="Segmento" columnKey="Segmento" />
                         <SortableHeader label="Departamento" columnKey="depart_responsavel" />
                         <SortableHeader label="Etapa" columnKey="Etapa" />
-                        <SortableHeader label="Data Cadastro" columnKey="Data_Cadastro" />
+                        <SortableHeader label="Data Cadastro" columnKey="criado_em" />
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -139,14 +139,14 @@ export const ClientesList = () => {
                        return (
                         <tr key={c.ID_Cliente}>
                             <td>{c.Nome_Cliente}</td>
-                            <td>{c.segmento_atuacao}</td>
+                            <td>{c.Segmento}</td>
                             <td>{c.depart_responsavel}</td>
                             <td>
                                 <span className="etapa-tag" style={{ backgroundColor: etapaStyle.background, color: etapaStyle.color }}>
                                     {c.Etapa || "—"}
                                 </span>
                             </td>
-                            <td>{formatarData(c.Data_Cadastro)}</td>
+                            <td>{formatarData(c.criado_em)}</td>
                             <td>
                                 <Button
                                     variant="outline-primary" size="sm" className="btn-acao"

@@ -1,27 +1,28 @@
-import db from '../config/db.js';
+import db from "../config/db.js";
 
 export const registrarInteracao = async (req, res) => {
-    try {
-        const {
-            id_cliente,
-            id_vendedor,
-            data_interacao,
-            forma_contato,
-            titulo,
-            descricao,
-            resultado,
-            proxima_acao,
-            data_proxima_acao,
-            prioridade
-        } = req.body;
+  const {
+    ID_Cliente,
+    ID_Colaborador,
+    data_interacao,
+    Tipo_Interacao,
+    Descricao,
+    Resultado,
+    proxima_acao,
+    data_proxima_acao,
+    prioridade,
+  } = req.body;
+  const titulo = req.body.titulo || `Interação ${Tipo_Interacao}`;
 
-        if (!id_cliente || !id_vendedor || !data_interacao || !forma_contato || !titulo) {
-            return res.status(400).json({
-                mensagem: "Campos obrigatórios: id_cliente, id_vendedor, data_interacao, forma_contato, titulo"
-            });
-        }
+  try {
+    if (!ID_Cliente || !ID_Colaborador || !Tipo_Interacao) {
+      return res.status(400).json({
+        mensagem:
+          "Campos obrigatórios: ID_Cliente, ID_Colaborador, data_interacao, forma_contato, titulo",
+      });
+    }
 
-        const query = `
+    const query = `
             INSERT INTO Historico_Interacao (
                 ID_Cliente,
                 ID_Colaborador,
@@ -37,41 +38,45 @@ export const registrarInteracao = async (req, res) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Realizada')
         `;
 
-        const [result] = await db.promise().query(query, [
-            id_cliente,
-            id_vendedor,
-            data_interacao,
-            forma_contato,
-            titulo,
-            descricao || null,
-            resultado || null,
-            proxima_acao || null,
-            data_proxima_acao || null,
-            prioridade || 'Media'
-        ]);
+    const [result] = await db
+      .promise()
+      .query(query, [
+        ID_Cliente,
+        ID_Colaborador,
+        data_interacao,
+        Tipo_Interacao,
+        titulo,
+        Descricao || null,
+        Resultado || null,
+        proxima_acao || null,
+        data_proxima_acao || null,
+        prioridade || "Media",
+      ]);
 
-        await db.promise().query(`
+    await db.promise().query(
+      `
             UPDATE Cliente 
             SET Ultima_Interacao = ? 
             WHERE ID_Cliente = ?
-        `, [data_interacao, id_cliente]);
+        `,
+      [data_interacao, ID_Cliente]
+    );
 
-        res.status(201).json({
-            mensagem: "Interação registrada com sucesso!",
-            id_interacao: result.insertId
-        });
-
-    } catch (error) {
-        console.error(" Erro ao registrar interação:", error);
-        res.status(500).json({ mensagem: "Erro interno ao registrar interação." });
-    }
+    res.status(201).json({
+      mensagem: "Interação registrada com sucesso!",
+      id_interacao: result.insertId,
+    });
+  } catch (error) {
+    console.error(" Erro ao registrar interação:", error);
+    res.status(500).json({ mensagem: "Erro interno ao registrar interação." });
+  }
 };
 
 export const listarInteracoesCliente = async (req, res) => {
-    try {
-        const { id_cliente } = req.params;
+  try {
+    const { id_cliente } = req.params;
 
-        const query = `
+    const query = `
             SELECT 
                 hi.*,
                 c.Nome_Col as vendedor_nome,
@@ -85,22 +90,21 @@ export const listarInteracoesCliente = async (req, res) => {
             ORDER BY hi.Data_Interacao DESC
         `;
 
-        const [interacoes] = await db.promise().query(query, [id_cliente]);
+    const [interacoes] = await db.promise().query(query, [id_cliente]);
 
-        res.status(200).json(interacoes);
-
-    } catch (error) {
-        console.error(" Erro ao listar interações:", error);
-        res.status(500).json({ mensagem: "Erro interno ao listar interações." });
-    }
+    res.status(200).json(interacoes);
+  } catch (error) {
+    console.error(" Erro ao listar interações:", error);
+    res.status(500).json({ mensagem: "Erro interno ao listar interações." });
+  }
 };
 
 export const listarInteracoesVendedor = async (req, res) => {
-    try {
-        const { id_vendedor } = req.params;
-        const { data_inicio, data_fim, forma_contato, status } = req.query;
+  try {
+    const { id_vendedor } = req.params;
+    const { data_inicio, data_fim, forma_contato, status } = req.query;
 
-        let query = `
+    let query = `
             SELECT 
                 hi.*,
                 cli.Nome_Cliente,
@@ -112,40 +116,39 @@ export const listarInteracoesVendedor = async (req, res) => {
             WHERE hi.ID_Colaborador = ?
         `;
 
-        const params = [id_vendedor];
+    const params = [id_vendedor];
 
-        if (data_inicio && data_fim) {
-            query += ` AND hi.Data_Interacao BETWEEN ? AND ?`;
-            params.push(data_inicio, data_fim);
-        }
-
-        if (forma_contato) {
-            query += ` AND hi.Forma_Contato = ?`;
-            params.push(forma_contato);
-        }
-
-        if (status) {
-            query += ` AND hi.Status = ?`;
-            params.push(status);
-        }
-
-        query += ` ORDER BY hi.Data_Interacao DESC`;
-
-        const [interacoes] = await db.promise().query(query, params);
-
-        res.status(200).json(interacoes);
-
-    } catch (error) {
-        console.error(" Erro ao listar interações do vendedor:", error);
-        res.status(500).json({ mensagem: "Erro interno ao listar interações." });
+    if (data_inicio && data_fim) {
+      query += ` AND hi.Data_Interacao BETWEEN ? AND ?`;
+      params.push(data_inicio, data_fim);
     }
+
+    if (forma_contato) {
+      query += ` AND hi.Forma_Contato = ?`;
+      params.push(forma_contato);
+    }
+
+    if (status) {
+      query += ` AND hi.Status = ?`;
+      params.push(status);
+    }
+
+    query += ` ORDER BY hi.Data_Interacao DESC`;
+
+    const [interacoes] = await db.promise().query(query, params);
+
+    res.status(200).json(interacoes);
+  } catch (error) {
+    console.error(" Erro ao listar interações do vendedor:", error);
+    res.status(500).json({ mensagem: "Erro interno ao listar interações." });
+  }
 };
 
 export const obterInteracaoPorId = async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const query = `
+    const query = `
             SELECT 
                 hi.*,
                 c.Nome_Col as vendedor_nome,
@@ -159,36 +162,35 @@ export const obterInteracaoPorId = async (req, res) => {
             WHERE hi.ID_Interacao = ?
         `;
 
-        const [interacoes] = await db.promise().query(query, [id]);
+    const [interacoes] = await db.promise().query(query, [id]);
 
-        if (interacoes.length === 0) {
-            return res.status(404).json({ mensagem: "Interação não encontrada." });
-        }
-
-        res.status(200).json(interacoes[0]);
-
-    } catch (error) {
-        console.error(" Erro ao buscar interação:", error);
-        res.status(500).json({ mensagem: "Erro interno ao buscar interação." });
+    if (interacoes.length === 0) {
+      return res.status(404).json({ mensagem: "Interação não encontrada." });
     }
+
+    res.status(200).json(interacoes[0]);
+  } catch (error) {
+    console.error(" Erro ao buscar interação:", error);
+    res.status(500).json({ mensagem: "Erro interno ao buscar interação." });
+  }
 };
 
 export const atualizarInteracao = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const {
-            data_interacao,
-            forma_contato,
-            titulo,
-            descricao,
-            resultado,
-            proxima_acao,
-            data_proxima_acao,
-            prioridade,
-            status
-        } = req.body;
+  try {
+    const { id } = req.params;
+    const {
+      data_interacao,
+      forma_contato,
+      titulo,
+      descricao,
+      resultado,
+      proxima_acao,
+      data_proxima_acao,
+      prioridade,
+      status,
+    } = req.body;
 
-        const query = `
+    const query = `
             UPDATE Historico_Interacao 
             SET Data_Interacao = ?,
                 Forma_Contato = ?,
@@ -203,55 +205,55 @@ export const atualizarInteracao = async (req, res) => {
             WHERE ID_Interacao = ?
         `;
 
-        const [result] = await db.promise().query(query, [
-            data_interacao,
-            forma_contato,
-            titulo,
-            descricao,
-            resultado,
-            proxima_acao,
-            data_proxima_acao,
-            prioridade,
-            status,
-            id
-        ]);
+    const [result] = await db
+      .promise()
+      .query(query, [
+        data_interacao,
+        forma_contato,
+        titulo,
+        descricao,
+        resultado,
+        proxima_acao,
+        data_proxima_acao,
+        prioridade,
+        status,
+        id,
+      ]);
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ mensagem: "Interação não encontrada." });
-        }
-
-        res.status(200).json({ mensagem: "Interação atualizada com sucesso!" });
-
-    } catch (error) {
-        console.error(" Erro ao atualizar interação:", error);
-        res.status(500).json({ mensagem: "Erro interno ao atualizar interação." });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ mensagem: "Interação não encontrada." });
     }
+
+    res.status(200).json({ mensagem: "Interação atualizada com sucesso!" });
+  } catch (error) {
+    console.error(" Erro ao atualizar interação:", error);
+    res.status(500).json({ mensagem: "Erro interno ao atualizar interação." });
+  }
 };
 
 export const excluirInteracao = async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const query = "DELETE FROM Historico_Interacao WHERE ID_Interacao = ?";
-        const [result] = await db.promise().query(query, [id]);
+    const query = "DELETE FROM Historico_Interacao WHERE ID_Interacao = ?";
+    const [result] = await db.promise().query(query, [id]);
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ mensagem: "Interação não encontrada." });
-        }
-
-        res.status(200).json({ mensagem: "Interação excluída com sucesso!" });
-
-    } catch (error) {
-        console.error(" Erro ao excluir interação:", error);
-        res.status(500).json({ mensagem: "Erro interno ao excluir interação." });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ mensagem: "Interação não encontrada." });
     }
+
+    res.status(200).json({ mensagem: "Interação excluída com sucesso!" });
+  } catch (error) {
+    console.error(" Erro ao excluir interação:", error);
+    res.status(500).json({ mensagem: "Erro interno ao excluir interação." });
+  }
 };
 
 export const obterProximasAcoes = async (req, res) => {
-    try {
-        const { id_vendedor } = req.params;
+  try {
+    const { id_vendedor } = req.params;
 
-        const query = `
+    const query = `
             SELECT 
                 hi.*,
                 cli.Nome_Cliente,
@@ -267,32 +269,34 @@ export const obterProximasAcoes = async (req, res) => {
             LIMIT 20
         `;
 
-        const [proximasAcoes] = await db.promise().query(query, [id_vendedor]);
+    const [proximasAcoes] = await db.promise().query(query, [id_vendedor]);
 
-        res.status(200).json(proximasAcoes);
-
-    } catch (error) {
-        console.error(" Erro ao buscar próximas ações:", error);
-        res.status(500).json({ mensagem: "Erro interno ao buscar próximas ações." });
-    }
+    res.status(200).json(proximasAcoes);
+  } catch (error) {
+    console.error(" Erro ao buscar próximas ações:", error);
+    res
+      .status(500)
+      .json({ mensagem: "Erro interno ao buscar próximas ações." });
+  }
 };
 
 export const obterEstatisticasVendedor = async (req, res) => {
-    try {
-        const { id_vendedor } = req.params;
-        const { mes, ano } = req.query;
+  try {
+    const { id_vendedor } = req.params;
+    const { mes, ano } = req.query;
 
-        const dataFiltro = mes && ano ? `${ano}-${mes.padStart(2, '0')}` : null;
+    const dataFiltro = mes && ano ? `${ano}-${mes.padStart(2, "0")}` : null;
 
-        let queryWhere = "WHERE hi.ID_Colaborador = ?";
-        const params = [id_vendedor];
+    let queryWhere = "WHERE hi.ID_Colaborador = ?";
+    const params = [id_vendedor];
 
-        if (dataFiltro) {
-            queryWhere += " AND DATE_FORMAT(hi.Data_Interacao, '%Y-%m') = ?";
-            params.push(dataFiltro);
-        }
+    if (dataFiltro) {
+      queryWhere += " AND DATE_FORMAT(hi.Data_Interacao, '%Y-%m') = ?";
+      params.push(dataFiltro);
+    }
 
-        const [estatisticas] = await db.promise().query(`
+    const [estatisticas] = await db.promise().query(
+      `
             SELECT 
                 COUNT(*) as total_interacoes,
                 COUNT(DISTINCT hi.ID_Cliente) as clientes_ativos,
@@ -303,9 +307,12 @@ export const obterEstatisticasVendedor = async (req, res) => {
                 SUM(CASE WHEN hi.Forma_Contato = 'Visita' THEN 1 ELSE 0 END) as visitas
             FROM Historico_Interacao hi
             ${queryWhere}
-        `, params);
+        `,
+      params
+    );
 
-        const [contatosPorForma] = await db.promise().query(`
+    const [contatosPorForma] = await db.promise().query(
+      `
             SELECT 
                 Forma_Contato,
                 COUNT(*) as total
@@ -313,15 +320,16 @@ export const obterEstatisticasVendedor = async (req, res) => {
             ${queryWhere}
             GROUP BY Forma_Contato
             ORDER BY total DESC
-        `, params);
+        `,
+      params
+    );
 
-        res.status(200).json({
-            estatisticas_gerais: estatisticas[0],
-            contatos_por_forma: contatosPorForma
-        });
-
-    } catch (error) {
-        console.error(" Erro ao buscar estatísticas:", error);
-        res.status(500).json({ mensagem: "Erro interno ao buscar estatísticas." });
-    }
+    res.status(200).json({
+      estatisticas_gerais: estatisticas[0],
+      contatos_por_forma: contatosPorForma,
+    });
+  } catch (error) {
+    console.error(" Erro ao buscar estatísticas:", error);
+    res.status(500).json({ mensagem: "Erro interno ao buscar estatísticas." });
+  }
 };

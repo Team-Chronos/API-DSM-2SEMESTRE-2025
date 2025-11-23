@@ -4,6 +4,7 @@ import { formatarDataHora } from "../../../../utils/formatacoes";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 import { ModalConfirmacao } from "../../../../components/modals/ModalConfirmacao";
 import { ModalEditarEvento } from "../../../../components/modals/ModalEditarEvento";
+import { ModalConsultarEvento } from "../../../../components/modals/ModalConsultarEvento";
 import type { Evento } from "../../../../utils/tipos";
 
 interface EventosListProps {
@@ -12,13 +13,22 @@ interface EventosListProps {
   refetch: () => void;
 }
 
-export const EventosList = ({ eventos, loading, refetch }: EventosListProps) => {
+export const EventosList = ({
+  eventos,
+  loading,
+  refetch,
+}: EventosListProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-  const [tituloMessage, setTituloMessage] = useState<"Sucesso" | "Erro" | "Aviso">("Aviso");
+  const [tituloMessage, setTituloMessage] = useState<
+    "Sucesso" | "Erro" | "Aviso"
+  >("Aviso");
   const [mensagem, setMensagem] = useState("");
   const [showEdit, setShowEdit] = useState(false);
-  const [eventoSelecionado, setEventoSelecionado] = useState<Evento | null>(null);
+  const [showConsultar, setShowConsultar] = useState(false);
+  const [eventoSelecionado, setEventoSelecionado] = useState<Evento | null>(
+    null
+  );
 
   if (loading) return <p>Carregando...</p>;
   if (eventos.length === 0)
@@ -28,7 +38,9 @@ export const EventosList = ({ eventos, loading, refetch }: EventosListProps) => 
     if (!eventoSelecionado) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/eventos/${eventoSelecionado.ID_Evento}`);
+      await axios.delete(
+        `http://localhost:3000/api/eventos/${eventoSelecionado.ID_Evento}`
+      );
       setTituloMessage("Sucesso");
       setMensagem("Evento excluído com sucesso!");
       setShowMessage(true);
@@ -64,12 +76,20 @@ export const EventosList = ({ eventos, loading, refetch }: EventosListProps) => 
                 <button
                   className="btn btn-sm btn-primary me-2"
                   onClick={() => {
-                      setEventoSelecionado(evento)
-                      setShowEdit(true)
-                    }
-                  }
+                    setEventoSelecionado(evento);
+                    setShowEdit(true);
+                  }}
                 >
                   Editar
+                </button>
+                <button
+                  className="btn btn-sm btn-primary me-2"
+                  onClick={() => {
+                    setEventoSelecionado(evento);
+                    setShowConsultar(true);
+                  }}
+                >
+                  Consultar
                 </button>
                 <button
                   className="btn btn-sm btn-danger"
@@ -96,6 +116,12 @@ export const EventosList = ({ eventos, loading, refetch }: EventosListProps) => 
           setMensagem("Evento editado com sucesso!");
           setShowMessage(true);
         }}
+      />
+
+      <ModalConsultarEvento
+        show={showConsultar}
+        evento={eventoSelecionado}
+        onClose={() => setShowConsultar(false)}
       />
 
       <ModalConfirmacao
@@ -126,7 +152,11 @@ export const EventosList = ({ eventos, loading, refetch }: EventosListProps) => 
 //   refetch: () => void;
 // }
 
-// export const EventosList = ({ eventos, loading, refetch }: EventosListProps) => {
+// export const EventosList = ({
+//   eventos,
+//   loading,
+//   refetch,
+// }: EventosListProps) => {
 //   const [modoCalendario, setModoCalendario] = useState(false);
 
 //   if (loading) return <p>Carregando...</p>;

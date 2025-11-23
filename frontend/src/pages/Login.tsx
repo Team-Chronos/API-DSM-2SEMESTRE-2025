@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useAuth } from '../context/AuthContext'
-import { Logo } from '../components/Logo'
+import { Logo } from '../components/LogoLogin'
 import "../css/login.css"
 import { useNavigate } from 'react-router-dom'
 
@@ -35,17 +35,16 @@ export const Login = () => {
   }
 
   return (
-    <main className="container-fluid d-flex p-0 m-0">
-      <div className="fundo-sombra d-flex flex-column col-12 pe-3 ps-3 col-lg-7">
-        <Logo />
-        <div id="rowForm" className="col-lg-8 my-auto my-lg-5 pb-4 pe-3 ps-3 row">
-          <form onSubmit={handleSubmit} className="d-flex flex-column">
-            <h2 className="mb-4">Entrar</h2>
-
-            <div className="mb-3">
+    <main className="container-principal">
+      <div className="fundo-sombra">
+        <div id="rowForm">
+          <form onSubmit={handleSubmit} className="login-form">
+            <h2>Entrar</h2>
+  
+            <div className="form-group">
               <input
                 type="email"
-                className="form-control"
+                className="form-input"
                 id="email"
                 placeholder="E-mail"
                 value={email}
@@ -53,45 +52,38 @@ export const Login = () => {
                 required
               />
             </div>
-
-            <div className="mb-3">
+  
+            <div className="form-group">
               <input
                 type="password"
-                className="form-control"
+                className="form-input"
                 id="senha"
                 placeholder="Senha"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 required
               />
-              <span className="form-text ms-1 mt-2 text-white">
-                Esqueceu a senha?
-              </span>
             </div>
-
+  
             {erroLogin && (
-              <div
-                id="erroLogin"
-                className="mb-3 bg-warning text-danger text-center py-3 px-2"
-                style={{
-                  borderRadius: "10px",
-                  fontWeight: "600"
-                }}
-              >
+              <div id="erroLogin" className="erro-mensagem">
                 {erroLogin}
               </div>
             )}
-
-            <button type="submit" className="btn align-self-center">
+  
+            <button type="submit" className="btn-login">
               <span className="space"></span>
-              <span id="entrar-btn-text" className='py-1'>ENTRAR</span>
-              <span id="setaLogin" className="d-flex">
-                <i className="bi bi-arrow-right-circle-fill" style={{ fontSize: "28px", display: "flex", alignItems: "center" }}></i>
+              <span id="entrar-btn-text">ENTRAR</span>
+              <span id="setaLogin">
+                <i className="bi bi-arrow-right-circle-fill"></i>
               </span>
             </button>
           </form>
         </div>
       </div>
+      <div className="logo-container">
+          <Logo />
+        </div>
     </main>
-  )
+  )  
 }

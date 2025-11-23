@@ -1,83 +1,110 @@
-import Colaborador from '../models/colaborador.js';
-import bcrypt from 'bcrypt';
-
+import Colaborador from "../models/colaborador.js";
+import bcrypt from "bcrypt";
 
 export const criarColaborador = async (req, res) => {
-    const { nome, email, senha, telefone, cpf, setor} = req.body;
-    if (!nome || !email || !senha || !telefone || !cpf || !setor) {
-        return res.status(400).json({ mensagem: "Preencha todos os campos!" });
-    }
-    try {
-        const [emailResults] = await Colaborador.findByEmail(email);
-        if (emailResults.length > 0) return res.status(400).json({ mensagem: "Email já cadastrado!" });
+  const {
+    nome,
+    email,
+    senha,
+    telefone,
+    cpf,
+    setor,
+    id_cargo: ID_Cargo,
+  } = req.body;
+  if (!nome || !email || !senha || !telefone || !cpf || !setor || !ID_Cargo) {
+    return res.status(400).json({ mensagem: "Preencha todos os campos!" });
+  }
+  try {
+    const [emailResults] = await Colaborador.findByEmail(email);
+    if (emailResults.length > 0)
+      return res.status(400).json({ mensagem: "Email já cadastrado!" });
 
-        const [cpfResults] = await Colaborador.findByCpf(cpf);
-        if (cpfResults.length > 0) return res.status(400).json({ mensagem: "CPF já cadastrado!" });
+    const [cpfResults] = await Colaborador.findByCpf(cpf);
+    if (cpfResults.length > 0)
+      return res.status(400).json({ mensagem: "CPF já cadastrado!" });
 
-        const senhaHash = await bcrypt.hash(senha, 10);
-        await Colaborador.create({ nome, email, senhaHash, telefone, cpf, setor });
+    const senhaHash = await bcrypt.hash(senha, 10);
+    await Colaborador.create({
+      nome,
+      email,
+      senhaHash,
+      telefone,
+      cpf,
+      setor,
+      ID_Cargo,
+    });
 
-        res.status(201).json({ mensagem: "Usuário cadastrado com sucesso!" });
-    } catch (err) {
-        res.status(500).json({ mensagem: "Erro ao cadastrar usuário" });
-    }
+    res.status(201).json({ mensagem: "Usuário cadastrado com sucesso!" });
+  } catch (err) {
+    console.error("ERRO DETALHADO AO CADASTRAR:", err);
+    res.status(500).json({ mensagem: "Erro ao cadastrar usuário" });
+  }
 };
 
+export const listarCargosDisponiveis = async (req, res) => {
+  try {
+    const [results] = await Colaborador.findAllCargos();
+    res.json(results);
+  } catch (err) {
+    console.error("Erro ao buscar cargos:", err);
+    res.status(500).json({ mensagem: "Erro ao buscar cargos." });
+  }
+};
 
 export const listarColaboradores = async (req, res) => {
-    try {
-        const [results] = await Colaborador.findAll();
-        res.json(results);
-    } catch (err) {
-        res.status(500).json({ mensagem: "Erro ao buscar colaboradores." });
-    }
+  try {
+    const [results] = await Colaborador.findAll();
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ mensagem: "Erro ao buscar colaboradores." });
+  }
 };
-
 
 export const obterColaboradorPorId = async (req, res) => {
-    try {
-        const [results] = await Colaborador.findById(req.params.id);
-        if (results.length === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
-        res.json(results[0]);
-    } catch (err) {
-        res.status(500).json({ mensagem: "Erro ao buscar colaborador." });
-    }
+  try {
+    const [results] = await Colaborador.findById(req.params.id);
+    if (results.length === 0)
+      return res.status(404).json({ mensagem: "Colaborador não encontrado." });
+    res.json(results[0]);
+  } catch (err) {
+    res.status(500).json({ mensagem: "Erro ao buscar colaborador." });
+  }
 };
-
 
 export const atualizarColaborador = async (req, res) => {
-    try {
-        const [result] = await Colaborador.updateById(req.params.id, req.body);
-        if (result.affectedRows === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
-        res.json({ mensagem: "Colaborador atualizado com sucesso!" });
-    } catch (err) {
-        res.status(500).json({ mensagem: "Erro ao atualizar colaborador." });
-    }
+  try {
+    const [result] = await Colaborador.updateById(req.params.id, req.body);
+    if (result.affectedRows === 0)
+      return res.status(404).json({ mensagem: "Colaborador não encontrado." });
+    res.json({ mensagem: "Colaborador atualizado com sucesso!" });
+  } catch (err) {
+    res.status(500).json({ mensagem: "Erro ao atualizar colaborador." });
+  }
 };
 
-
 export const excluirColaborador = async (req, res) => {
-    try {
-        const [result] = await Colaborador.deleteById(req.params.id);
-        if (result.affectedRows === 0) return res.status(404).json({ mensagem: "Colaborador não encontrado." });
-        res.json({ mensagem: "Colaborador excluído com sucesso!" });
-    } catch (err) {
-        res.status(500).json({ mensagem: "Erro ao excluir colaborador." });
-    }
+  try {
+    const [result] = await Colaborador.deleteById(req.params.id);
+    if (result.affectedRows === 0)
+      return res.status(404).json({ mensagem: "Colaborador não encontrado." });
+    res.json({ mensagem: "Colaborador excluído com sucesso!" });
+  } catch (err) {
+    res.status(500).json({ mensagem: "Erro ao excluir colaborador." });
+  }
 };
 
 export const salvarLocalidade = async (req, res) => {
-    const { colaboradorId, localidade } = req.body;
+  const { colaboradorId, localidade } = req.body;
 
-    if (!colaboradorId || !localidade) {
-        return res.status(400).json({ mensagem: "Dados incompletos." });
-    }
+  if (!colaboradorId || !localidade) {
+    return res.status(400).json({ mensagem: "Dados incompletos." });
+  }
 
-    try {
-        await Colaborador.updateLocalidade(colaboradorId, localidade);
-        res.json({ mensagem: "Localidade salva com sucesso!" });
-    } catch (err) {
-        console.error("Erro ao salvar localidade:", err);
-        res.status(500).json({ mensagem: "Erro interno ao salvar localidade." });
-    }
+  try {
+    await Colaborador.updateLocalidade(colaboradorId, localidade);
+    res.json({ mensagem: "Localidade salva com sucesso!" });
+  } catch (err) {
+    console.error("Erro ao salvar localidade:", err);
+    res.status(500).json({ mensagem: "Erro interno ao salvar localidade." });
+  }
 };

@@ -8,6 +8,7 @@ import { HeaderControlsColaboradores } from "../../../components/HeaderControlsC
 import { HeaderControlsEventos } from "../../../components/HeaderControlsEventos";
 import { type Colaborador, type Evento, type Tab } from "../../../utils/tipos";
 import { normalizarTexto } from "../../../utils/formatacoes";
+import { RelatorioList } from "./comercial/RelatorioList";
 
 export const Administrativo = () => {
   const [activeTab, setActiveTab] = useState<Tab>("colaboradores");
@@ -89,13 +90,13 @@ export const Administrativo = () => {
           searchText={searchText}
           setSearchText={setSearchText}
         />
-      ) : (
+      ) : activeTab === "eventos" ? (
         <HeaderControlsEventos
           onSuccess={carregarEventos}
           searchText={searchText}
           setSearchText={setSearchText}
         />
-      )}
+      ) : (null)}
       <div id="lista-colaboradores-eventos">
         {activeTab === "colaboradores" ? (
           <ColaboradoresList
@@ -103,12 +104,14 @@ export const Administrativo = () => {
             loading={loadingColaboradores}
             refetch={carregarColaboradores}
           />
-        ) : (
+        ) : activeTab === "eventos" ? (
           <EventosList
             eventos={eventosFiltrados}
             loading={loadingEventos}
             refetch={carregarEventos}
           />
+        ) : (
+          <RelatorioList />
         )}
       </div>
     </div>
