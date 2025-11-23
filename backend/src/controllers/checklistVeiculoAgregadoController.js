@@ -55,10 +55,13 @@ export async function registrarChecklist(req, res) {
       return [key, uploadResult.secure_url];
     });
 
-    const uploadedImages = Object.fromEntries(await Promise.all(uploadPromises));
+    const uploadedImages = Object.fromEntries(
+      await Promise.all(uploadPromises)
+    );
 
-    id_responsavel_vistoria = id_responsavel_vistoria === "outro" ? null : id_responsavel_vistoria
-    observacoes = observacoes === "" ? null : observacoes
+    id_responsavel_vistoria =
+      id_responsavel_vistoria === "outro" ? null : id_responsavel_vistoria;
+    observacoes = observacoes === "" ? null : observacoes;
 
     const checklistData = {
       nome_motorista,
@@ -133,18 +136,24 @@ export async function listarResponsaveis(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error("Erro ao listar Responsáveis pela vistoria:", err);
-    res.status(500).json({ mensagem: "Erro interno ao listar Responsáveis pela vistoria." });
+    res
+      .status(500)
+      .json({ mensagem: "Erro interno ao listar Responsáveis pela vistoria." });
   }
 }
 
 export async function listarChecklistsVeiculoAgregado(req, res) {
-  try{
-    const query = `SELECT cva.*, col.Nome_Col FROM checklistveiculoagregado cva left join colaboradores col on col.ID_colaborador = cva.id_responsavel_vistoria;`
-    const [result] = await db.promise().query(query)
-    res.status(200).json(result)
+  try {
+    const query = `SELECT cva.*, col.Nome_Col FROM checklistveiculoagregado cva left join colaboradores col on col.ID_colaborador = cva.id_responsavel_vistoria;`;
+    const [result] = await db.promise().query(query);
+    res.status(200).json(result);
   } catch (err) {
     console.error("Erro ao listar checklists de veículo agregado:", err);
-    res.status(500).json({ mensagem: "Erro interno ao listar checklists de veículo agregado." });
+    res
+      .status(500)
+      .json({
+        mensagem: "Erro interno ao listar checklists de veículo agregado.",
+      });
   }
 }
 
@@ -154,7 +163,7 @@ export async function listarChecklistPorId(req, res) {
     const query = `
       SELECT cva.*, col.Nome_Col FROM checklistVeiculoAgregado cva LEFT JOIN colaboradores col ON col.ID_colaborador = cva.id_responsavel_vistoria WHERE cva.ID_cva = ?;`;
     const [result] = await db.promise().query(query, [id]);
-    if (result.length === 0){
+    if (result.length === 0) {
       return res.status(404).json({ mensagem: "Checklist não encontrado." });
     }
 

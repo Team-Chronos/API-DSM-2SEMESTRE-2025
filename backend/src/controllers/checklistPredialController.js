@@ -24,7 +24,7 @@ export async function registrarChecklistPredial(req, res) {
     porta_armazem,
     cadeado_correntes,
     problemas_portao,
-    situacao_atipica
+    situacao_atipica,
   } = req.body;
 
   try {
@@ -51,7 +51,7 @@ export async function registrarChecklistPredial(req, res) {
       PortaArmazem: porta_armazem,
       CadeadoCorrentes: cadeado_correntes,
       MotorRuidos: problemas_portao || null,
-      SituacaoAtip: situacao_atipica || null
+      SituacaoAtip: situacao_atipica || null,
     };
 
     const campos = Object.keys(checklistData).join(",");
@@ -68,7 +68,9 @@ export async function registrarChecklistPredial(req, res) {
     res.json({ mensagem: "Checklist predial registrado com sucesso!" });
   } catch (err) {
     console.error("Erro ao registrar checklist predial:", err);
-    res.status(500).json({ mensagem: "Erro interno ao registrar checklist predial" });
+    res
+      .status(500)
+      .json({ mensagem: "Erro interno ao registrar checklist predial" });
   }
 }
 
@@ -79,7 +81,9 @@ export async function listarChecklistsPredial(req, res) {
     res.status(200).json(result);
   } catch (err) {
     console.error("Erro ao listar checklists prediais:", err);
-    res.status(500).json({ mensagem: "Erro interno ao listar checklists prediais" });
+    res
+      .status(500)
+      .json({ mensagem: "Erro interno ao listar checklists prediais" });
   }
 }
 

@@ -1,4 +1,4 @@
-import db from '../config/db.js';
+import db from "../config/db.js";
 
 const HistoricoModalidade = {
   findByColaboradorId: (colaboradorId) => {
@@ -13,9 +13,10 @@ const HistoricoModalidade = {
 
   create: (data) => {
     const { colaboradorId, modalidade } = data;
-    const query = "INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (?, ?)";
+    const query =
+      "INSERT INTO historico_modalidade (colaborador_id, modalidade) VALUES (?, ?)";
     return db.promise().query(query, [colaboradorId, modalidade]);
-  }
+  },
 };
 
 export default HistoricoModalidade;
