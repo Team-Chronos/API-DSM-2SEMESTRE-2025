@@ -29,6 +29,10 @@ import db from './src/config/db.js';
 import cors from 'cors';
 
 import cotacaoRoutes from "./src/routes/cotacaoRoutes.js";
+import dotenv from 'dotenv';
+
+// Carregar variáveis de ambiente
+dotenv.config();
 
 const app = express();
 const PORT = 3000;
@@ -45,6 +49,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Configuração de todas as rotas
 app.use('/api/auth', authRoutes);
 app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/eventos', eventoRoutes);
@@ -72,7 +77,7 @@ app.use("/api/cotacao", cotacaoRoutes);
 app.post('/api/eventos/:id/enviar-convites', async (req, res) => {
     try {
         const eventoId = parseInt(req.params.id);
-        console.log(`🎉 Enviando convites para evento: ${eventoId}`);
+        console.log(` Enviando convites para evento: ${eventoId}`);
 
         if (!eventoId) {
             return res.status(400).json({
@@ -107,12 +112,6 @@ app.post('/api/eventos/:id/enviar-convites', async (req, res) => {
     }
 });
 
-notificacaoObserver.iniciar().then(() => {
-    console.log(' NotificacaoObserver iniciado com sucesso');
-}).catch(error => {
-    console.error(' Erro ao iniciar NotificacaoObserver:', error);
-});
-
 app.get("/api/certificados", listarCertificados);
 
 app.get('/api/setores', async (req, res) => {
@@ -133,8 +132,11 @@ app.post('/confirmarEvento', (req, res) => {
     res.status(200).json({ mensagem: 'Resposta registrada com sucesso no servidor!' });
 });
 
-app.use("/api/checklistVeiculoAgregado", checklistVeiculoAgregadoRoutes);
-app.use("/api/checklistPredios", checklistPredialRoutes);
+notificacaoObserver.iniciar().then(() => {
+    console.log(' NotificacaoObserver iniciado com sucesso');
+}).catch(error => {
+    console.error(' Erro ao iniciar NotificacaoObserver:', error);
+});
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Spinner, Card, Row, Col, Badge, Accordion } from 'react-bootstrap';
 
 interface Checklist {
@@ -129,7 +130,7 @@ const ModalDetalhesChecklist = ({ show, onClose, checklist }: ModalDetalhesProps
       field.toUpperCase(),
       field.replace(/_/g, ''),
       `ID_${field}`,
-      ...(field.includes('_') ? [field.split('_').map(word => 
+      ...(field.includes('_') ? [field.split('_').map(word =>
         word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       ).join('_')] : [])
     ];
@@ -182,16 +183,16 @@ const ModalDetalhesChecklist = ({ show, onClose, checklist }: ModalDetalhesProps
       }
       return value === false;
     }
-    
+
     if (typeof value === 'string') {
       const lowerValue = value.toLowerCase();
-      return lowerValue.includes('ruim') || 
-             lowerValue.includes('defeito') || 
-             lowerValue.includes('quebrad') ||
-             lowerValue.includes('danificad') ||
-             lowerValue.includes('problema');
+      return lowerValue.includes('ruim') ||
+        lowerValue.includes('defeito') ||
+        lowerValue.includes('quebrad') ||
+        lowerValue.includes('danificad') ||
+        lowerValue.includes('problema');
     }
-    
+
     return false;
   };
 
@@ -213,11 +214,11 @@ const ModalDetalhesChecklist = ({ show, onClose, checklist }: ModalDetalhesProps
             <Accordion.Body>
               <Row>
                 <Col md={6} className="mb-2">
-                  <strong>Responsável:</strong> 
+                  <strong>Responsável:</strong>
                   <div className="text-muted">{formatFieldValue(getFieldValue('responsavel'))}</div>
                 </Col>
                 <Col md={6} className="mb-2">
-                  <strong>Data de Verificação:</strong> 
+                  <strong>Data de Verificação:</strong>
                   <div className="text-muted">{formatDate(getFieldValue('data_verificacao'))}</div>
                 </Col>
               </Row>
@@ -444,7 +445,7 @@ const ModalDetalhesChecklist = ({ show, onClose, checklist }: ModalDetalhesProps
                     </Col>
                   );
                 })}
-                
+
                 {[
                   { field: 'condicoes_paleteiras', label: 'Condições das Paleteiras' },
                   { field: 'organizacao_local', label: 'Organização do Local' },
@@ -526,7 +527,7 @@ const ModalDetalhesChecklist = ({ show, onClose, checklist }: ModalDetalhesProps
             <Accordion.Body>
               {(() => {
                 const problemas: string[] = [];
-                
+
                 const camposParaVerificar = [
                   { field: 'arcond_adm', label: 'Ar Condicionado ADM' },
                   { field: 'arcond_diretoria', label: 'Ar Condicionado Diretoria' },
@@ -648,7 +649,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const { name, value, type } = e.target;
-    
+
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setForm((prev) => ({
@@ -666,10 +667,10 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
   const validateForm = (): string | null => {
     if (!form.responsavel.trim()) return 'O campo Responsável é obrigatório';
     if (!form.data_verificacao) return 'O campo Data de Verificação é obrigatório';
-    
+
     const selectedDate = new Date(form.data_verificacao);
     if (selectedDate > new Date()) return 'A data de verificação não pode ser futura';
-    
+
     return null;
   };
 
@@ -791,9 +792,9 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
       onClose();
     } catch (err: any) {
       console.error('Erro detalhado ao criar checklist:', err);
-      const errorMessage = err.response?.data?.mensagem || 
-                          err.response?.data?.erro || 
-                          'Erro ao criar checklist';
+      const errorMessage = err.response?.data?.mensagem ||
+        err.response?.data?.erro ||
+        'Erro ao criar checklist';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -1282,9 +1283,9 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
           >
             Cancelar
           </Button>
-          <Button 
-            variant="primary" 
-            type="submit" 
+          <Button
+            variant="primary"
+            type="submit"
             disabled={loading}
           >
             {loading ? (
@@ -1305,7 +1306,8 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
   );
 };
 
- function ChecklistPage() {
+function ChecklistPage() {
+  const navigate = useNavigate();
   const [checklists, setChecklists] = useState<Checklist[]>([]);
   const [loading, setLoading] = useState<LoadingState>({
     page: true,
@@ -1333,7 +1335,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
       setError(null);
       const response = await axios.get('http://localhost:3000/api/checklist');
       const data = response.data;
-      
+
       let checklistsData: Checklist[] = [];
 
       if (Array.isArray(data)) {
@@ -1365,7 +1367,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
       const primeiroDiaMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
       const primeiroDiaSemana = new Date(agora);
       primeiroDiaSemana.setDate(agora.getDate() - agora.getDay());
-      
+
       const checklistsEsteMes = checklists.filter(checklist => {
         const dataChecklist = new Date(getChecklistValue(checklist, 'data_verificacao'));
         return dataChecklist >= primeiroDiaMes;
@@ -1409,13 +1411,13 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
           problemas++;
           if (!areasProblema.includes('Cadeiras')) areasProblema.push('Cadeiras');
         }
-        
+
         const condicoesPaleteiras = getChecklistValue(checklist, 'condicoes_paleteiras').toLowerCase();
         if (condicoesPaleteiras.includes('ruim') || condicoesPaleteiras.includes('defeito') || condicoesPaleteiras.includes('quebrad')) {
           problemas++;
           if (!areasProblema.includes('Paleteiras')) areasProblema.push('Paleteiras');
         }
-        
+
         const balancaCondicao = getChecklistValue(checklist, 'balanca_condicao').toLowerCase();
         if (balancaCondicao.includes('ruim') || balancaCondicao.includes('defeito') || balancaCondicao.includes('quebrad')) {
           problemas++;
@@ -1424,7 +1426,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
       });
 
       const percentualConformidade = Math.max(0, 100 - (problemas / checklists.length) * 100);
-      
+
       let statusGeral = 'Bom';
       if (percentualConformidade < 70) {
         statusGeral = 'Crítico';
@@ -1461,7 +1463,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
       field.toUpperCase(),
       field.replace(/_/g, ''),
       `ID_${field}`,
-      ...(field.includes('_') ? [field.split('_').map(word => 
+      ...(field.includes('_') ? [field.split('_').map(word =>
         word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       ).join('_')] : [])
     ];
@@ -1522,14 +1524,14 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
     ];
 
     const temCheckboxProblema = problemasCheckboxes.some(field => checklist[field] === false);
-    
+
     const temCadeirasRuim = checklist.cadeiras_ruim === true;
     const temPaleteirasProblema = getChecklistValue(checklist, 'condicoes_paleteiras').toLowerCase().includes('ruim') ||
-                                 getChecklistValue(checklist, 'condicoes_paleteiras').toLowerCase().includes('defeito') ||
-                                 getChecklistValue(checklist, 'condicoes_paleteiras').toLowerCase().includes('quebrad');
+      getChecklistValue(checklist, 'condicoes_paleteiras').toLowerCase().includes('defeito') ||
+      getChecklistValue(checklist, 'condicoes_paleteiras').toLowerCase().includes('quebrad');
     const temBalancaProblema = getChecklistValue(checklist, 'balanca_condicao').toLowerCase().includes('ruim') ||
-                              getChecklistValue(checklist, 'balanca_condicao').toLowerCase().includes('defeito') ||
-                              getChecklistValue(checklist, 'balanca_condicao').toLowerCase().includes('quebrad');
+      getChecklistValue(checklist, 'balanca_condicao').toLowerCase().includes('defeito') ||
+      getChecklistValue(checklist, 'balanca_condicao').toLowerCase().includes('quebrad');
 
     return temCheckboxProblema || temCadeirasRuim || temPaleteirasProblema || temBalancaProblema;
   };
@@ -1583,7 +1585,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
           <tbody>
             {checklistsToShow.map((c, i) => {
               const temProblema = temProblemas(c);
-              
+
               return (
                 <tr key={c.id || i} className={temProblema ? 'table-warning' : ''}>
                   <td>
@@ -1620,7 +1622,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
             })}
           </tbody>
         </table>
-        
+
         {checklists.length > 5 && (
           <div className="text-center mt-3">
             <Button
@@ -1639,12 +1641,23 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h1 className="h3 mb-1">Checklist Predial</h1>
-          <p className="text-muted mb-0">Gestão e monitoramento das condições prediais</p>
+        <div className="d-flex align-items-center gap-3">
+          <Button
+            variant="outline-secondary"
+            className="border-0 rounded-circle p-2 d-flex align-items-center justify-content-center"
+            style={{ width: '40px', height: '40px' }}
+            onClick={() => navigate(-1)}
+            title="Voltar"
+          >
+            <i className="bi bi-arrow-left fs-5"></i>
+          </Button>
+          <div>
+            <h1 className="h3 mb-1">Checklist Predial</h1>
+            <p className="text-muted mb-0">Gestão e monitoramento das condições prediais</p>
+          </div>
         </div>
-        <Button 
-          variant="primary" 
+        <Button
+          variant="primary"
           size="lg"
           onClick={() => setShowModal(true)}
         >
@@ -1764,4 +1777,4 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
   );
 }
 
- export default ChecklistPage;
+export default ChecklistPage;

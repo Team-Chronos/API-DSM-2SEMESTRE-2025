@@ -1,4 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Accordion, Row, Col, Badge } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { formatarDataHora } from "../../utils/formatacoes";
@@ -11,7 +11,7 @@ interface Props {
 
 export function ModalVerChecklistPredial({ show, onClose, idChecklist }: Props) {
   const [checklist, setChecklist] = useState<any>(null);
-
+  
   async function carregarChecklist() {
     try {
       const resposta = await api.get(`/checklistPredios/${idChecklist}`);
@@ -29,50 +29,117 @@ export function ModalVerChecklistPredial({ show, onClose, idChecklist }: Props) 
 
   if (!checklist) return null;
 
-  const renderCampo = (label: string, valor: string | null) => (
-    <div className="my-3 fs-5">
-      <strong className="me-3">{label}:</strong> {valor || "—"}
-    </div>
-  );
+  const normalizar = (txt: string) => txt?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+  const temProblema = (valor: string) => normalizar(valor) === 'nao';
+
+  const renderItem = (label: string, valor: string) => {
+    const isProblem = temProblema(valor);
+    return (
+      <div className="mb-2 d-flex justify-content-between border-bottom pb-1">
+        <span>{label}</span>
+        <span className={isProblem ? "text-danger fw-bold" : "text-success"}>
+          {valor}
+          {isProblem ? <i className="bi bi-x-circle ms-2"></i> : <i className="bi bi-check-circle ms-2"></i>}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <Modal show={show} size="lg" centered onHide={onClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Checklist Predial #{checklist.CheckPredio}</Modal.Title>
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title>
+          <i className="bi bi-building-lock me-2"></i>
+          Detalhes Fechamento #{checklist.CheckPredio}
+        </Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
-        <h3>Informações Gerais</h3>
-        {renderCampo("Responsável pelo fechamento", checklist.NomeFuncPredio)}
-        {renderCampo("Data do fechamento", formatarDataHora(checklist.DataPredio))}
+      <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+        <Accordion defaultActiveKey="0">
 
-        <hr />
-        <h3>Verificações gerais</h3>
-        {renderCampo("Lixo da cozinha", checklist.LixoCozinha)}
-        {renderCampo("Lixo reciclável", checklist.LixoReciclavel)}
-        {renderCampo("Cozinha organizada", checklist.CozinhaOrganizada)}
-        {renderCampo("Luzes da cozinha apagadas", checklist.LuzesCozinha)}
-        {renderCampo("Cadeado portão 2", checklist.CadeadoPortao2)}
-        {renderCampo("Cadeado portão 1", checklist.CadeadoPortao1)}
-        {renderCampo("Torneiras fechadas", checklist.TorneirasFechadas)}
-        {renderCampo("Lixo do banheiro retirado", checklist.LixoBanheiro)}
-        {renderCampo("Porta do banheiro trancada", checklist.PortaBanheiro)}
-        {renderCampo("Bebedouro desligado", checklist.BebedouroDesligado)}
-        {renderCampo("Chaves no chaveiro", checklist.ChavesChaveiro)}
-        {renderCampo("TV das câmeras desligada", checklist.TVCameras)}
-        {renderCampo("TV do dashboard desligada", checklist.TVDashboard)}
-        {renderCampo("Ar-condicionado desligado", checklist.ArCondicionado)}
-        {renderCampo("Luzes do operacional apagadas", checklist.LuzesOperacional)}
-        {renderCampo("Luzes do armazém apagadas", checklist.LuzesArmazem)}
-        {renderCampo("Cone PCD retirado", checklist.ConePCD)}
-        {renderCampo("Alarme ativado", checklist.Alarme)}
-        {renderCampo("Porta do armazém fechada", checklist.PortaArmazem)}
-        {renderCampo("Cadeado das correntes trancado", checklist.CadeadoCorrentes)}
+          <Accordion.Item eventKey="0">
+            <Accordion.Header><i className="bi bi-person-badge me-2"></i> Informações Gerais</Accordion.Header>
+            <Accordion.Body>
+              <Row>
+                <Col md={6}>
+                  <strong>Responsável:</strong> {checklist.NomeFuncPredio}
+                </Col>
+                <Col md={6}>
+                  <strong>Data:</strong> {formatarDataHora(checklist.DataPredio)}
+                </Col>
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
 
-        <hr />
-        <h3>Observações</h3>
-        {renderCampo("Motor dos portões - ruídos/travamentos", checklist.MotorRuidos)}
-        {renderCampo("Situação atípica", checklist.SituacaoAtip)}
+          <Accordion.Item eventKey="1">
+            <Accordion.Header><i className="bi bi-trash3 me-2"></i> Limpeza e Cozinha</Accordion.Header>
+            <Accordion.Body>
+              <Row>
+                <Col md={12}>
+                  {renderItem("Lixo da Cozinha Retirado?", checklist.LixoCozinha)}
+                  {renderItem("Lixo Reciclável Retirado?", checklist.LixoReciclavel)}
+                  {renderItem("Cozinha Organizada?", checklist.CozinhaOrganizada)}
+                  {renderItem("Lixo Banheiro Retirado?", checklist.LixoBanheiro)}
+                  {renderItem("Torneiras Fechadas?", checklist.TorneirasFechadas)}
+                </Col>
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
+
+          <Accordion.Item eventKey="2">
+            <Accordion.Header><i className="bi bi-shield-lock me-2"></i> Segurança e Trancas</Accordion.Header>
+            <Accordion.Body>
+              <Row>
+                <Col md={12}>
+                  {renderItem("Cadeado Portão 1 Trancado?", checklist.CadeadoPortao1)}
+                  {renderItem("Cadeado Portão 2 Trancado?", checklist.CadeadoPortao2)}
+                  {renderItem("Porta Armazém Fechada?", checklist.PortaArmazem)}
+                  {renderItem("Cadeado Correntes Trancado?", checklist.CadeadoCorrentes)}
+                  {renderItem("Porta Banheiro Trancada?", checklist.PortaBanheiro)}
+                  {renderItem("Alarme Ativado?", checklist.Alarme)}
+                  {renderItem("Chaves no Quadro?", checklist.ChavesChaveiro)}
+                </Col>
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
+
+          <Accordion.Item eventKey="3">
+            <Accordion.Header><i className="bi bi-lightning-charge me-2"></i> Energia e Equipamentos</Accordion.Header>
+            <Accordion.Body>
+              <Row>
+                <Col md={12}>
+                  {renderItem("Luzes Cozinha Apagadas?", checklist.LuzesCozinha)}
+                  {renderItem("Luzes Operacional Apagadas?", checklist.LuzesOperacional)}
+                  {renderItem("Luzes Armazém Acesas?", checklist.LuzesArmazem)}
+                  {renderItem("Ar Condicionado Desligado?", checklist.ArCondicionado)}
+                  {renderItem("Bebedouro Desligado?", checklist.BebedouroDesligado)}
+                  {renderItem("TV Câmeras Desligada?", checklist.TVCameras)}
+                  {renderItem("TV Dashboard Desligada?", checklist.TVDashboard)}
+                </Col>
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
+
+          <Accordion.Item eventKey="4">
+            <Accordion.Header><i className="bi bi-exclamation-octagon me-2"></i> Ocorrências</Accordion.Header>
+            <Accordion.Body>
+              <div className="mb-3">
+                <strong>Ruídos/Travamento nos Portões:</strong>
+                <p className="text-muted bg-light p-2 rounded">
+                  {checklist.MotorRuidos || "Não relatado."}
+                </p>
+              </div>
+              <div>
+                <strong>Situação Atípica:</strong>
+                <p className="text-muted bg-light p-2 rounded">
+                  {checklist.SituacaoAtip || "Não relatado."}
+                </p>
+              </div>
+            </Accordion.Body>
+          </Accordion.Item>
+
+        </Accordion>
       </Modal.Body>
 
       <Modal.Footer>

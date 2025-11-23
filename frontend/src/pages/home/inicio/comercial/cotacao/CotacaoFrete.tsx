@@ -3,6 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { buscarCidades, buscarEstados } from "../../../../../services/ibgeService";
 import { calcularDistancia } from "../../../../../services/orsService";
 import api from "../../../../../services/api";
+import "../../../../../css/cotacaoFrete.css";
 
 interface Estado {
   id: number;
@@ -36,32 +37,25 @@ interface valorFreteProps {
 interface Props {
   show: boolean;
   onClose: () => void;
+  onCotacaoCriada?: () => void;
 }
 
-export function ModalCotacaoFrete({ show, onClose }: Props) {
-
+export function ModalCotacaoFrete({ show, onClose, onCotacaoCriada }: Props) {
   const [estados, setEstados] = useState<Estado[]>([]);
-
   const [ufOrigem, setUfOrigem] = useState("SP");
   const [cidadesOrigem, setCidadesOrigem] = useState<string[]>([]);
   const [origem, setOrigem] = useState("São José dos Campos");
-
   const [ufDestino, setUfDestino] = useState("");
   const [cidadesDestino, setCidadesDestino] = useState<string[]>([]);
   const [destino, setDestino] = useState("");
   const [remetente, setRemetente] = useState("");
-
   const [pesoCarga, setPesoCarga] = useState<string>("");
   const [valorCarga, setValorCarga] = useState<string>("");
   const [tipoCarga, setTipoCarga] = useState<string>("");
-
   const [pedagio, setPedagio] = useState<string>("");
-
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
   const [veiculoSelecionado, setVeiculoSelecionado] = useState<Veiculo | null>(null);
-
   const [drop, setDrop] = useState(false);
-
   const [calculando, setCalculando] = useState<boolean | null>(null);
   const [distancia, setDistancia] = useState<string | null>(null);
   const [valorFrete, setValorFrete] = useState<valorFreteProps | null>(null);
@@ -72,7 +66,6 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
     async function inicial() {
       const cidades = await buscarCidades(ufOrigem);
       setCidadesOrigem(cidades);
-
       const res = await api.get("/cotacao/wexVeiculos");
       setVeiculos(res.data ?? []);
     }
@@ -104,35 +97,28 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
       const payload = {
         origem_uf: ufOrigem,
         origem_cidade: origem,
-
         destino_uf: ufDestino,
         destino_cidade: destino,
         remetente,
-
         peso_carga: Number(pesoCarga),
         valor_carga: Number(valorCarga),
         tipo_carga: tipoCarga,
-
         pedagio: Number(pedagio),
-
         distancia_km: Number(distancia),
-
         veiculo_id: veiculoSelecionado?.id,
-
         drop_servico: drop,
-
         imposto: valorFrete.imposto,
         total: valorFrete.total,
         custo: valorFrete.custo,
         frete: valorFrete.frete,
         liquido: valorFrete.liquido,
         margem: valorFrete.margem,
+        created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
       };
-
-      console.log(payload)
-      const res = await api.post("/cotacao", payload);
-
+      
+      await api.post("/cotacao", payload);
       alert("Cotação cadastrada com sucesso!");
+      if (onCotacaoCriada) onCotacaoCriada();
       onClose();
     } catch (err) {
       console.error(err);
@@ -142,43 +128,25 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
 
   function calcFrete(distanciaDireta?: number) {
     if (!veiculoSelecionado) return null;
-
     const num = (v: any) => Number(v ?? 0);
-
     const dist = typeof distanciaDireta === "number" ? distanciaDireta : Number(distancia);
     if (Number.isNaN(dist)) return null;
-
     const dias = 1;
-
     const Vbase = num(veiculoSelecionado.frete_minimo);
     const Vdias = num(veiculoSelecionado.diaria_veiculo) * dias;
-
     const km_minimo = num(veiculoSelecionado.km_minimo);
     const km_excedente = num(veiculoSelecionado.km_excedente);
-
     const VKmExc = dist > km_minimo ? (dist - km_minimo) * km_excedente : 0;
-
     const Vfrete = Vbase + VKmExc;
-
     const Vcarga = num(valorCarga);
     const seguro_com_ddr = num(veiculoSelecionado.seguro_com_ddr);
     const gris = num(veiculoSelecionado.gris);
-
-    const Vimposto =
-      Vcarga * (ufDestino === "RJ" ? seguro_com_ddr : 0.0035) +
-      Vcarga * gris;
-
-      
+    const Vimposto = Vcarga * (ufDestino === "RJ" ? seguro_com_ddr : 0.0035) + Vcarga * gris;
     const Vdrop = drop ? 150 : 0;
-
     const Vcusto = Vfrete + Vdias + Vimposto + num(pedagio) + Vdrop;
-
     const VmargemOperacao = Vfrete * 0.2;
-
     const Vtotal = Vcusto + VmargemOperacao;
-    
-    const Vliquido = Vtotal - Vcusto
-
+    const Vliquido = Vtotal - Vcusto;
     const pagar: valorFreteProps = {
       imposto: Vimposto,
       total: Vtotal,
@@ -187,29 +155,20 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
       liquido: Vliquido,
       margem: Vtotal !== 0 ? Vliquido / Vtotal : 0,
     };
-
     setValorFrete(pagar);
     setCalculando(false);
   }
-
 
   const calcular = async () => {
     if (!origem || !destino) {
       alert("Selecione origem e destino");
       return;
     }
-
     try {
       setCalculando(true);
-
-      const distanciaKm = await calcularDistancia(
-        `${origem}, ${ufOrigem}`,
-        `${destino}, ${ufDestino}`
-      );
-
+      const distanciaKm = await calcularDistancia(`${origem}, ${ufOrigem}`, `${destino}, ${ufDestino}`);
       const dist = Number(distanciaKm.toFixed(2));
       setDistancia(dist.toString());
-
       calcFrete(dist);
     } catch (e) {
       console.error(e);
@@ -234,7 +193,6 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
       <Modal.Header closeButton>
         <Modal.Title>Cotação de Frete</Modal.Title>
       </Modal.Header>
-
       <Modal.Body>
         <Form>
           <h3>Origem</h3>
@@ -246,7 +204,6 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
                 <option key={uf.id} value={uf.sigla}>{uf.nome}</option>
               ))}
             </Form.Select>
-
             {cidadesOrigem.length > 0 && (
               <>
                 <Form.Label className="fw-semibold mt-3">Cidade</Form.Label>
@@ -259,9 +216,7 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
               </>
             )}
           </Form.Group>
-
           <hr className="my-3" />
-
           <h3>Destino</h3>
           <Form.Group className="mb-4">
             <Form.Label className="fw-semibold">Estado</Form.Label>
@@ -271,7 +226,6 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
                 <option key={uf.id} value={uf.sigla}>{uf.nome}</option>
               ))}
             </Form.Select>
-
             {cidadesDestino.length > 0 && (
               <>
                 <Form.Label className="fw-semibold mt-3">Cidade</Form.Label>
@@ -281,131 +235,112 @@ export function ModalCotacaoFrete({ show, onClose }: Props) {
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </Form.Select>
-
                 <Form.Label className="fw-semibold mt-3">Remetente</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Nome do remetente"
-                  value={remetente}
-                  onChange={(e) => setRemetente(e.target.value)}
-                />
+                <Form.Control type="text" placeholder="Nome do remetente" value={remetente} onChange={(e) => setRemetente(e.target.value)} />
               </>
             )}
           </Form.Group>
-
           <hr className="my-3" />
-
           <section>
             <h4>Carga</h4>
-
             <Form.Group>
               <Form.Label>Peso (Kg)</Form.Label>
-              <Form.Control
-                type="number"
-                value={pesoCarga}
-                onChange={(e) => setPesoCarga(e.target.value)}
-                min={0}
-              />
+              <Form.Control type="number" value={pesoCarga} onChange={(e) => setPesoCarga(e.target.value)} min={0} />
             </Form.Group>
-
             <Form.Group className="mt-3">
               <Form.Label>Valor da Carga (R$)</Form.Label>
-              <Form.Control
-                type="number"
-                value={valorCarga}
-                onChange={(e) => setValorCarga(e.target.value)}
-                min={0}
-              />
+              <Form.Control type="number" value={valorCarga} onChange={(e) => setValorCarga(e.target.value)} min={0} />
             </Form.Group>
-
             <Form.Group className="mt-3">
               <Form.Label>Tipo de Carga</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ex: Eletrônicos, alimentos..."
-                value={tipoCarga}
-                onChange={(e) => setTipoCarga(e.target.value)}
-              />
+              <Form.Control type="text" placeholder="Ex: Eletrônicos, alimentos..." value={tipoCarga} onChange={(e) => setTipoCarga(e.target.value)} />
             </Form.Group>
           </section>
-
           <hr className="my-3" />
-
           <section>
             <Form.Group>
               <Form.Label>Taxa de Pedágio (R$)</Form.Label>
-              <Form.Control
-                type="number"
-                value={pedagio}
-                onChange={(e) => setPedagio(e.target.value)}
-                min={0}
-              />
+              <Form.Control type="number" value={pedagio} onChange={(e) => setPedagio(e.target.value)} min={0} />
             </Form.Group>
           </section>
-
           <hr className="my-3" />
-
           <section>
             <h6 className="fw-semibold">Tipo de Serviço</h6>
             <p>WExpress (Rodoviário)</p>
-
             <Form.Group>
               <Form.Label className="fw-semibold">Veículo</Form.Label>
-
-              <Form.Select
-                value={veiculoSelecionado?.id ?? ""}
-                onChange={(e) => {
-                  const found = veiculos.find((v) => v.id === Number(e.target.value));
-                  setVeiculoSelecionado(found ?? null);
-                }}
-              >
-                {veiculosFiltrados.length === 0 && (
-                  <option value="">Nenhum veículo compatível</option>
-                )}
-
-                {veiculosFiltrados.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.veiculo} ({v.peso_min}–{v.peso_max} kg)
-                  </option>
-                ))}
+              <Form.Select value={veiculoSelecionado?.id ?? ""} onChange={(e) => { const found = veiculos.find((v) => v.id === Number(e.target.value)); setVeiculoSelecionado(found ?? null); }}>
+                {veiculosFiltrados.length === 0 && (<option value="">Nenhum veículo compatível</option>)}
+                {veiculosFiltrados.map((v) => (<option key={v.id} value={v.id}>{v.veiculo} ({v.peso_min}–{v.peso_max} kg)</option>))}
               </Form.Select>
             </Form.Group>
           </section>
-
           <section className="mt-3">
-            <Form.Check
-              id="drop-check"
-              type="checkbox"
-              label="DROP - R$ 150"
-              checked={drop}
-              onChange={(e) => setDrop(e.target.checked)}
-            />
+            <Form.Check id="drop-check" type="checkbox" label="DROP - R$ 150" checked={drop} onChange={(e) => setDrop(e.target.checked)} />
           </section>
-
-          {calculando === true && (
-            <div className="text-center pt-2">Calculando...</div>
-          )}
-
-          {calculando === false && valorFrete && (
+          {calculando === true && (<div className="text-center pt-2">Calculando...</div>)}
+          {calculando === false && valorFrete && distancia && (
             <>
-              <hr className="my-3" />
-              <div className="text-center">
-                <p className="fs-5 fw-semibold mt-2">
-                  Imposto: <span className="text-success">R$ {valorFrete.imposto.toFixed(2)}</span><br />
-                  Total do frete: <span className="text-success">R$ {valorFrete.total.toFixed(2)}</span><br />
-                  (-) Custo Estimado: <span className="text-success">R$ {valorFrete.custo.toFixed(2)}</span>
-                </p>
-                <hr className="my-3" />
-                <p>
-                  Valor Líquido: <span className="text-success">R$ {valorFrete.liquido.toFixed(2)}</span><br />
-                  Margem: <span className="text-success">{(valorFrete.margem * 100).toFixed(2)}%</span>
-                </p>
+              <hr className="my-4" />
+              <div className="resultado-cotacao">
+                <div className="resultado-header">
+                  <i className="bi bi-check-circle-fill"></i>
+                  <h5>Cotação Calculada</h5>
+                </div>
+                <div className="distancia-box">
+                  <i className="bi bi-signpost-2"></i>
+                  <div>
+                    <span className="label">Distância</span>
+                    <span className="valor">{distancia} km</span>
+                  </div>
+                </div>
+                <div className="valores-grid">
+                  <div className="valor-card valor-primario">
+                    <i className="bi bi-cash-coin"></i>
+                    <div className="card-content">
+                      <span className="card-label">Total do Frete</span>
+                      <span className="card-valor">R$ {valorFrete.total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <div className="valor-card valor-custo">
+                    <i className="bi bi-receipt"></i>
+                    <div className="card-content">
+                      <span className="card-label">Custo Estimado</span>
+                      <span className="card-valor">R$ {valorFrete.custo.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="detalhes-valores">
+                  <div className="detalhe-item">
+                    <span className="detalhe-label">Valor do Frete Base</span>
+                    <span className="detalhe-valor">R$ {valorFrete.frete.toFixed(2)}</span>
+                  </div>
+                  <div className="detalhe-item">
+                    <span className="detalhe-label">Impostos e Taxas</span>
+                    <span className="detalhe-valor">R$ {valorFrete.imposto.toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className="resultado-footer">
+                  <div className="lucro-box">
+                    <i className="bi bi-graph-up-arrow"></i>
+                    <div>
+                      <span className="lucro-label">Valor Líquido</span>
+                      <span className="lucro-valor">R$ {valorFrete.liquido.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <div className="margem-box">
+                    <i className="bi bi-percent"></i>
+                    <div>
+                      <span className="margem-label">Margem</span>
+                      <span className="margem-valor">{(valorFrete.margem * 100).toFixed(2)}%</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </>
           )}
         </Form>
       </Modal.Body>
-
       <Modal.Footer>
         <Button variant="danger" onClick={onClose}>Fechar</Button>
         <Button variant="secondary" onClick={calcular}>Calcular</Button>

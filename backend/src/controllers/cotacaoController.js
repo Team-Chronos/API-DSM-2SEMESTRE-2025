@@ -139,3 +139,27 @@ export async function deletarCotacao(req, res) {
     return res.status(500).json({ mensagem: "Erro ao deletar cotação." });
   }
 }
+
+export async function atualizarCotacao(req, res) {
+  try {
+    const { id } = req.params;
+    const { cliente_id, remetente, status } = req.body;
+
+    const sql = `
+      UPDATE wexpress_cotacoes 
+      SET remetente = ?, status = ?
+      WHERE id = ?
+    `;
+
+    const [result] = await db.promise().query(sql, [remetente, status, id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ mensagem: "Cotação não encontrada." });
+    }
+
+    return res.status(200).json({ mensagem: "Cotação atualizada com sucesso!" });
+  } catch (err) {
+    console.error("Erro ao atualizar cotação:", err);
+    return res.status(500).json({ mensagem: "Erro ao atualizar cotação." });
+  }
+}

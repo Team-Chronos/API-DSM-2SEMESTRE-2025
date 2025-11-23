@@ -1,5 +1,5 @@
-CREATE DATABASE Api_2;
-USE Api_2;
+CREATE DATABASE api_2;
+USE api_2;
 
 CREATE TABLE Setor (
     ID_Setor INT PRIMARY KEY AUTO_INCREMENT,
@@ -256,72 +256,72 @@ CREATE TABLE ChecklistManutencao (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table responsaveisVistoria(
+CREATE TABLE responsaveisVistoria (
     id_responsavel int primary key,
     foreign key (id_responsavel) references Colaboradores(ID_colaborador)
 );
 
-create table checklistVeiculoAgregado(
-	ID_cva int primary key auto_increment,
-    nome_motorista varchar(255) not null,
-    cpf varchar(11) not null,
-    placa_veiculo varchar(7) not null,
-    tipo_veiculo varchar(127) not null,
-    nivel_oleo enum("sim", "não", "na") not null,
-    vazamento_oleo enum("sim", "não", "na") not null,
-    nivel_agua enum("sim", "não", "na") not null,
-    foto_motor varchar(255) not null,
-    foto_etiqueta_troca_oleo varchar(255),
-    pne_liso enum("sim", "não") not null,
-    pte_liso enum("sim", "não") not null,
-    ptd_liso enum("sim", "não") not null,
-    pdd_liso enum("sim", "não") not null,
-    pne_foto varchar(255) not null,
-    pte_foto varchar(255) not null,
-    ptd_foto varchar(255) not null,
-    pdd_foto varchar(255) not null,
-    parabrisa_perfeito enum("sim", "não", "na") not null,
-    cabine_externa_limpa enum("sim", "não", "na") not null,
-    veiculo_externo_limpo enum("sim", "não", "na") not null,
-    sem_amassado_ferrugem enum("sim", "não", "na") not null,
-    assoalho_conservado enum("sim", "não", "na") not null,
-    faixas_refletivas enum("sim", "não", "na") not null,
-    parabrisa_funcionando enum("sim", "não", "na") not null,
-    buzina_funciona enum("sim", "não", "na") not null,
-    farol_alto enum("sim", "não", "na") not null,
-    farol_baixo enum("sim", "não", "na") not null,
-    setas_dianteiras enum("sim", "não", "na") not null,
-    setas_traseiras enum("sim", "não", "na") not null,
-    pisca_alerta enum("sim", "não", "na") not null,
-    luz_freio enum("sim", "não", "na") not null,
-    luz_re enum("sim", "não", "na") not null,
-    sirene_re enum("sim", "não", "na") not null,
-    extintor enum("sim", "não", "na") not null,
-    step enum("sim", "não", "na") not null,
-    triangulo enum("sim", "não", "na") not null,
-    macaco enum("sim", "não", "na") not null,
-    chave_roda enum("sim", "não", "na") not null,
-    capacete_seguranca enum("sim", "não", "na") not null,
-    colete_seguranca enum("sim", "não", "na") not null,
-    bota_seguranca enum("sim", "não", "na") not null,
-    foto_frente varchar(255) not null,
-    foto_lateral_direita varchar(255) not null,
-    foto_lateral_esquerda varchar(255) not null,
-    foto_traseira varchar(255) not null,
-    observacoes text,
-    id_responsavel_vistoria int,
-    nome_responsavel_vistoria varchar(255),
-    criado_em datetime default current_timestamp,
-    foreign key (id_responsavel_vistoria) references responsaveisVistoria (id_responsavel)
+CREATE TABLE checklistVeiculoAgregado (
+    ID_cva INT PRIMARY KEY AUTO_INCREMENT,
+    nome_motorista VARCHAR(255) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    placa_veiculo VARCHAR(7) NOT NULL,
+    tipo_veiculo VARCHAR(127) NOT NULL,
+    nivel_oleo ENUM("sim", "não", "na") NOT NULL,
+    vazamento_oleo ENUM("sim", "não", "na") NOT NULL,
+    nivel_agua ENUM("sim", "não", "na") NOT NULL,
+    foto_motor VARCHAR(255) NOT NULL,
+    foto_etiqueta_troca_oleo VARCHAR(255),
+    pne_liso ENUM("sim", "não") NOT NULL,
+    pte_liso ENUM("sim", "não") NOT NULL,
+    ptd_liso ENUM("sim", "não") NOT NULL,
+    pdd_liso ENUM("sim", "não") NOT NULL,
+    pne_foto VARCHAR(255) NOT NULL,
+    pte_foto VARCHAR(255) NOT NULL,
+    ptd_foto VARCHAR(255) NOT NULL,
+    pdd_foto VARCHAR(255) NOT NULL,
+    parabrisa_perfeito ENUM("sim", "não", "na") NOT NULL,
+    cabine_externa_limpa ENUM("sim", "não", "na") NOT NULL,
+    veiculo_externo_limpo ENUM("sim", "não", "na") NOT NULL,
+    sem_amassado_ferrugem ENUM("sim", "não", "na") NOT NULL,
+    assoalho_conservado ENUM("sim", "não", "na") NOT NULL,
+    faixas_refletivas ENUM("sim", "não", "na") NOT NULL,
+    parabrisa_funcionando ENUM("sim", "não", "na") NOT NULL,
+    buzina_funciona ENUM("sim", "não", "na") NOT NULL,
+    farol_alto ENUM("sim", "não", "na") NOT NULL,
+    farol_baixo ENUM("sim", "não", "na") NOT NULL,
+    setas_dianteiras ENUM("sim", "não", "na") NOT NULL,
+    setas_traseiras ENUM("sim", "não", "na") NOT NULL,
+    pisca_alerta ENUM("sim", "não", "na") NOT NULL,
+    luz_freio ENUM("sim", "não", "na") NOT NULL,
+    luz_re ENUM("sim", "não", "na") NOT NULL,
+    sirene_re ENUM("sim", "não", "na") NOT NULL,
+    extintor ENUM("sim", "não", "na") NOT NULL,
+    step ENUM("sim", "não", "na") NOT NULL,
+    triangulo ENUM("sim", "não", "na") NOT NULL,
+    macaco ENUM("sim", "não", "na") NOT NULL,
+    chave_roda ENUM("sim", "não", "na") NOT NULL,
+    capacete_seguranca ENUM("sim", "não", "na") NOT NULL,
+    colete_seguranca ENUM("sim", "não", "na") NOT NULL,
+    bota_seguranca ENUM("sim", "não", "na") NOT NULL,
+    foto_frente VARCHAR(255) NOT NULL,
+    foto_lateral_direita VARCHAR(255) NOT NULL,
+    foto_lateral_esquerda VARCHAR(255) NOT NULL,
+    foto_traseira VARCHAR(255) NOT NULL,
+    observacoes TEXT,
+    id_responsavel_vistoria INT,
+    nome_responsavel_vistoria VARCHAR(255),
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_responsavel_vistoria) REFERENCES responsaveisVistoria (id_responsavel)
 );
 
-create table motorista(
-	id_motorista int primary key auto_increment,
+CREATE TABLE motorista (
+    id_motorista int primary key auto_increment,
     nome_motorista varchar(100) not null
 );
 
-create table checklistVeiculoFrota(
-	id_cvf int primary key auto_increment,
+CREATE TABLE checklistVeiculoFrota (
+    id_cvf int primary key auto_increment,
     id_motorista int,
     placa varchar(7) not null,
     km_inicial int not null,
@@ -335,17 +335,17 @@ create table checklistVeiculoFrota(
     estado_pneus enum("sim", "não") not null,
     limpeza_bau_sider_cabine enum("sim", "não") not null,
     lubrificacao_suspensoes enum("sim", "não") not null,
-	macaco enum("sim", "não") not null,
+    macaco enum("sim", "não") not null,
     chave_roda enum("sim", "não") not null,
     documento_vigente enum("sim", "não") not null,
     data_encerramento_atividade datetime not null,
     observacoes text,
-	criado_em datetime default current_timestamp,
+    criado_em datetime default current_timestamp,
     foreign key (id_motorista) references motorista (id_motorista)
 );
 
 CREATE TABLE ChecklistPredial (
-    CheckPredio INT PRIMARY KEY AUTO_INCREMENT,
+    CheckPredio INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     NomeFuncPredio VARCHAR(50),
     DataPredio DATETIME DEFAULT CURRENT_TIMESTAMP,
     LixoCozinha ENUM('Sim','Não'),
@@ -372,9 +372,9 @@ CREATE TABLE ChecklistPredial (
     SituacaoAtip TEXT
 );
 
--- TABELAS DE COTAÇÃO (DO PRIMEIRO ARQUIVO)
+-- TABELAS DE COTAÇÃO
 CREATE TABLE weair_convencional (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     servico VARCHAR(50) NOT NULL,
     cita CHAR(3) NOT NULL,
     destino VARCHAR(100) NOT NULL,
@@ -384,7 +384,7 @@ CREATE TABLE weair_convencional (
 );
 
 CREATE TABLE weair_expresso (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     servico VARCHAR(50) NOT NULL,
     destino VARCHAR(50) NOT NULL,
     frete_minimo DECIMAL(10,2) NOT NULL,
@@ -393,7 +393,7 @@ CREATE TABLE weair_expresso (
 );
 
 CREATE TABLE weair_generalidades (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     coleta_horario_descricao TEXT,
     coleta_horario_valor DECIMAL(10,2),
     coleta_emergencia_descricao TEXT,
@@ -409,13 +409,13 @@ CREATE TABLE weair_generalidades (
 );
 
 CREATE TABLE weair_proximo_voo (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     peso_ate VARCHAR(20) NOT NULL,
     valor DECIMAL(12,4) NOT NULL
 );
 
 CREATE TABLE weair_proximo_voo_generalidades (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     valor_atualizado DECIMAL(10,2),
     coleta_horario_descricao TEXT,
     coleta_horario_valor DECIMAL(10,2),
@@ -432,10 +432,10 @@ CREATE TABLE weair_proximo_voo_generalidades (
 );
 
 CREATE TABLE wexpress (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     veiculo VARCHAR(50) NOT NULL,
-    peso_min int NOT NULL,
-    peso_max int NOT NULL,
+    peso_min INT NOT NULL,
+    peso_max INT NOT NULL,
     frete_minimo DECIMAL(10,2) NOT NULL,
     km_minimo INT NOT NULL,
     km_excedente DECIMAL(10,2) NOT NULL,
@@ -446,7 +446,7 @@ CREATE TABLE wexpress (
 );
 
 CREATE TABLE wexpress_generalidades (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     advalorem_rj DECIMAL(10,5),
     batedor_incluso BOOLEAN,
     tap_incluso BOOLEAN,
@@ -456,7 +456,7 @@ CREATE TABLE wexpress_generalidades (
 );
 
 CREATE TABLE wexpress_cotacoes (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     origem_uf VARCHAR(2) NOT NULL,
     origem_cidade VARCHAR(100) NOT NULL,
     destino_uf VARCHAR(2) NOT NULL,
@@ -467,7 +467,7 @@ CREATE TABLE wexpress_cotacoes (
     tipo_carga VARCHAR(200),
     pedagio DECIMAL(10,2),
     distancia_km DECIMAL(10,2) NOT NULL,
-    veiculo_id INTEGER NOT NULL REFERENCES wexpress(id) ON DELETE RESTRICT,
+    veiculo_id INTEGER NOT NULL,
     imposto DECIMAL(15,2) NOT NULL,
     custo DECIMAL(15,2) NOT NULL,
     frete DECIMAL(15,2) NOT NULL,
@@ -475,11 +475,13 @@ CREATE TABLE wexpress_cotacoes (
     liquido DECIMAL(15,2) NOT NULL,
     margem DECIMAL(10,5) NOT NULL,
     drop_servico BOOLEAN DEFAULT FALSE,
-    criado_em datetime DEFAULT current_timestamp
+    status VARCHAR(20) DEFAULT 'ABERTA',
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (veiculo_id) REFERENCES wexpress(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE weair_lead_time (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     iata CHAR(3) NOT NULL,
     cidade VARCHAR(100) NOT NULL,
     uf CHAR(2) NOT NULL,
@@ -514,20 +516,40 @@ CREATE TABLE notificacoes_personalizadas (
 );
 
 CREATE TABLE Agregados (
-    id_agregado INT PRIMARY KEY AUTO_INCREMENT,
+    id_agregado INT AUTO_INCREMENT PRIMARY KEY,
     genero ENUM('Masculino', 'Feminino', 'Outro') NOT NULL,
-    nome VARCHAR(255) NOT NULL,
-    cpf VARCHAR(11) NOT NULL UNIQUE,
-    nascimento DATE NOT NULL,
-    cidadeNascimento VARCHAR(100) NOT NULL,
-    telefone VARCHAR(20),
-    email VARCHAR(255),
-    endereco TEXT,
-    placa VARCHAR(7),
-    marca VARCHAR(100),
-    modelo VARCHAR(100),
+    nome VARCHAR(150) NOT NULL,
+    cnpj CHAR(14) NULL,
+    cpf CHAR(11) NULL,
+    nascimento DATE NULL,
+    cidadeNascimento VARCHAR(100) NULL,
+    telefone VARCHAR(20) NULL,
+    email VARCHAR(150) NULL,
+    rg VARCHAR(20) NULL,
+    emissaoRG DATE NULL,
+    orgaoExp VARCHAR(20) NULL,
+    pai VARCHAR(150) NULL,
+    mae VARCHAR(150) NULL,
+    pis VARCHAR(15) NULL,
+    cep CHAR(8) NULL,
+    endereco VARCHAR(255) NULL, 
+    nomeProprietario VARCHAR(150) NULL,
+    placa VARCHAR(10) NULL,
+    marca VARCHAR(50) NULL,
+    modelo VARCHAR(100) NULL,
+    cor VARCHAR(30) NULL,
+    anoFabricacao YEAR NULL,
+    cilindrada INT NULL,
+    bauSuporte BOOLEAN DEFAULT FALSE,
+    seguro BOOLEAN DEFAULT FALSE,
+    valorMinSaida DECIMAL(10,2) NULL,
+    valorKmRodado DECIMAL(10,2) NULL,
+    cursoMotoFrete BOOLEAN DEFAULT FALSE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT uc_cpf UNIQUE (cpf),
+    CONSTRAINT uc_cnpj UNIQUE (cnpj),
+    CONSTRAINT uc_rg UNIQUE (rg)
 );
 
 CREATE OR REPLACE VIEW vw_participacao AS
@@ -579,6 +601,7 @@ INSERT INTO Colaboradores (Email, Senha, Nome_Col, setor, CPF, Telefone, ID_Carg
 
 INSERT INTO responsaveisVistoria VALUES (1), (2), (3);
 
+-- DADOS DE COTAÇÃO
 INSERT INTO weair_convencional (servico, cita, destino, frete_minimo, valor_kilo_excedente, peso_minimo) VALUES
 ('NEWE CONVENCIONAL', 'AJU', 'Aracaju', 257.30, 11.62, 10),
 ('NEWE CONVENCIONAL', 'JPA', 'João Pessoa', 257.30, 13.42, 10),
@@ -611,7 +634,6 @@ INSERT INTO weair_convencional (servico, cita, destino, frete_minimo, valor_kilo
 ('NEWE CONVENCIONAL', 'NAT', 'Natal', 257.30, 13.42, 10),
 ('NEWE CONVENCIONAL', 'BEL', 'Belém', 257.30, 16.90, 10),
 ('NEWE CONVENCIONAL', 'MAO', 'Manaus', 257.30, 16.90, 10);
-
 
 INSERT INTO weair_expresso (servico, destino, frete_minimo, valor_kilo_excedente, peso_minimo) VALUES
 ('NEWE EXPRESS', 'AJU', 283.50, 12.80, 10),
@@ -829,6 +851,19 @@ INSERT INTO weair_lead_time (iata, cidade, uf, convencional, expresso, proximo_v
 ('PLU','Belo Horizonte (Pampulha)','MG',3,3,1,false),
 ('MCZ','Maceió','AL',4,3,1,false),
 ('LFR','Lauro de Freitas','BA',4,3,1,false);
+
+-- DADOS ADICIONAIS
+INSERT INTO Cliente (Nome_Cliente, Telefone_Cliente, Email_Cliente, Segmento, atividade, Cidade, depart_responsavel, Ultima_Interacao, Criado_Por) VALUES
+('Transportadora São Paulo Ltda', '11987654321', 'contato@transpsp.com.br', 'Serviços', 'Transporte Rodoviário', 'São Paulo', 'Comercial', '2025-11-20 14:30:00', 1),
+('Indústria Metal Brasil S.A.', '11976543210', 'vendas@metalbrasil.com.br', 'Indústria', 'Fabricação de Peças', 'Guarulhos', 'Comercial', '2025-11-19 10:00:00', 2),
+('Supermercado Central', '21987651234', 'compras@supercentral.com.br', 'Varejo', 'Supermercado', 'Rio de Janeiro', 'Comercial', NULL, 1),
+('Farmácia Saúde Total', '11965432187', 'farmacia@saudetotal.com.br', 'Varejo', 'Drogaria', 'São Paulo', 'Comercial', '2025-11-15 16:00:00', 2),
+('Construtora Alicerce Forte', '11954321987', 'projetos@alicerceforte.com.br', 'Indústria', 'Obras', 'Campinas', 'Comercial', '2025-11-18 09:30:00', 1),
+('Tech Solutions Informática', '11943219876', 'ti@techsolutions.com.br', 'Serviços', 'TI e Software', 'São José dos Campos', 'Comercial', '2025-11-21 11:00:00', 2),
+('Distribuidora Alimentícia ABC', '11932198765', 'comercial@distribabc.com.br', 'Varejo', 'Distribuição', 'Santos', 'Comercial', '2025-11-17 14:00:00', 1),
+('Fábrica de Móveis São João', '11921987654', 'vendas@moveissaojoao.com.br', 'Indústria', 'Fabricação', 'São Bernardo do Campo', 'Comercial', NULL, 2),
+('Clínica Médica Vida Plena', '11912876543', 'atendimento@vidaplena.com.br', 'Serviços', 'Clínica Médica', 'São Paulo', 'Comercial', '2025-11-20 15:30:00', 1),
+('AutoPeças Veloz', '11998765432', 'pecas@velocauto.com.br', 'Varejo', 'Peças Automotivas', 'Osasco', 'Comercial', '2025-11-19 13:00:00', 2);
 
 INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao, Criado_Por) VALUES
 ('Workshop Gestão', '2025-11-20 09:00:00', '4h', 'Auditório P.', 2, 'Workshop de gestão.', 1),

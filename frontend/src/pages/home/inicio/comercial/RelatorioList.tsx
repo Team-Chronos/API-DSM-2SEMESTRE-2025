@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios, { type AxiosRequestConfig } from "axios";
-import { Button, Table, Spinner, Alert } from "react-bootstrap";
-import { ModalGerarRelatorio } from "../../../../components/modals/ModalGerarRelatorio"; 
+import { ModalGerarRelatorio } from "../../../../components/modals/ModalGerarRelatorio";
 import { useAuth } from "../../../../context/AuthContext";
+import "../../../../css/relatorio.css";
 
 interface Relatorio {
   ID_Relatorio: number;
@@ -18,17 +18,17 @@ export const RelatorioList = () => {
   const [error, setError] = useState<string | null>(null);
   const [showGerarRelatorioModal, setShowGerarRelatorioModal] = useState(false);
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
-  const [deletingId, setDeletingId] = useState<number | null>(null); 
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [confirmingDeleteId, setConfirmingDeleteId] = useState<number | null>(null);
-  const { user } = useAuth()
-  if (!user) return null
+  const { user } = useAuth();
+  
+  if (!user) return null;
 
   const carregarRelatorios = async () => {
     setIsLoading(true);
-    setError(null); 
+    setError(null);
     try {
-
-      const res = await axios.get("http://localhost:3000/api/relatorios"); 
+      const res = await axios.get("http://localhost:3000/api/relatorios");
       setRelatorios(res.data);
     } catch (err: any) {
       console.error("Erro ao carregar relatórios:", err);
@@ -46,7 +46,7 @@ export const RelatorioList = () => {
   const handleCloseGerarRelatorioModal = () => {
     setShowGerarRelatorioModal(false);
   };
-  
+
   const handleSuccessGerarRelatorio = () => {
     setShowGerarRelatorioModal(false);
     carregarRelatorios();
@@ -56,43 +56,45 @@ export const RelatorioList = () => {
     setDownloadingId(reportId);
     setError(null);
     try {
-      const config: AxiosRequestConfig = { responseType: 'blob' };
-      const response = await axios.get(`http://localhost:3000/api/relatorios/download/${filename}`, config);
+      const config: AxiosRequestConfig = { responseType: "blob" };
+      const response = await axios.get(
+        `http://localhost:3000/api/relatorios/download/${filename}`,
+        config
+      );
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', filename);
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
     } catch (downloadError: any) {
       console.error("Erro ao descarregar o relatório:", downloadError);
       if (downloadError.response && downloadError.response.status === 404) {
-          setError("Não foi possível descarregar: Ficheiro não encontrado no servidor.");
+        setError("Não foi possível descarregar: Ficheiro não encontrado no servidor.");
       } else {
-          setError("Erro ao descarregar o relatório.");
+        setError("Erro ao descarregar o relatório.");
       }
     } finally {
       setDownloadingId(null);
     }
   };
-  
+
   const handleExcluir = async (reportId: number) => {
     setDeletingId(reportId);
     setConfirmingDeleteId(null);
     setError(null);
     try {
-      await axios.delete(`http://localhost:3000/api/relatorios/${reportId}`); 
+      await axios.delete(`http://localhost:3000/api/relatorios/${reportId}`);
       carregarRelatorios();
     } catch (err: any) {
       console.error("Erro ao excluir o relatório:", err);
       if (err.response && err.response.status === 404) {
-           setError("Não foi possível excluir: Relatório não encontrado.");
+        setError("Não foi possível excluir: Relatório não encontrado.");
       } else {
-           setError("Erro ao excluir o relatório.");
+        setError("Erro ao excluir o relatório.");
       }
     } finally {
       setDeletingId(null);
@@ -102,46 +104,89 @@ export const RelatorioList = () => {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <tr><td colSpan={4} className="text-center"><Spinner /></td></tr>
+        <tr>
+          <td colSpan={4} className="relatorio-loading-cell">
+            <div className="relatorio-spinner"></div>
+            <span>Carregando...</span>
+          </td>
+        </tr>
       );
     }
 
-    if (error && relatorios.length === 0) { 
+    if (error && relatorios.length === 0) {
       return (
-        <tr><td colSpan={4} className="text-center"><Alert variant="danger">{error}</Alert></td></tr>
+        <tr>
+          <td colSpan={4} className="relatorio-error-cell">
+            <i className="bi bi-exclamation-triangle"></i>
+            <span>{error}</span>
+          </td>
+        </tr>
       );
     }
 
     if (relatorios.length === 0) {
       return (
-        <tr><td colSpan={4} className="text-center">Nenhum relatório gerado ainda.</td></tr>
+        <tr>
+          <td colSpan={4} className="relatorio-empty-cell">
+            <i className="bi bi-inbox"></i>
+            <span>Nenhum relatório gerado ainda.</span>
+          </td>
+        </tr>
       );
     }
 
     return relatorios.map((r) => (
       <tr key={r.ID_Relatorio}>
         <td>{r.Nome_Relatorio}</td>
-        <td>{r.Tipo_Relatorio}</td>
-        <td>{new Date(r.Data_Geracao).toLocaleString("pt-BR")}</td>
         <td>
+          <span className="relatorio-tipo-badge">{r.Tipo_Relatorio}</span>
+        </td>
+        <td>{new Date(r.Data_Geracao).toLocaleString("pt-BR")}</td>
+        <td className="relatorio-acoes">
           {confirmingDeleteId === r.ID_Relatorio ? (
-            <>
-              <Button variant="danger" size="sm" onClick={() => handleExcluir(r.ID_Relatorio)} disabled={deletingId === r.ID_Relatorio}>
-                {deletingId === r.ID_Relatorio ? <Spinner size="sm" /> : "Confirmar"}
-              </Button>
-              <Button variant="secondary" size="sm" className="ms-2" onClick={() => setConfirmingDeleteId(null)} disabled={deletingId === r.ID_Relatorio}>
+            <div className="relatorio-confirm-group">
+              <button
+                className="relatorio-btn relatorio-btn-confirmar"
+                onClick={() => handleExcluir(r.ID_Relatorio)}
+                disabled={deletingId === r.ID_Relatorio}
+              >
+                {deletingId === r.ID_Relatorio ? (
+                  <span className="relatorio-spinner-sm"></span>
+                ) : (
+                  "Confirmar"
+                )}
+              </button>
+              <button
+                className="relatorio-btn relatorio-btn-cancelar"
+                onClick={() => setConfirmingDeleteId(null)}
+                disabled={deletingId === r.ID_Relatorio}
+              >
                 Cancelar
-              </Button>
-            </>
+              </button>
+            </div>
           ) : (
-            <>
-              <Button variant="outline-success" size="sm" disabled={downloadingId === r.ID_Relatorio || deletingId !== null} onClick={() => handleDownload(r.ID_Relatorio, r.Nome_Relatorio)}>
-                {downloadingId === r.ID_Relatorio ? <Spinner size="sm" /> : "Baixar"}
-              </Button>
-              <Button variant="outline-danger" size="sm" className="ms-2" disabled={downloadingId !== null || deletingId !== null} onClick={() => setConfirmingDeleteId(r.ID_Relatorio)}>
-                Excluir
-              </Button>
-            </>
+            <div className="relatorio-action-group">
+              <button
+                className="relatorio-btn relatorio-btn-download"
+                disabled={downloadingId === r.ID_Relatorio || deletingId !== null}
+                onClick={() => handleDownload(r.ID_Relatorio, r.Nome_Relatorio)}
+              >
+                {downloadingId === r.ID_Relatorio ? (
+                  <span className="relatorio-spinner-sm"></span>
+                ) : (
+                  <>
+                    <i className="bi bi-download"></i> Baixar
+                  </>
+                )}
+              </button>
+              <button
+                className="relatorio-btn relatorio-btn-excluir"
+                disabled={downloadingId !== null || deletingId !== null}
+                onClick={() => setConfirmingDeleteId(r.ID_Relatorio)}
+              >
+                <i className="bi bi-trash"></i> Excluir
+              </button>
+            </div>
           )}
         </td>
       </tr>
@@ -149,29 +194,39 @@ export const RelatorioList = () => {
   };
 
   return (
-    <div className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3>Relatórios Gerados</h3>
-        <Button onClick={() => setShowGerarRelatorioModal(true)}>
-          + Gerar Novo Relatório
-        </Button>
+    <div className="relatorio-container">
+      <div className="relatorio-header">
+        <div className="relatorio-title-group">
+          <h3 className="relatorio-title">Relatórios Gerados</h3>
+        </div>
+        <button
+          className="relatorio-btn relatorio-btn-novo"
+          onClick={() => setShowGerarRelatorioModal(true)}
+        >
+          <i className="bi bi-plus-lg"></i> Gerar Novo Relatório
+        </button>
       </div>
 
-      {error && <Alert variant="danger">{error}</Alert>} 
+      {error && relatorios.length > 0 && (
+        <div className="relatorio-alert">
+          <i className="bi bi-exclamation-circle"></i>
+          <span>{error}</span>
+        </div>
+      )}
 
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>Nome Ficheiro</th>
-            <th>Tipo</th>
-            <th>Data Geração</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {renderContent()}
-        </tbody>
-      </Table>
+      <div className="relatorio-table-wrapper">
+        <table className="relatorio-table">
+          <thead>
+            <tr>
+              <th>Nome Ficheiro</th>
+              <th>Tipo</th>
+              <th>Data Geração</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>{renderContent()}</tbody>
+        </table>
+      </div>
 
       <ModalGerarRelatorio
         setor={user.setor}
@@ -182,4 +237,3 @@ export const RelatorioList = () => {
     </div>
   );
 };
-
