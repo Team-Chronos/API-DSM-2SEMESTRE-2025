@@ -2,7 +2,7 @@ import Agregado from "../models/agregado.js";
 
 export const criarAgregado = async (req, res) => {
   try {
-    const dados = { ...req.body };
+    let dados = { ...req.body };
     if (dados.cpf) dados.cpf = dados.cpf.replace(/\D/g, "");
     if (dados.cnpj) dados.cnpj = dados.cnpj.replace(/\D/g, "");
     if (dados.telefone) dados.telefone = dados.telefone.replace(/\D/g, "");

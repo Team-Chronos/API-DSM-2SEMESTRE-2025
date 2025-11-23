@@ -11,6 +11,7 @@ import { GestaoChecklistFechamento } from "../pages/home/inicio/operacional/Gest
 
 const Home = lazy(() => import("../pages/Home").then(mod => ({ default: (mod as any).default ?? (mod as any).Home })));
 const Login = lazy(() => import("../pages/Login").then(mod => ({ default: (mod as any).default ?? (mod as any).Login })));
+const Agregado = lazy(() => import("../pages/Agregado").then(mod => ({ default: (mod as any).default ?? (mod as any).Agregado })));
 const Inicio = lazy(() => import("../pages/home/Inicio").then(mod => ({ default: (mod as any).default ?? (mod as any).Inicio })));
 const Eventos = lazy(() => import("../pages/home/Eventos").then(mod => ({ default: (mod as any).default ?? (mod as any).Eventos })));
 const Notificacoes = lazy(() => import("../pages/home/Notificacoes").then(mod => ({ default: (mod as any).default ?? (mod as any).Notificacoes })));
@@ -35,6 +36,7 @@ export const AppRoutes = () => {
         <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/agregado" element={<Agregado />} />
 
             <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>}>
               <Route index element={<Inicio />} />

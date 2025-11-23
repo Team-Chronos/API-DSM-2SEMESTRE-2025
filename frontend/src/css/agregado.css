@@ -1,0 +1,15 @@
+.section-box {
+  border: 1px solid #ccc;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.section-box h2 {
+  margin-bottom: 1rem;
+}
+
+html{
+  overflow-y: auto;
+}
