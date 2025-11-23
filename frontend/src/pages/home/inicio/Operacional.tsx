@@ -1,84 +1,72 @@
-import { useState } from "react"
-import "../../../css/operacional.css"
-import { ModalChecklistVeiAgreg } from "../../../components/modals/ModalChecklistVeiAgreg"
-import { useNavigate } from "react-router-dom"
-import { ModalMensagem } from "../../../components/modals/ModalMensagem"
-import { ModalChecklistPredios } from "../../../components/modals/ModalChecklistPredios"
-import { ModalChecklistVeiFrota } from "../../../components/modals/ModalChecklistVeiFrota"
+import "../../../css/operacional.css";
+import { useNavigate } from "react-router-dom";
+import { FaCar, FaTruck, FaBuilding, FaClipboardList } from "react-icons/fa";
 
-export function Operacional(){
-  const [ showModalVeiAgreg, setShowModalVeiAgreg ] = useState(false)
-  const [ showModalVeiFrota, setShowModalVeiFrota ] = useState(false)
-  const [ showModalPredial, setShowModalPredial ] = useState(false)
-  const [showMessage, setShowMessage] = useState(false);
-  const [tituloMessage, setTituloMessage] = useState<"Sucesso" | "Erro" | "Aviso">("Aviso");
-  const [mensagem, setMensagem] = useState("");
-  const navigate = useNavigate()
+const buttons = [
+  { 
+    id: 1, 
+    label: "Veículo Agregado", 
+    desc: "Gestão de frota terceira", 
+    route: "/gestao-agregado", 
+    icon: <FaCar /> 
+  },
+  { 
+    id: 2, 
+    label: "Veículo Frota", 
+    desc: "Gestão de frota própria", 
+    route: "/gestao-frota", 
+    icon: <FaTruck /> 
+  },
+  { 
+    id: 3, 
+    label: "Fechamento Predial", 
+    desc: "Checklist diário de segurança", 
+    route: "/gestao-fechamento", 
+    icon: <FaBuilding /> 
+  },
+  { 
+    id: 4, 
+    label: "Manutenção Predial", 
+    desc: "Checklist de infraestrutura", 
+    route: "/checklist", 
+    icon: <FaClipboardList /> 
+  },
+];
 
-  return(
-    <>
-      <div className={`historicoChecklists d-flex mb-4 py-3 justify-content-center`} onClick={() => navigate("/historicoChecklists")}>Visualizar Histórico</div>
-      <div className={`checklists d-flex flex-column row-gap-4`}>
-        <div role="button" className={`btn-azul checklist py-2 ps-4 pe-3`} onClick={() => setShowModalVeiAgreg(true)}>Checklist de veículo agregado</div>
-        <div role="button" className={`btn-azul checklist py-2 ps-4 pe-3`} onClick={() => setShowModalVeiFrota(true)}>Checklist de veículo frota</div>
-        <div role="button" className={`btn-azul checklist py-2 ps-4 pe-3`} onClick={() => setShowModalPredial(true)}>Checklist de fechamento predial</div>
-        <div role="button" className={`btn-azul checklist py-2 ps-4 pe-3`} onClick={() => navigate("/checklist")}>Gestão de Checklist Predial</div>
+export function Operacional() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="operacional-container">
+      <div className="operacional-content">
+        <div className="operacional-header">
+          <h2>Painel Operacional</h2>
+          <span className="subtitle">Selecione o módulo de gestão</span>
+        </div>
+        
+        <div className="operacional-grid">
+          {buttons.map(({ id, label, desc, route, icon }) => (
+            <div 
+              key={id} 
+              className="dashboard-card" 
+              onClick={() => navigate(route)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && navigate(route)}
+            >
+              <div className="card-icon">
+                {icon}
+              </div>
+              <div className="card-info">
+                <h3>{label}</h3>
+                <p>{desc}</p>
+              </div>
+              
+              <div className="card-arrow">→</div>
+            </div>
+          ))}
+        </div>
       </div>
-      
-      <ModalChecklistVeiAgreg
-        show={showModalVeiAgreg}
-        onClose={() => {
-          setShowModalVeiAgreg(false)
-        }}
-        onSucces={() => {
-          setTituloMessage("Sucesso");
-          setShowMessage(true)
-        }}
-        onErro={() => {
-          setTituloMessage("Erro")
-          setShowMessage(true)
-        }}
-        setMensagem={setMensagem}
-      />
-
-      <ModalChecklistVeiFrota
-        show={showModalVeiFrota}
-        onClose={() => {
-          setShowModalVeiFrota(false)
-        }}
-        onSucces={() => {
-          setTituloMessage("Sucesso");
-          setShowMessage(true)
-        }}
-        onErro={() => {
-          setTituloMessage("Erro")
-          setShowMessage(true)
-        }}
-        setMensagem={setMensagem}
-      />
-
-      <ModalChecklistPredios
-        show={showModalPredial}
-        onClose={() => {
-          setShowModalPredial(false)
-        }}
-        onSucces={() => {
-          setTituloMessage("Sucesso");
-          setShowMessage(true)
-        }}
-        onErro={() => {
-          setTituloMessage("Erro")
-          setShowMessage(true)
-        }}
-        setMensagem={setMensagem}
-      />
-
-      <ModalMensagem 
-        show={showMessage}
-        titulo={tituloMessage}
-        mensagem={mensagem}
-        onClose={() => setShowMessage(false)}
-      />
-    </>
-  )
+    </div>
+  );
 }

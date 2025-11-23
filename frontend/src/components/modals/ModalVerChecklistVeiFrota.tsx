@@ -1,4 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Accordion, Row, Col, Badge } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { formatarDataHora } from "../../utils/formatacoes";
@@ -29,56 +29,111 @@ export function ModalVerChecklistVeiFrota({ show, onClose, idChecklist }: Props)
 
   if (!checklist) return null;
 
-  const renderCampo = (label: string, valor: string | number | null) => (
-    <div className="my-2 fs-5">
-      <strong className="me-2">{label}:</strong> {valor ?? "—"}
-    </div>
-  );
+  const normalizar = (txt: string) => txt?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+  const temProblema = (valor: string) => normalizar(valor) === 'nao';
+
+  const renderItem = (label: string, valor: string) => {
+    const isProblem = temProblema(valor);
+    return (
+      <div className="mb-2 d-flex justify-content-between border-bottom pb-1">
+        <strong>{label}:</strong>
+        <span className={isProblem ? "text-danger fw-bold" : "text-muted"}>
+          {valor?.toUpperCase() || "-"}
+          {isProblem && <i className="bi bi-exclamation-triangle-fill ms-2"></i>}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <Modal show={show} size="lg" centered onHide={onClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Checklist Frota #{checklist.id_cvf}</Modal.Title>
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title>
+          <i className="bi bi-truck-front me-2"></i>
+          Detalhes Frota #{checklist.id_cvf}
+        </Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
-        <h3>Dados Enviados</h3>
-        {renderCampo("Motorista", checklist.nome_motorista_vinculado)}
-        {renderCampo("ID Motorista", checklist.id_motorista)}
-        {renderCampo("Placa", checklist.placa)}
-        {renderCampo("KM Inicial", checklist.km_inicial)}
-        {renderCampo("KM Final", checklist.km_final)}
-        {renderCampo("Destino", checklist.destino)}
+      <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+        <Accordion defaultActiveKey="0">
+          
+          <Accordion.Item eventKey="0">
+            <Accordion.Header><i className="bi bi-info-circle me-2"></i> Dados da Viagem</Accordion.Header>
+            <Accordion.Body>
+              <Row>
+                <Col md={6}>
+                  <p><strong>Motorista:</strong> {checklist.nome_motorista_vinculado || checklist.nome_motorista}</p>
+                  <p><strong>Placa:</strong> <Badge bg="secondary">{checklist.placa}</Badge></p>
+                </Col>
+                <Col md={6}>
+                  <p><strong>Destino:</strong> {checklist.destino}</p>
+                  <p><strong>Data Saída:</strong> {formatarDataHora(checklist.criado_em)}</p>
+                </Col>
+              </Row>
+              <Row className="mt-2 bg-light p-2 rounded mx-1">
+                <Col md={6}><strong>KM Inicial:</strong> {checklist.km_inicial}</Col>
+                <Col md={6}><strong>KM Final:</strong> {checklist.km_final}</Col>
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
 
-        <hr />
+          <Accordion.Item eventKey="1">
+            <Accordion.Header><i className="bi bi-clipboard-check me-2"></i> Itens Verificados</Accordion.Header>
+            <Accordion.Body>
+              <Row>
+                <Col md={6}>
+                   <h6 className="text-primary">Mecânica & Segurança</h6>
+                   {renderItem("Óleo do Motor OK?", checklist.oleo_motor)}
+                   {renderItem("Água Radiador OK?", checklist.reservatorio_agua)}
+                   {renderItem("Suspensão OK?", checklist.lubrificacao_suspensoes)}
+                   {renderItem("Pneus OK?", checklist.estado_pneus)}
+                   {renderItem("Elétrica OK?", checklist.sistema_eletrico)}
+                </Col>
+                <Col md={6}>
+                   <h6 className="text-primary">Geral</h6>
+                   {renderItem("Limpeza OK?", checklist.limpeza_bau_sider_cabine)}
+                   {renderItem("Macaco Presente?", checklist.macaco)}
+                   {renderItem("Chave Roda Presente?", checklist.chave_roda)}
+                   {renderItem("Documento em Dia?", checklist.documento_vigente)}
+                </Col>
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
 
-        <h3>Checklist Realizado</h3>
-        {renderCampo("Abasteceu?", checklist.abastecimento)}
-        {renderCampo("Comprovante enviado?", checklist.comprovante_enviado)}
-        {renderCampo("Óleo do motor ok?", checklist.oleo_motor)}
-        {renderCampo("Reservatório de água ok?", checklist.reservatorio_agua)}
-        {renderCampo("Sistema elétrico ok?", checklist.sistema_eletrico)}
-        {renderCampo("Estado dos pneus", checklist.estado_pneus)}
-        {renderCampo("Limpeza baú/sider/cabine", checklist.limpeza_bau_sider_cabine)}
-        {renderCampo("Lubrificação das suspensões", checklist.lubrificacao_suspensoes)}
-        {renderCampo("Macaco presente", checklist.macaco)}
-        {renderCampo("Chave de roda presente", checklist.chave_roda)}
-        {renderCampo("Documentação vigente ok?", checklist.documento_vigente)}
+          <Accordion.Item eventKey="2">
+            <Accordion.Header><i className="bi bi-fuel-pump me-2"></i> Abastecimento</Accordion.Header>
+            <Accordion.Body>
+              <Row>
+                <Col md={6}>
+                    <strong>Abasteceu?</strong> {checklist.abastecimento?.toUpperCase()}
+                </Col>
+                <Col md={6}>
+                    <strong>Comprovante Enviado?</strong> 
+                    <span className={
+                        (checklist.abastecimento === 'sim' && checklist.comprovante_enviado === 'não') 
+                        ? "text-danger ms-2 fw-bold" 
+                        : "ms-2"
+                    }>
+                        {checklist.comprovante_enviado?.toUpperCase()}
+                    </span>
+                </Col>
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
 
-        <hr />
+          <Accordion.Item eventKey="3">
+            <Accordion.Header><i className="bi bi-flag me-2"></i> Encerramento</Accordion.Header>
+            <Accordion.Body>
+               <p><strong>Data Encerramento:</strong> {formatarDataHora(checklist.data_encerramento_atividade)}</p>
+               <div className="bg-light p-3 rounded mt-2">
+                 <strong>Observações:</strong><br/>
+                 {checklist.observacoes || "Nenhuma observação."}
+               </div>
+            </Accordion.Body>
+          </Accordion.Item>
 
-        <h3>Encerramento da Atividade</h3>
-        {renderCampo(
-          "Data de encerramento",
-          formatarDataHora(checklist.data_encerramento_atividade)
-        )}
-
-        <hr />
-
-        <h3>Observações</h3>
-        {renderCampo("Observações", checklist.observacoes)}
-
-        {renderCampo("Criado em", formatarDataHora(checklist.criado_em))}
+        </Accordion>
       </Modal.Body>
 
       <Modal.Footer>
