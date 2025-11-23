@@ -1,5 +1,4 @@
-import mysql from 'mysql2';
-
+import mysql from "mysql2";
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -7,6 +6,5 @@ const db = mysql.createConnection({
   password: "TusckAct4$",
   database: "api_2"
 });
-
 
 export default db;

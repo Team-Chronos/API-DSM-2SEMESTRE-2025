@@ -3,11 +3,11 @@ import multer from "multer";
 import {
   registrarChecklistPredial,
   listarChecklistsPredial,
-  listarChecklistPredialPorId
+  listarChecklistPredialPorId,
 } from "../controllers/checklistPredialController.js";
 
 const router = express.Router();
-const upload = multer(); 
+const upload = multer();
 
 router.post("/", upload.none(), registrarChecklistPredial);
 

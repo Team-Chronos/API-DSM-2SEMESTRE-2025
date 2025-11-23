@@ -1,14 +1,16 @@
-import db from '../config/db.js';
+import db from "../config/db.js";
 
-export async function getVeiculos(req, res){
-  try{
-    const query = "SELECT * FROM wexpress;"
+export async function getVeiculos(req, res) {
+  try {
+    const query = "SELECT * FROM wexpress;";
     const [vei] = await db.promise().query(query);
 
-    res.status(200).json(vei)
+    res.status(200).json(vei);
   } catch (err) {
     console.error("Erro ao listar veículos WExpress:", err);
-    res.status(500).json({ mensagem: "Erro interno ao listar veículos WExpress." });
+    res
+      .status(500)
+      .json({ mensagem: "Erro interno ao listar veículos WExpress." });
   }
 }
 
@@ -37,7 +39,7 @@ export async function cadastrarCotacao(req, res) {
       custo,
       frete,
       liquido,
-      margem
+      margem,
     } = req.body;
 
     const sql = `
@@ -72,16 +74,15 @@ export async function cadastrarCotacao(req, res) {
       custo,
       frete,
       liquido,
-      margem
+      margem,
     ];
 
     const [result] = await db.promise().query(sql, params);
 
     return res.status(201).json({
       mensagem: "Cotação cadastrada com sucesso!",
-      id: result.insertId
+      id: result.insertId,
     });
-
   } catch (err) {
     console.error("Erro ao cadastrar cotação:", err);
     return res.status(500).json({ mensagem: "Erro ao cadastrar cotação." });
@@ -95,7 +96,6 @@ export async function listarCotacoes(req, res) {
     const [rows] = await db.promise().query(sql);
 
     return res.status(200).json(rows);
-
   } catch (err) {
     console.error("Erro ao listar cotações:", err);
     return res.status(500).json({ mensagem: "Erro ao listar cotações." });
@@ -114,7 +114,6 @@ export async function buscarCotacaoPorId(req, res) {
     }
 
     return res.status(200).json(rows[0]);
-
   } catch (err) {
     console.error("Erro ao buscar cotação:", err);
     return res.status(500).json({ mensagem: "Erro ao buscar cotação." });
@@ -133,7 +132,6 @@ export async function deletarCotacao(req, res) {
     }
 
     return res.status(200).json({ mensagem: "Cotação deletada com sucesso!" });
-
   } catch (err) {
     console.error("Erro ao deletar cotação:", err);
     return res.status(500).json({ mensagem: "Erro ao deletar cotação." });
@@ -157,7 +155,9 @@ export async function atualizarCotacao(req, res) {
       return res.status(404).json({ mensagem: "Cotação não encontrada." });
     }
 
-    return res.status(200).json({ mensagem: "Cotação atualizada com sucesso!" });
+    return res
+      .status(200)
+      .json({ mensagem: "Cotação atualizada com sucesso!" });
   } catch (err) {
     console.error("Erro ao atualizar cotação:", err);
     return res.status(500).json({ mensagem: "Erro ao atualizar cotação." });

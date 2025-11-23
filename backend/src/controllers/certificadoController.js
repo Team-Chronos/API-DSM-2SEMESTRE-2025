@@ -24,4 +24,3 @@ export const listarCertificados = (req, res) => {
     res.status(500).json({ mensagem: "Erro ao listar certificados." });
   }
 };
-

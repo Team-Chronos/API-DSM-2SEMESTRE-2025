@@ -33,22 +33,25 @@ export async function registrarChecklistFrota(req, res) {
     if (id_motorista === "outro") {
       if (!nome_motorista || nome_motorista.trim() === "") {
         return res.status(400).json({
-          mensagem: "Nome do motorista é obrigatório quando selecionado 'outro'."
+          mensagem:
+            "Nome do motorista é obrigatório quando selecionado 'outro'.",
         });
       }
 
-      const [existe] = await db.promise().query(
-        "SELECT id_motorista FROM motorista WHERE nome_motorista = ?",
-        [nome_motorista]
-      );
+      const [existe] = await db
+        .promise()
+        .query("SELECT id_motorista FROM motorista WHERE nome_motorista = ?", [
+          nome_motorista,
+        ]);
 
       if (existe.length > 0) {
         motoristaIdFinal = existe[0].id_motorista;
       } else {
-        const [novo] = await db.promise().query(
-          "INSERT INTO motorista (nome_motorista) VALUES (?)",
-          [nome_motorista]
-        );
+        const [novo] = await db
+          .promise()
+          .query("INSERT INTO motorista (nome_motorista) VALUES (?)", [
+            nome_motorista,
+          ]);
         motoristaIdFinal = novo.insertId;
       }
     }
@@ -93,13 +96,17 @@ export async function registrarChecklistFrota(req, res) {
 }
 
 export async function listarChecklistsVeiculoFrota(req, res) {
-  try{
-    const query = `SELECT cvf.*, m.nome_motorista FROM checklistVeiculoFrota cvf left join motorista m on m.id_motorista = cvf.id_motorista ORDER BY cvf.criado_em DESC;`
-    const [result] = await db.promise().query(query)
-    res.status(200).json(result)
+  try {
+    const query = `SELECT cvf.*, m.nome_motorista FROM checklistVeiculoFrota cvf left join motorista m on m.id_motorista = cvf.id_motorista ORDER BY cvf.criado_em DESC;`;
+    const [result] = await db.promise().query(query);
+    res.status(200).json(result);
   } catch (err) {
     console.error("Erro ao listar checklists de veículo frota:", err);
-    res.status(500).json({ mensagem: "Erro interno ao listar checklists de veículo frota." });
+    res
+      .status(500)
+      .json({
+        mensagem: "Erro interno ao listar checklists de veículo frota.",
+      });
   }
 }
 

@@ -1,6 +1,11 @@
-import express from 'express';
+import express from "express";
 import multer from "multer";
-import { listarChecklistPorId, listarChecklistsVeiculoAgregado, listarResponsaveis, registrarChecklist } from '../controllers/checklistVeiculoAgregadoController.js';
+import {
+  listarChecklistPorId,
+  listarChecklistsVeiculoAgregado,
+  listarResponsaveis,
+  registrarChecklist,
+} from "../controllers/checklistVeiculoAgregadoController.js";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
@@ -14,12 +19,12 @@ const campos = [
   { name: "foto_frente", maxCount: 1 },
   { name: "foto_lateral_direita", maxCount: 1 },
   { name: "foto_lateral_esquerda", maxCount: 1 },
-  { name: "foto_traseira", maxCount: 1 }
-]
+  { name: "foto_traseira", maxCount: 1 },
+];
 
-router.post("/", upload.fields(campos), registrarChecklist)
-router.get("/", listarChecklistsVeiculoAgregado)
-router.get("/responsaveis", listarResponsaveis)
+router.post("/", upload.fields(campos), registrarChecklist);
+router.get("/", listarChecklistsVeiculoAgregado);
+router.get("/responsaveis", listarResponsaveis);
 router.get("/:id", listarChecklistPorId);
 
 export default router;

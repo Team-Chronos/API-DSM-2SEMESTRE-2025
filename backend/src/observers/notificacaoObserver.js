@@ -130,10 +130,11 @@ class NotificacaoObserver {
                 INNER JOIN Evento e ON pe.ID_Evento = e.ID_Evento
                 INNER JOIN Colaboradores c ON pe.ID_Colaborador = c.ID_colaborador
                 INNER JOIN Colaboradores criador ON e.Criado_Por = criador.ID_colaborador
-                WHERE pe.atualizado_em > DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                WHERE pe.criado_em > DATE_SUB(NOW(), INTERVAL 24 HOUR)
                 AND pe.ID_Status IN (2, 3) -- Confirmado (2) ou Recusado (3)
                 AND (pe.notificado = 0 OR pe.notificado IS NULL)
-                ORDER BY pe.atualizado_em DESC
+                ORDER BY pe.criado_em DESC
+                LIMIT 50
             `);
 
             console.log(` Encontradas ${respostas.length} respostas para processar`);
@@ -157,9 +158,13 @@ class NotificacaoObserver {
             const corStatus = resposta.ID_Status === 2 ? '#22c55e' : '#ef4444';
             const iconeStatus = resposta.ID_Status === 2 ? '✅' : '❌';
 
+            const justificativaValida = resposta.justificativa && 
+                                      resposta.justificativa !== 'null' && 
+                                      resposta.justificativa.trim() !== '';
+
             const notificacaoData = {
                 titulo: `${iconeStatus} Resposta de Participação`,
-                mensagem: `${resposta.nome_participante} ${statusTexto.toLowerCase()} participação no evento "${resposta.Nome_Evento}"${resposta.justificativa ? `. Justificativa: ${resposta.justificativa}` : ''}`,
+                mensagem: `${resposta.nome_participante} ${statusTexto.toLowerCase()} participação no evento "${resposta.Nome_Evento}"${justificativaValida ? `. Justificativa: ${resposta.justificativa}` : ''}`,
                 destinatarios: [resposta.id_criador], 
                 prioridade: 'media',
                 criado_por: 1,
@@ -170,7 +175,7 @@ class NotificacaoObserver {
 
             console.log(` Notificação criada para o criador do evento: ${resposta.nome_criador}`);
 
-            if (resposta.email_criador) {
+            if (resposta.email_criador && this.validarEmail(resposta.email_criador)) {
                 const mensagemEmail = `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px 10px 0 0; color: white;">
@@ -185,12 +190,12 @@ class NotificacaoObserver {
                                     <strong>${resposta.nome_participante}</strong> <span style="color: ${corStatus}; font-weight: bold;">${statusTexto}</span> participação no evento:
                                 </p>
                                 <h3 style="color: #374151; margin: 15px 0 10px 0;">${resposta.Nome_Evento}</h3>
-                                ${resposta.justificativa ? `<p style="color: #6b7280; font-style: italic; margin: 10px 0 0 0;"><strong>Justificativa:</strong> ${resposta.justificativa}</p>` : ''}
+                                ${justificativaValida ? `<p style="color: #6b7280; font-style: italic; margin: 10px 0 0 0;"><strong>Justificativa:</strong> ${resposta.justificativa}</p>` : ''}
                             </div>
                             
                             <div style="margin: 20px 0; padding: 15px; background: #edf2f7; border-radius: 8px;">
                                 <p style="margin: 0; color: #4a5568; font-size: 14px;">
-                                    <strong>Data da resposta:</strong> ${new Date(resposta.atualizado_em).toLocaleString('pt-BR')}<br>
+                                    <strong>Data da resposta:</strong> ${new Date(resposta.criado_em).toLocaleString('pt-BR')}<br>
                                     <strong>Participante:</strong> ${resposta.nome_participante}
                                 </p>
                             </div>
@@ -338,15 +343,21 @@ class NotificacaoObserver {
 
             for (const participante of participantes) {
                 try {
-                    const eventoComCriador = {
-                        ...evento,
-                        nome_criador: nome_criador,
-                        email_criador: email_criador
-                    };
-                    
-                    await this.enviarEmailConviteEvento(eventoComCriador, participante);
-                    enviados++;
-                    console.log(` Email enviado para: ${participante.Email}`);
+                    // ✅ CORREÇÃO: Usar função de validação estática
+                    if (participante.Email && NotificacaoObserver.validarEmail(participante.Email)) {
+                        const eventoComCriador = {
+                            ...evento,
+                            nome_criador: nome_criador,
+                            email_criador: email_criador
+                        };
+                        
+                        await NotificacaoObserver.enviarEmailConviteEvento(eventoComCriador, participante);
+                        enviados++;
+                        console.log(` Email enviado para: ${participante.Email}`);
+                    } else {
+                        console.log(` Email inválido para: ${participante.Nome_Col}`);
+                        erros++;
+                    }
                 } catch (error) {
                     console.error(` Falha ao enviar para ${participante.Email}:`, error.message);
                     erros++;
@@ -356,7 +367,7 @@ class NotificacaoObserver {
             console.log(` Resultado final: ${enviados} sucessos, ${erros} erros`);
 
             if (enviados > 0) {
-                await this.criarNotificacao({
+                await NotificacaoObserver.criarNotificacao({
                     titulo: ' Novo Evento Criado',
                     mensagem: `Evento "${evento.Nome_Evento}" foi criado e convites enviados para ${enviados} participantes`,
                     destinatarios: [evento.Criado_Por],
@@ -903,6 +914,18 @@ class NotificacaoObserver {
             this.ativo = false;
             console.log(' Observador de notificações parado');
         }
+    }
+
+    validarEmail(email) {
+        if (!email) return false;
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email) && email.length > 5;
+    }
+
+    static validarEmail(email) {
+        if (!email) return false;
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email) && email.length > 5;
     }
 }
 

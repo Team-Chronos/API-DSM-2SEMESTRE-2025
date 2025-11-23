@@ -15,16 +15,6 @@ CREATE TABLE Cargo (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Tipo_Evento (
-    ID_Tipo_Evento INT PRIMARY KEY AUTO_INCREMENT,
-    Tipo_Evento_Nome ENUM('Feira', 'Workshop', 'Reunião')
-);
-
-CREATE TABLE Status_Participacao (
-    ID_Status INT PRIMARY KEY AUTO_INCREMENT,
-    Nome_Status ENUM('Pendente', 'Confirmado', 'Recusado', 'Concluído') NOT NULL
-);
-
 CREATE TABLE Colaboradores (
     ID_colaborador INT PRIMARY KEY AUTO_INCREMENT,
     Nome_Col VARCHAR(255) NOT NULL,
@@ -38,18 +28,140 @@ CREATE TABLE Colaboradores (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (ID_Cargo) REFERENCES Cargo(ID_Cargo),
-    FOREIGN KEY (setor) REFERENCES Setor(ID_Setor)
+    FOREIGN KEY (Setor) REFERENCES Setor(ID_Setor)
 );
 
 CREATE TABLE historico_modalidade (
     id INT AUTO_INCREMENT PRIMARY KEY,
     colaborador_id INT NOT NULL,
-    modalidade ENUM('Presencial', 'Remoto', 'Outro') NOT NULL,
+    modalidade ENUM('Presencial', 'Remoto', 'Outro') NOT NULL, 
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    data_resposta DATETIME NULL,
+    data_resposta DATETIME NULL, 
     FOREIGN KEY (colaborador_id) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE
 );
+
+CREATE TABLE Tipo_Evento(
+    ID_Tipo_Evento INT PRIMARY KEY AUTO_INCREMENT,
+    Tipo_Evento_Nome ENUM("Feira", "Workshop", "Reunião")
+);
+
+CREATE TABLE Evento (
+    ID_Evento INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Evento VARCHAR(255) NOT NULL,
+    Data_Evento DATETIME NOT NULL,
+    Duracao_Evento VARCHAR(30),
+    Local_Evento VARCHAR(255) NOT NULL,
+    ID_Tipo_Evento INT NOT NULL,
+    Descricao TEXT NOT NULL,
+    Criado_Por INT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (Criado_Por) REFERENCES Colaboradores(ID_colaborador),
+    FOREIGN KEY (ID_Tipo_Evento) REFERENCES Tipo_Evento(ID_Tipo_Evento) 
+);
+
+CREATE TABLE Status_Participacao (
+    ID_Status INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Status ENUM('Pendente','Confirmado','Recusado', 'Concluído') NOT NULL
+);
+
+CREATE TABLE Participacao_Evento (
+    ID_Evento INT NOT NULL,
+    ID_Colaborador INT NOT NULL,
+    ID_Status INT NOT NULL,
+    justificativa VARCHAR(255),
+    notificado TINYINT(1) DEFAULT 0,
+    notificado_criador TINYINT(1) DEFAULT 0,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (ID_Evento, ID_Colaborador),
+    FOREIGN KEY (ID_Evento) REFERENCES Evento (ID_Evento) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_colaborador) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Status) REFERENCES Status_Participacao(ID_Status)
+);
+
+CREATE TABLE Certificado_Participacao (
+    ID_Colaborador INT NOT NULL,
+    ID_Evento INT NOT NULL,
+    Data_Part DATETIME DEFAULT CURRENT_TIMESTAMP,      
+    Duracao_Part VARCHAR(100) NOT NULL,                 
+    Descricao_Part TEXT NOT NULL,
+    Arquivo_PDF VARCHAR(255) NULL,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,     
+    PRIMARY KEY (ID_Evento, ID_Colaborador),
+    FOREIGN KEY (ID_Evento) REFERENCES Evento (ID_Evento) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores (ID_Colaborador) ON DELETE CASCADE
+);
+
+CREATE TABLE Checklist (
+    ID_Checklist INT PRIMARY KEY AUTO_INCREMENT,
+    Responsavel VARCHAR(100) NOT NULL,
+    Data_Verificacao DATETIME NOT NULL,
+    Piso_ADM TEXT,
+    Piso_Operacional TEXT,
+    Piso_Galpao TEXT,
+    Piso_Refeitorio TEXT,
+    Forro_ADM TEXT,
+    Forro_Operacional TEXT,
+    Forro_Galpao TEXT,
+    Forro_Refeitorio TEXT,
+    Instalacoes_Eletricas TEXT,
+    Protecao_Raios TEXT,
+    ArCond_ADM BOOLEAN DEFAULT FALSE,
+    ArCond_Diretoria BOOLEAN DEFAULT FALSE,
+    ArCond_Reuniao BOOLEAN DEFAULT FALSE,
+    ArCond_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_ADM BOOLEAN DEFAULT FALSE,
+    Lampadas_Diretoria BOOLEAN DEFAULT FALSE,
+    Lampadas_Reuniao BOOLEAN DEFAULT FALSE,
+    Lampadas_Operacional BOOLEAN DEFAULT FALSE,
+    Lampadas_Galpao BOOLEAN DEFAULT FALSE,
+    Lampadas_Refeitorio BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroFem BOOLEAN DEFAULT FALSE,
+    Lampadas_BanheiroMasc BOOLEAN DEFAULT FALSE,
+    Macanetas_OK BOOLEAN DEFAULT FALSE,
+    Mesas_Protecao_OK BOOLEAN DEFAULT FALSE,
+    Condicoes_Paleteiras TEXT,
+    Organizacao_Local TEXT,
+    Cameras_OK BOOLEAN DEFAULT FALSE,
+    Balanca_Condicao TEXT,
+    Data_Afericao_Balanca DATE,
+    Condicoes_Mictorios TEXT,
+    Data_Limpeza_Bebedouro DATE,
+    Data_Prox_Dedetizacao DATE,
+    Data_Ult_Recarga_Extintores DATE,
+    Data_Prox_Recarga_Extintores DATE,
+    Data_Limpeza_Caixa DATE,
+    Data_Prox_Limpeza DATE,
+    Cadeiras_Ruim BOOLEAN DEFAULT FALSE,
+    Cadeiras_Detalhe TEXT,
+    Observacoes TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE OR REPLACE VIEW vw_participacao AS
+SELECT
+  "RELATÓRIO DE APROVEITAMENTO" AS tipo_documento,
+  s.Nome_Setor AS departamento_funcionario,
+  e.Nome_Evento AS titulo_atividade,
+  e.Data_Evento,
+  e.Duracao_Evento,
+  col.Nome_Col AS participante,
+  car.Nome_Cargo AS cargo_funcionario,
+  e.Local_Evento,
+  te.Tipo_Evento_Nome,
+  cp.Data_Part,
+  cp.Duracao_Part,
+  cp.Descricao_Part,
+  cp.criado_em
+FROM Certificado_Participacao cp
+INNER JOIN Colaboradores col ON col.ID_Colaborador = cp.ID_Colaborador
+INNER JOIN Cargo car ON car.ID_Cargo = col.ID_Cargo
+INNER JOIN Setor s ON s.ID_Setor = col.Setor
+INNER JOIN Evento e ON e.ID_Evento = cp.ID_Evento
+INNER JOIN Tipo_Evento te ON te.ID_Tipo_Evento = e.ID_Tipo_Evento;
 
 CREATE TABLE colaboradores_emails_enviados (
     ID_colaborador INT PRIMARY KEY,
@@ -65,47 +177,41 @@ CREATE TABLE colaboradores_confirmados (
     FOREIGN KEY (ID_colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE
 );
 
-CREATE TABLE Evento (
-    ID_Evento INT PRIMARY KEY AUTO_INCREMENT,
-    Nome_Evento VARCHAR(255) NOT NULL,
-    Data_Evento DATETIME NOT NULL,
-    Duracao_Evento VARCHAR(30),
-    Local_Evento VARCHAR(255) NOT NULL,
-    ID_Tipo_Evento INT NOT NULL,
-    Descricao TEXT NOT NULL,
-    Criado_Por INT,
+CREATE TABLE Agregados (
+    id_agregado INT AUTO_INCREMENT PRIMARY KEY,
+    genero ENUM('Masculino', 'Feminino', 'Outro') NOT NULL,
+    nome VARCHAR(150) NOT NULL,
+    cnpj CHAR(14) NULL,
+    cpf CHAR(11) NULL,
+    nascimento DATE NULL,
+    cidadeNascimento VARCHAR(100) NULL,
+    telefone VARCHAR(20) NULL,
+    email VARCHAR(150) NULL,
+    rg VARCHAR(20) NULL,
+    emissaoRG DATE NULL,
+    orgaoExp VARCHAR(20) NULL,
+    pai VARCHAR(150) NULL,
+    mae VARCHAR(150) NULL,
+    pis VARCHAR(15) NULL,
+    cep CHAR(8) NULL,
+    endereco VARCHAR(255) NULL, 
+    nomeProprietario VARCHAR(150) NULL,
+    placa VARCHAR(10) NULL,
+    marca VARCHAR(50) NULL,
+    modelo VARCHAR(100) NULL,
+    cor VARCHAR(30) NULL,
+    anoFabricacao YEAR NULL,
+    cilindrada INT NULL,
+    bauSuporte BOOLEAN DEFAULT FALSE,
+    seguro BOOLEAN DEFAULT FALSE,
+    valorMinSaida DECIMAL(10,2) NULL,
+    valorKmRodado DECIMAL(10,2) NULL,
+    cursoMotoFrete BOOLEAN DEFAULT FALSE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (Criado_Por) REFERENCES Colaboradores(ID_colaborador),
-    FOREIGN KEY (ID_Tipo_Evento) REFERENCES Tipo_Evento(ID_Tipo_Evento)
-);
-
-CREATE TABLE Participacao_Evento (
-    ID_Evento INT NOT NULL,
-    ID_Colaborador INT NOT NULL,
-    ID_Status INT NOT NULL,
-    justificativa VARCHAR(255),
-    notificado TINYINT(1) DEFAULT 0,
-    notificado_criador TINYINT(1) DEFAULT 0,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (ID_Evento, ID_Colaborador),
-    FOREIGN KEY (ID_Evento) REFERENCES Evento(ID_Evento) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Status) REFERENCES Status_Participacao(ID_Status)
-);
-
-CREATE TABLE Certificado_Participacao (
-    ID_Colaborador INT NOT NULL,
-    ID_Evento INT NOT NULL,
-    Data_Part DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Duracao_Part VARCHAR(100) NOT NULL,
-    Descricao_Part TEXT NOT NULL,
-    Arquivo_PDF VARCHAR(255) NULL,
-    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (ID_Evento, ID_Colaborador),
-    FOREIGN KEY (ID_Evento) REFERENCES Evento(ID_Evento) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_Colaborador) ON DELETE CASCADE
+    CONSTRAINT uc_cpf UNIQUE (cpf),
+    CONSTRAINT uc_cnpj UNIQUE (cnpj),
+    CONSTRAINT uc_rg UNIQUE (rg)
 );
 
 CREATE TABLE Cliente (
@@ -162,51 +268,28 @@ CREATE TABLE Agenda (
     FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente)
 );
 
-CREATE TABLE Checklist (
-    ID_Checklist INT PRIMARY KEY AUTO_INCREMENT,
-    Responsavel VARCHAR(100) NOT NULL,
-    Data_Verificacao DATETIME NOT NULL,
-    Piso_ADM TEXT,
-    Piso_Operacional TEXT,
-    Piso_Galpao TEXT,
-    Piso_Refeitorio TEXT,
-    Forro_ADM TEXT,
-    Forro_Operacional TEXT,
-    Forro_Galpao TEXT,
-    Forro_Refeitorio TEXT,
-    Instalacoes_Eletricas TEXT,
-    Protecao_Raios TEXT,
-    ArCond_ADM BOOLEAN DEFAULT FALSE,
-    ArCond_Diretoria BOOLEAN DEFAULT FALSE,
-    ArCond_Reuniao BOOLEAN DEFAULT FALSE,
-    ArCond_Operacional BOOLEAN DEFAULT FALSE,
-    Lampadas_ADM BOOLEAN DEFAULT FALSE,
-    Lampadas_Diretoria BOOLEAN DEFAULT FALSE,
-    Lampadas_Reuniao BOOLEAN DEFAULT FALSE,
-    Lampadas_Operacional BOOLEAN DEFAULT FALSE,
-    Lampadas_Galpao BOOLEAN DEFAULT FALSE,
-    Lampadas_Refeitorio BOOLEAN DEFAULT FALSE,
-    Lampadas_BanheiroFem BOOLEAN DEFAULT FALSE,
-    Lampadas_BanheiroMasc BOOLEAN DEFAULT FALSE,
-    Macanetas_OK BOOLEAN DEFAULT FALSE,
-    Mesas_Protecao_OK BOOLEAN DEFAULT FALSE,
-    Condicoes_Paleteiras TEXT,
-    Organizacao_Local TEXT,
-    Cameras_OK BOOLEAN DEFAULT FALSE,
-    Balanca_Condicao TEXT,
-    Data_Afericao_Balanca DATE,
-    Condicoes_Mictorios TEXT,
-    Data_Limpeza_Bebedouro DATE,
-    Data_Prox_Dedetizacao DATE,
-    Data_Ult_Recarga_Extintores DATE,
-    Data_Prox_Recarga_Extintores DATE,
-    Data_Limpeza_Caixa DATE,
-    Data_Prox_Limpeza DATE,
-    Cadeiras_Ruim BOOLEAN DEFAULT FALSE,
-    Cadeiras_Detalhe TEXT,
-    Observacoes TEXT,
+CREATE TABLE Relatorio (
+    ID_Relatorio INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Relatorio VARCHAR(255) NOT NULL,
+    Tipo_Relatorio VARCHAR(50) NOT NULL,
+    Data_Geracao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Gerado_Por INT,
+    FOREIGN KEY (Gerado_Por) REFERENCES Colaboradores(ID_colaborador) ON DELETE SET NULL
+);
+
+CREATE TABLE notificacoes_personalizadas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(255) NOT NULL,
+    mensagem TEXT NOT NULL,
+    tipo ENUM('personalizada', 'sistema', 'lembrete') DEFAULT 'personalizada',
+    destinatarios JSON,
+    prioridade ENUM('baixa', 'media', 'alta', 'urgente') DEFAULT 'media',
+    agendamento DATETIME NULL,
+    status ENUM('pendente', 'enviada', 'cancelada', 'erro') DEFAULT 'pendente',
+    criado_por INT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    enviado_em DATETIME NULL,
+    FOREIGN KEY (criado_por) REFERENCES Colaboradores(ID_colaborador)
 );
 
 CREATE TABLE ChecklistManutencao (
@@ -256,12 +339,12 @@ CREATE TABLE ChecklistManutencao (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE responsaveisVistoria (
+create table responsaveisVistoria(
     id_responsavel int primary key,
     foreign key (id_responsavel) references Colaboradores(ID_colaborador)
 );
 
-CREATE TABLE checklistVeiculoAgregado (
+CREATE TABLE checklistVeiculoAgregado(
     ID_cva INT PRIMARY KEY AUTO_INCREMENT,
     nome_motorista VARCHAR(255) NOT NULL,
     cpf VARCHAR(11) NOT NULL,
@@ -315,13 +398,13 @@ CREATE TABLE checklistVeiculoAgregado (
     FOREIGN KEY (id_responsavel_vistoria) REFERENCES responsaveisVistoria (id_responsavel)
 );
 
-CREATE TABLE motorista (
-    id_motorista int primary key auto_increment,
+create table motorista(
+	id_motorista int primary key auto_increment,
     nome_motorista varchar(100) not null
 );
 
-CREATE TABLE checklistVeiculoFrota (
-    id_cvf int primary key auto_increment,
+create table checklistVeiculoFrota(
+	id_cvf int primary key auto_increment,
     id_motorista int,
     placa varchar(7) not null,
     km_inicial int not null,
@@ -335,44 +418,43 @@ CREATE TABLE checklistVeiculoFrota (
     estado_pneus enum("sim", "não") not null,
     limpeza_bau_sider_cabine enum("sim", "não") not null,
     lubrificacao_suspensoes enum("sim", "não") not null,
-    macaco enum("sim", "não") not null,
+	macaco enum("sim", "não") not null,
     chave_roda enum("sim", "não") not null,
     documento_vigente enum("sim", "não") not null,
     data_encerramento_atividade datetime not null,
     observacoes text,
-    criado_em datetime default current_timestamp,
+	criado_em datetime default current_timestamp,
     foreign key (id_motorista) references motorista (id_motorista)
 );
 
 CREATE TABLE ChecklistPredial (
-    CheckPredio INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    NomeFuncPredio VARCHAR(50),
-    DataPredio DATETIME DEFAULT CURRENT_TIMESTAMP,
-    LixoCozinha ENUM('Sim','Não'),
-    LixoReciclavel ENUM('Sim','Não'),
-    CozinhaOrganizada ENUM('Sim','Não'),
-    LuzesCozinha ENUM('Sim','Não'),
-    CadeadoPortao2 ENUM('Sim','Não'),
-    CadeadoPortao1 ENUM('Sim','Não'),
-    TorneirasFechadas ENUM('Sim','Não'),
-    LixoBanheiro ENUM('Sim','Não'),
-    PortaBanheiro ENUM('Sim','Não'),
-    BebedouroDesligado ENUM('Sim','Não'),
-    ChavesChaveiro ENUM('Sim','Não'),
-    TVCameras ENUM('Sim','Não'),
-    TVDashboard ENUM('Sim','Não'),
-    ArCondicionado ENUM('Sim','Não'),
-    LuzesOperacional ENUM('Sim','Não'),
-    LuzesArmazem ENUM('Sim','Não'),
-    ConePCD ENUM('Sim','Não'),
-    Alarme ENUM('Sim','Não'),
-    PortaArmazem ENUM('Sim','Não'),
-    CadeadoCorrentes ENUM('Sim','Não'),
-    MotorRuidos TEXT,
-    SituacaoAtip TEXT
+  CheckPredio INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  NomeFuncPredio VARCHAR(50),
+  DataPredio DATETIME DEFAULT CURRENT_TIMESTAMP,
+  LixoCozinha ENUM('Sim','Não'),
+  LixoReciclavel ENUM('Sim','Não'),
+  CozinhaOrganizada ENUM('Sim','Não'),
+  LuzesCozinha ENUM('Sim','Não'),
+  CadeadoPortao2 ENUM('Sim','Não'),
+  CadeadoPortao1 ENUM('Sim','Não'),
+  TorneirasFechadas ENUM('Sim','Não'),
+  LixoBanheiro ENUM('Sim','Não'),
+  PortaBanheiro ENUM('Sim','Não'),
+  BebedouroDesligado ENUM('Sim','Não'),
+  ChavesChaveiro ENUM('Sim','Não'),
+  TVCameras ENUM('Sim','Não'),
+  TVDashboard ENUM('Sim','Não'),
+  ArCondicionado ENUM('Sim','Não'),
+  LuzesOperacional ENUM('Sim','Não'),
+  LuzesArmazem ENUM('Sim','Não'),
+  ConePCD ENUM('Sim','Não'),
+  Alarme ENUM('Sim','Não'),
+  PortaArmazem ENUM('Sim','Não'),
+  CadeadoCorrentes ENUM('Sim','Não'),
+  MotorRuidos TEXT,
+  SituacaoAtip TEXT
 );
 
--- TABELAS DE COTAÇÃO
 CREATE TABLE weair_convencional (
     id INT AUTO_INCREMENT PRIMARY KEY,
     servico VARCHAR(50) NOT NULL,
@@ -491,113 +573,26 @@ CREATE TABLE weair_lead_time (
     conexao BOOLEAN
 );
 
-CREATE TABLE Relatorio (
-    ID_Relatorio INT PRIMARY KEY AUTO_INCREMENT,
-    Nome_Relatorio VARCHAR(255) NOT NULL,
-    Tipo_Relatorio VARCHAR(50) NOT NULL,
-    Data_Geracao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Gerado_Por INT,
-    FOREIGN KEY (Gerado_Por) REFERENCES Colaboradores(ID_colaborador) ON DELETE SET NULL
-);
-
-CREATE TABLE notificacoes_personalizadas (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    titulo VARCHAR(255) NOT NULL,
-    mensagem TEXT NOT NULL,
-    tipo ENUM('personalizada', 'sistema', 'lembrete') DEFAULT 'personalizada',
-    destinatarios JSON,
-    prioridade ENUM('baixa', 'media', 'alta', 'urgente') DEFAULT 'media',
-    agendamento DATETIME NULL,
-    status ENUM('pendente', 'enviada', 'cancelada', 'erro') DEFAULT 'pendente',
-    criado_por INT,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    enviado_em DATETIME NULL,
-    FOREIGN KEY (criado_por) REFERENCES Colaboradores(ID_colaborador)
-);
-
-CREATE TABLE Agregados (
-    id_agregado INT AUTO_INCREMENT PRIMARY KEY,
-    genero ENUM('Masculino', 'Feminino', 'Outro') NOT NULL,
-    nome VARCHAR(150) NOT NULL,
-    cnpj CHAR(14) NULL,
-    cpf CHAR(11) NULL,
-    nascimento DATE NULL,
-    cidadeNascimento VARCHAR(100) NULL,
-    telefone VARCHAR(20) NULL,
-    email VARCHAR(150) NULL,
-    rg VARCHAR(20) NULL,
-    emissaoRG DATE NULL,
-    orgaoExp VARCHAR(20) NULL,
-    pai VARCHAR(150) NULL,
-    mae VARCHAR(150) NULL,
-    pis VARCHAR(15) NULL,
-    cep CHAR(8) NULL,
-    endereco VARCHAR(255) NULL, 
-    nomeProprietario VARCHAR(150) NULL,
-    placa VARCHAR(10) NULL,
-    marca VARCHAR(50) NULL,
-    modelo VARCHAR(100) NULL,
-    cor VARCHAR(30) NULL,
-    anoFabricacao YEAR NULL,
-    cilindrada INT NULL,
-    bauSuporte BOOLEAN DEFAULT FALSE,
-    seguro BOOLEAN DEFAULT FALSE,
-    valorMinSaida DECIMAL(10,2) NULL,
-    valorKmRodado DECIMAL(10,2) NULL,
-    cursoMotoFrete BOOLEAN DEFAULT FALSE,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT uc_cpf UNIQUE (cpf),
-    CONSTRAINT uc_cnpj UNIQUE (cnpj),
-    CONSTRAINT uc_rg UNIQUE (rg)
-);
-
-CREATE OR REPLACE VIEW vw_participacao AS
-SELECT
-    "RELATÓRIO DE APROVEITAMENTO" AS tipo_documento,
-    s.Nome_Setor AS departamento_funcionario,
-    e.Nome_Evento AS titulo_atividade,
-    e.Data_Evento,
-    e.Duracao_Evento,
-    col.Nome_Col AS participante,
-    car.Nome_Cargo AS cargo_funcionario,
-    e.Local_Evento,
-    te.Tipo_Evento_Nome,
-    cp.Data_Part,
-    cp.Duracao_Part,
-    cp.Descricao_Part,
-    cp.criado_em
-FROM Certificado_Participacao cp
-INNER JOIN Colaboradores col ON col.ID_Colaborador = cp.ID_Colaborador
-INNER JOIN Cargo car ON car.ID_Cargo = col.ID_Cargo
-INNER JOIN Setor s ON s.ID_Setor = col.setor
-INNER JOIN Evento e ON e.ID_Evento = cp.ID_Evento
-INNER JOIN Tipo_Evento te ON te.ID_Tipo_Evento = e.ID_Tipo_Evento;
-
+-- INSERTS
+INSERT INTO Tipo_Evento (Tipo_Evento_Nome) VALUES ('Feira'), ('Workshop'), ('Reunião');
+INSERT INTO Status_Participacao (Nome_Status) VALUES ('Pendente'), ('Confirmado'), ('Recusado'), ('Concluído');
 INSERT INTO Setor (Nome_Setor, Descricao) VALUES 
 ('Administrativo', 'Operações administrativas'),
 ('Comercial', 'Vendas e relacionamento'),
 ('Operacional', 'Execução das atividades');
-
 INSERT INTO Cargo (Nome_Cargo, Nivel_Acesso) VALUES
-('Gerente', 'Gestor'),
+('Gerente', 'Gestor'), 
 ('Coordenador', 'Gestor'),
-('Assistente', 'Colaborador'),
+('Assistente', 'Colaborador'), 
 ('Analista', 'Colaborador');
-
-INSERT INTO Tipo_Evento (Tipo_Evento_Nome) VALUES 
-('Feira'), ('Workshop'), ('Reunião');
-
-INSERT INTO Status_Participacao (Nome_Status) VALUES 
-('Pendente'), ('Confirmado'), ('Recusado'), ('Concluído');
-
-INSERT INTO Colaboradores (Email, Senha, Nome_Col, setor, CPF, Telefone, ID_Cargo) VALUES
-('gabrielhlazaro2022@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
+INSERT INTO Colaboradores (Email, Senha, Nome_Col, Setor, CPF, Telefone, ID_Cargo) VALUES
 ('jv.moura.sjc@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'João Victor Moura', 2, '12345678901', '11999999999', 1),
-('rafael@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rafael Sette', 1, '77777777777', '12988777777', 1),
+('rafael@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rafael Sette', 3, '77777777777', '12988777777', 1),
 ('rebeca@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Rebeca Lima', 1, '99999999999', '11999999999', 1),
 ('rubim@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Ana Julia Rubim', 1, '88888888888', '11999998888', 1),
-('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1);
+('lazaro@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1),
+('enzo@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Enzo de Paula', 1, '17221722172', '11945699399', 1),
+('gabrielhlazaro2022@gmail.com', '$2a$10$N58kA4rPjE2nTUKAHNHHTeOhYwwSwXsm7/eOI8zEBdd3RT/mOXlU2', 'Gabriel Lazaro', 1, '66666666666', '11994444499', 1);
 
 INSERT INTO responsaveisVistoria VALUES (1), (2), (3);
 
@@ -863,7 +858,17 @@ INSERT INTO Cliente (Nome_Cliente, Telefone_Cliente, Email_Cliente, Segmento, at
 ('Distribuidora Alimentícia ABC', '11932198765', 'comercial@distribabc.com.br', 'Varejo', 'Distribuição', 'Santos', 'Comercial', '2025-11-17 14:00:00', 1),
 ('Fábrica de Móveis São João', '11921987654', 'vendas@moveissaojoao.com.br', 'Indústria', 'Fabricação', 'São Bernardo do Campo', 'Comercial', NULL, 2),
 ('Clínica Médica Vida Plena', '11912876543', 'atendimento@vidaplena.com.br', 'Serviços', 'Clínica Médica', 'São Paulo', 'Comercial', '2025-11-20 15:30:00', 1),
-('AutoPeças Veloz', '11998765432', 'pecas@velocauto.com.br', 'Varejo', 'Peças Automotivas', 'Osasco', 'Comercial', '2025-11-19 13:00:00', 2);
+('AutoPeças Veloz', '11998765432', 'pecas@velocauto.com.br', 'Varejo', 'Peças Automotivas', 'Osasco', 'Comercial', '2025-11-19 13:00:00', 2),
+('Padaria e Confeitaria Delícia', '11987654322', 'padaria@delicia.com.br', 'Varejo', 'Panificação', 'São Paulo', 'Comercial', '2025-11-21 08:00:00', 1),
+('Escola Técnica Futuro', '11976543211', 'secretaria@escolafuturo.com.br', 'Serviços', 'Ensino Técnico', 'São Paulo', 'Comercial', NULL, 2),
+('Loja de Roupas Fashion Style', '11965432188', 'loja@fashionstyle.com.br', 'Varejo', 'Varejo de Roupas', 'São Paulo', 'Comercial', '2025-11-16 10:30:00', 1),
+('Gráfica Rápida Impressões', '11954321988', 'grafica@rapidaimpressoes.com.br', 'Serviços', 'Impressão Gráfica', 'Barueri', 'Comercial', '2025-11-18 14:00:00', 2),
+('Pet Shop Amigo Fiel', '11943219877', 'petshop@amigofiel.com.br', 'Varejo', 'Produtos para Pets', 'São Paulo', 'Comercial', '2025-11-21 09:00:00', 1),
+('Laboratório Análises Clínicas', '11932198766', 'lab@analisesclinicas.com.br', 'Serviços', 'Laboratório', 'Santo André', 'Comercial', '2025-11-14 11:00:00', 2),
+('Importadora Global Trade', '11921987655', 'importacao@globaltrade.com.br', 'Varejo', 'Comércio Exterior', 'São Paulo', 'Comercial', '2025-11-20 16:00:00', 1),
+('Hotel Conforto Plaza', '11912876544', 'reservas@confortoplaza.com.br', 'Serviços', 'Hospedagem', 'São Paulo', 'Comercial', NULL, 2),
+('Academia Corpo em Forma', '11998765433', 'academia@corpoemforma.com.br', 'Serviços', 'Academia', 'São Paulo', 'Comercial', '2025-11-21 07:00:00', 1),
+('Agência de Publicidade Criativa', '11987654323', 'agencia@criativa.com.br', 'Serviços', 'Publicidade', 'São Paulo', 'Comercial', '2025-11-19 15:00:00', 2);
 
 INSERT INTO Evento (Nome_Evento, Data_Evento, Duracao_Evento, Local_Evento, ID_Tipo_Evento, Descricao, Criado_Por) VALUES
 ('Workshop Gestão', '2025-11-20 09:00:00', '4h', 'Auditório P.', 2, 'Workshop de gestão.', 1),
