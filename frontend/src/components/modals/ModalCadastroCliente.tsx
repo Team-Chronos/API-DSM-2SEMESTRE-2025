@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import axios from "axios";
 import { formatarTelefone } from "../../utils/formatacoes";
+import api from "../../services/api";
 
 interface ModalCadastroClienteProps {
   show: boolean;
@@ -45,7 +45,7 @@ export const ModalCadastroCliente = ({ show, onClose, onSuccess }: ModalCadastro
     e.preventDefault();
     try {
       form.telefone = form.telefone.replace(/\D/g, '')
-      await axios.post("http://localhost:3000/api/clientes", form);
+      await api.post("/clientes", form);
       onSuccess();
       onClose();
       limparForm()

@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { formatarTelefone } from "../../../../utils/formatacoes";
-import axios from "axios";
+import api from "../../../../services/api";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 import { ModalConfirmacao } from "../../../../components/modals/ModalConfirmacao";
 import { ModalEditarColaborador } from "../../../../components/modals/ModalEditarColaborador";
@@ -56,7 +56,7 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
   const excluirColaborador = async () => {
     if (!colaboradorSelecionado) return;
     try {
-      await axios.delete(`http://localhost:3000/api/colaboradores/${colaboradorSelecionado.ID_colaborador}`);
+      await api.delete(`/colaboradores/${colaboradorSelecionado.ID_colaborador}`);
       setTituloMessage("Sucesso");
       setMensagem("Colaborador excluído com sucesso!");
       setShowMessage(true);

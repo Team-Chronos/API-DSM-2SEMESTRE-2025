@@ -785,7 +785,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
         arcond_operacional: dadosParaEnvio.arcond_operacional
       });
 
-      await axios.post('http://localhost:3000/api/checklist', dadosParaEnvio);
+      await api.post('/checklist', dadosParaEnvio);
 
       onSuccess();
       limparForm();
@@ -1333,7 +1333,7 @@ function ChecklistPage() {
     try {
       setLoading((prev) => ({ ...prev, page: true }));
       setError(null);
-      const response = await axios.get('http://localhost:3000/api/checklist');
+      const response = await api.get('/checklist');
       const data = response.data;
 
       let checklistsData: Checklist[] = [];

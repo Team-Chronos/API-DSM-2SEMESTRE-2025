@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { Modal, Button, Form } from "react-bootstrap";
 import { formatarCpf, formatarTelefone } from "../../utils/formatacoes";
 import type { Cargos } from "../../utils/tipos";
@@ -50,7 +50,7 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
 		}
 
     async function getCargos(){
-      const resCargos = await axios.get("http://localhost:3000/api/colaboradores/cargos")
+      const resCargos = await api.get("/colaboradores/cargos")
       setCargos(resCargos.data)
     }
     getCargos()
@@ -77,7 +77,7 @@ export const ModalEditarColaborador = ({ show, colaborador, onClose, onSuccess }
     try {
 			form.telefone = form.telefone.replace(/\D/g, '')
 			form.cpf = form.cpf.replace(/\D/g, '')
-      await axios.put(`http://localhost:3000/api/colaboradores/${colaborador.ID_colaborador}`, form);
+      await api.put(`/colaboradores/${colaborador.ID_colaborador}`, form);
       onSuccess();
       onClose();
     } catch (error) {

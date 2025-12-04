@@ -29,11 +29,11 @@ import db from "./src/config/db.js";
 import cors from "cors";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_ORIGIN || "http://localhost:5173",
     credentials: true,
     exposedHeaders: ["Content-Disposition"],
   })
@@ -45,7 +45,6 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Configuração de todas as rotas
 app.use("/api/auth", authRoutes);
 app.use("/api/colaboradores", colaboradorRoutes);
 app.use("/api/eventos", eventoRoutes);

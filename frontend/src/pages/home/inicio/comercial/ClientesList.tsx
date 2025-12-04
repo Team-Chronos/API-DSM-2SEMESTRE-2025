@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import api from "../../../../services/api";
 import { Button, Table, Form, InputGroup, Spinner, Alert } from "react-bootstrap";
 import { ModalCadastroCliente } from "../../../../components/modals/ModalCadastroCliente";
 import type { Cliente } from "../../../../utils/tipos";
@@ -36,7 +36,7 @@ export const ClientesList = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await axios.get("http://localhost:3000/api/clientes");
+            const res = await api.get("/clientes");
             setClientes(res.data);
         } catch (err) {
             console.error(err);

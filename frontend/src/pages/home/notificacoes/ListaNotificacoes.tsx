@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../services/api";
 import { NotificacaoItem } from "./NotificacaoItem";
 import type { Notificacao } from "../../../utils/tipos";
 import { ModalMensagem } from "../../../components/modals/ModalMensagem";
@@ -22,8 +22,8 @@ export const ListaNotificacoes: React.FC<Props> = ({ idColab }) => {
 
   const carregarNotificacoes = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/participacaoEventos/${idColab}`
+      const res = await api.get(
+        `/participacaoEventos/${idColab}`
       );
       setNotificacoes(res.data);
     } catch (err) {
@@ -51,8 +51,8 @@ export const ListaNotificacoes: React.FC<Props> = ({ idColab }) => {
     justificativa?: string
   ) => {
     try {
-      await axios.put(
-        `http://localhost:3000/api/participacaoEventos/${idColab}/${idEvento}`,
+      await api.put(
+        `/participacaoEventos/${idColab}/${idEvento}`,
         { status, justificativa_notificacao: justificativa || null }
       );
       await carregarNotificacoes();

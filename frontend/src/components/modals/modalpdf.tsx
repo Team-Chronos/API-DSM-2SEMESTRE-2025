@@ -22,7 +22,7 @@ function PdfPreview({ certificados = [] }: PdfPreviewProps) {
           certificados.map((cert) => (
             <a
               key={`${cert.ID_Colaborador}-${cert.ID_Evento}`}
-              href={`http://localhost:3000/api/certificadoParticipacao/download/${cert.Arquivo_PDF}`}
+              href={`/certificadoParticipacao/download/${cert.Arquivo_PDF}`}
               className="pdf-card"
               rel="noopener noreferrer"
               
@@ -30,7 +30,7 @@ function PdfPreview({ certificados = [] }: PdfPreviewProps) {
             >
               <div className="pdf-preview-container">
                 <Document
-                  file={`http://localhost:3000/api/certificadoParticipacao/download/${cert.Arquivo_PDF}`}
+                  file={`/certificadoParticipacao/download/${cert.Arquivo_PDF}`}
                   loading="Carregando prévia..."
                   error="Falha ao carregar prévia."
                 >

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { dataHora } from "../../utils/facilidades";
 import type { Colaborador } from "../../utils/tipos";
 import { normalizarTexto } from "../../utils/formatacoes";
+import api from "../../services/api";
 
 interface ModalCadastroEventoProps {
   show: boolean;
@@ -38,8 +38,8 @@ export const ModalCadastroEvento = ({
   async function carregarColaboradores() {
     setLoading(true);
     try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/colaboradores"
+      const { data } = await api.get(
+        "colaboradores"
       );
       setColaboradores(data);
     } catch (error) {
@@ -97,7 +97,7 @@ export const ModalCadastroEvento = ({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/eventos", form);
+      await api.post("eventos", form);
       onSuccess();
       limparForm();
       onClose();

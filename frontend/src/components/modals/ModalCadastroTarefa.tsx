@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
-import type { Tarefa } from "../pages/home/eventos/Calendar";
+import type { Tarefa } from "../../pages/home/eventos/Calendar";
+import api from "../../services/api";
 
 interface ModalCadastroTarefaProps {
   isOpen: boolean;
@@ -55,8 +55,7 @@ export const ModalCadastroTarefa = ({
 
   useEffect(() => {
     if (isComercial && user?.id) {
-      axios
-        .get(`http://localhost:3000/api/clientes/dropdown/${user.id}`)
+      api.get(`/clientes/dropdown/${user.id}`)
         .then((res) => {
           if (Array.isArray(res.data)) {
             setClientes(res.data);
@@ -114,9 +113,9 @@ export const ModalCadastroTarefa = ({
       };
 
       if (isEditMode && tarefaParaEditar) {
-        await axios.put(`http://localhost:3000/api/agenda/${tarefaParaEditar.ID_Agenda}`, payload);
+        await api.put(`/agenda/${tarefaParaEditar.ID_Agenda}`, payload);
       } else {
-        await axios.post("http://localhost:3000/api/agenda", payload);
+        await api.post("/agenda", payload);
       }
 
       limparForm();

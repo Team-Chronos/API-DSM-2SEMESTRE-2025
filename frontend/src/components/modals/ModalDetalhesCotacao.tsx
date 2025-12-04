@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import axios from "axios";
+import api from "../../services/api";
 import { FaMapMarkerAlt, FaUser, FaSync, FaBoxes, FaDollarSign, FaCalendarAlt, FaRoute, FaTruck } from 'react-icons/fa';
 import "../../css/detalhesCotacao.css";
 
@@ -50,7 +50,7 @@ export function ModalDetalhesCotacao({ show, onClose, cotacaoId, onAtualizar }: 
   const carregarDados = async () => {
     try {
       setLoading(true);
-      const resCotacao = await axios.get(`http://localhost:3000/api/cotacao/${cotacaoId}`);
+      const resCotacao = await api.get(`/cotacao/${cotacaoId}`);
 
       console.log("Dados da cotação individual:", resCotacao.data);
 
@@ -73,7 +73,7 @@ export function ModalDetalhesCotacao({ show, onClose, cotacaoId, onAtualizar }: 
     }
 
     try {
-      await axios.put(`http://localhost:3000/api/cotacao/${cotacaoId}`, {
+      await api.put(`/cotacao/${cotacaoId}`, {
         remetente: remetenteEditado,
         status: statusSelecionado,
       });
@@ -91,7 +91,7 @@ export function ModalDetalhesCotacao({ show, onClose, cotacaoId, onAtualizar }: 
     if (!window.confirm("Tem certeza que deseja excluir esta cotação?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/cotacao/${cotacaoId}`);
+      await api.delete(`/cotacao/${cotacaoId}`);
       alert("Cotação excluída com sucesso!");
       onAtualizar();
       onClose();

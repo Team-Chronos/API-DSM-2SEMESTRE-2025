@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { Modal, Button, ListGroup, Spinner, Badge } from "react-bootstrap";
 import { formatarDataHora } from "../../utils/formatacoes";
 import type { Evento } from "../../utils/tipos";
@@ -30,8 +30,8 @@ export const ModalConsultarEvento = ({
       const fetchParticipantes = async () => {
         setLoading(true);
         try {
-          const res = await axios.get(
-            `http://localhost:3000/api/eventos/${evento.ID_Evento}/participantes`
+          const res = await api.get(
+            `/eventos/${evento.ID_Evento}/participantes`
           );
           setParticipantes(res.data);
         } catch (error) {

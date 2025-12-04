@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../../../services/api";
 import { formatarTelefone } from "../../../../utils/formatacoes";
 import { useAuth } from "../../../../context/AuthContext";
 import "../../../../css/clienteDetalhes.css";
@@ -44,7 +44,7 @@ export const ClienteDetalhes = () => {
 
   const carregarCliente = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/clientes/${id}`);
+      const res = await api.get(`/clientes/${id}`);
       setCliente(res.data);
     } catch (err) {
       console.error(err);
@@ -53,7 +53,7 @@ export const ClienteDetalhes = () => {
 
   const carregarInteracoes = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/interacoes/cliente/${id}`);
+      const res = await api.get(`/interacoes/cliente/${id}`);
       setInteracoes(res.data);
     } catch (err) {
       console.error(err);
@@ -69,7 +69,7 @@ export const ClienteDetalhes = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/interacoes", {
+      await api.post("/interacoes", {
         ...form,
         ID_Cliente: Number(id),
         ID_Colaborador: user?.id,
