@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../../services/api";
+import api from '../../../../services/api'
 import { Card, Row, Col } from "react-bootstrap";
 import "../../../../css/ComercialDashboard.css";
 import {
@@ -67,14 +67,14 @@ export const ComercialDashboard = () => {
   if (loading) return <p>Carregando...</p>;
 
   return (
-    <div className="dashboard-container">
-      <h2 className="dashboard-title">Painel Comercial</h2>
+    <div className="dashboard-container-comercial">
+      <h2 className="dashboard-title-comercial">Painel Comercial</h2>
 
       <Row>
         <Col md={15}>
-          <Card className="dashboard-card">
+          <Card className="dashboard-card-comercial">
             <Card.Body>
-              <Card.Title className="dashboard-card-title">
+              <Card.Title className="dashboard-card-title-comercial">
                 Clientes por Segmento
               </Card.Title>
               <ResponsiveContainer width="100%" height={550}>
@@ -95,16 +95,16 @@ export const ComercialDashboard = () => {
                     iconType="circle"
                     iconSize={12}
                     content={() => (
-                      <div className="dashboard-legend">
+                      <div className="dashboard-legend-comercial">
                         {data.map((entry, index) => (
-                          <div key={`legend-${index}`} className="legend-item">
+                          <div key={`legend-${index}`} className="legend-item-comercial">
                             <div
-                              className="legend-color"
+                              className="legend-color-comercial"
                               style={{
                                 backgroundColor: COLORS[index % COLORS.length],
                               }}
                             />
-                            <span className="legend-text">{entry.name}</span>
+                            <span className="legend-text-comercial">{entry.name}</span>
                           </div>
                         ))}
                       </div>
@@ -112,7 +112,7 @@ export const ComercialDashboard = () => {
                   />
 
                   <Bar dataKey="value" radius={[5, 5, 0, 0]}>
-                    {data.map((entry, index) => (
+                    {data.map((_entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}

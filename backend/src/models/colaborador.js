@@ -9,7 +9,7 @@ const Colaborador = {
 
   findByEmail: (email) => {
     const query =
-      "SELECT col.*, car.Nivel_Acesso FROM Colaboradores col inner join cargo car on car.ID_Cargo = col.ID_Cargo WHERE Email = ?";
+      "SELECT col.*, car.Nivel_Acesso FROM Colaboradores col inner join Cargo car on car.ID_Cargo = col.ID_Cargo WHERE Email = ?";
     return db.promise().query(query, [email]);
   },
 
@@ -40,19 +40,21 @@ const Colaborador = {
   },
 
   updateById: (id, data) => {
-    const { nome, email, telefone, cpf, id_cargo, setor } = data;
+    const id_cargo_final = data.ID_Cargo || data.id_Cargo || data.id_cargo;
+    const { nome, email, telefone, cpf, setor } = data;
+
     if (cpf === "") {
       const query =
-        "UPDATE Colaboradores SET Nome_Col = ?, Email = ?, Telefone = ?, Setor = ?, id_cargo = ? WHERE ID_colaborador = ?";
+        "UPDATE Colaboradores SET Nome_Col = ?, Email = ?, Telefone = ?, Setor = ?, ID_Cargo = ? WHERE ID_colaborador = ?";
       return db
         .promise()
-        .query(query, [nome, email, telefone, setor, id_cargo, id]);
+        .query(query, [nome, email, telefone, setor, id_cargo_final, id]);
     } else {
       const query =
-        "UPDATE Colaboradores SET Nome_Col = ?, Email = ?, Telefone = ?, CPF = ?, Setor = ?, id_cargo = ? WHERE ID_colaborador = ?";
+        "UPDATE Colaboradores SET Nome_Col = ?, Email = ?, Telefone = ?, CPF = ?, Setor = ?, ID_Cargo = ? WHERE ID_colaborador = ?";
       return db
         .promise()
-        .query(query, [nome, email, telefone, cpf, setor, id_cargo, id]);
+        .query(query, [nome, email, telefone, cpf, setor, id_cargo_final, id]);
     }
   },
 
