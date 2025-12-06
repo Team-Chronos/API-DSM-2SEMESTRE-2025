@@ -6,11 +6,11 @@ export const HomeLayout = () => {
 	const { logout } = useAuth()
 
 	return (
-    <div className="home-layout d-flex overflow-y-hidden">
+    <div className="home-layout d-flex overflow-y-hidden" style={{ height: '100vh' }}>
       <Sidebar
         onLogout={logout}
       />
-      <main className="home-main flex-grow-1 p-4 overflow-y-auto" style={{ height: '100vh' }}>{<Outlet />}</main>
+      <main className="home-main flex-grow-1 p-4 overflow-y-auto">{<Outlet />}</main>
     </div>
   );
 }

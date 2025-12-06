@@ -1,9 +1,50 @@
+.btn-toggle-sidebar {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 999;
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 1.4rem;
+
+  transition: left .45s ease;
+}
+
 #barra-lateral {
   background-color: var(--azul);
   color: white;
   padding: 1rem;
   width: 15%;
   min-width: 250px;
+
+  transition: transform .4s ease;
+}
+
+@media (max-width: 768px) {
+  #barra-lateral {
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    z-index: 998;
+  }
+
+  #barra-lateral.open {
+    transform: translateX(0);
+  }
+
+  .btn-toggle-sidebar {
+    display: block;
+  }
+
+  #barra-lateral.open ~ .btn-toggle-sidebar {
+    left: calc(250px + 16px);
+  }
 }
 
 #barra-lateral #colab-info {
