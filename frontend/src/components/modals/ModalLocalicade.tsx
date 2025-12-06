@@ -71,7 +71,7 @@ export const LocalidadeModal = ({ }: LocalidadeModalProps) => {
             <div className="modal-body">
               <p>Olá, {user?.nome}! Por favor, selecione como você está trabalhando hoje.</p>
 
-              <div className="radio-options-group">
+              <div className="radio-options-group flex-wrap">
                 <input type="radio" id="presencial" name="local" value="P" checked={localidade === "P"} onChange={(e) => setLocalidade(e.target.value)} />
                 <label htmlFor="presencial">Presencial</label>
 
