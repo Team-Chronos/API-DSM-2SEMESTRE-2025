@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
-import axios from "axios";
 import { ModalCotacaoFrete } from "./CotacaoFrete";
 import { ModalDetalhesCotacao } from "../../../../../components/modals/ModalDetalhesCotacao";
-import { FaSearch, FaSort, FaSortUp, FaSortDown, FaPlus, FaSlidersH, FaTimes, FaSync, FaMapMarkerAlt, FaEye, FaTrash } from 'react-icons/fa';
+import { FaSort, FaSortUp, FaSortDown, FaSlidersH, FaTimes, FaSync, FaMapMarkerAlt, FaEye, FaTrash } from 'react-icons/fa';
 import "../../../../../css/cotacao.css";
+import api from "../../../../../services/api";
 
 interface Cotacao {
   id: number;
@@ -41,7 +41,7 @@ export default function Cotacao() {
   const fetchCotacoes = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/cotacao");
+      const response = await api.get("/cotacao");
       
       console.log("Dados recebidos do backend:", response.data);
       
@@ -152,7 +152,7 @@ export default function Cotacao() {
     if (!window.confirm("Tem certeza que deseja excluir esta cotação?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/cotacao/${id}`);
+      await api.delete(`/cotacao/${id}`);
       alert("Cotação excluída com sucesso!");
       fetchCotacoes();
     } catch (err) {

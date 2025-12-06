@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Modal, Button, Form } from "react-bootstrap";
 import { dataHora } from "../../utils/facilidades";
 import type { Evento } from "../../utils/tipos";
+import api from "../../services/api";
 
 interface ModalEditarEventoProps {
   show: boolean;
@@ -57,8 +57,8 @@ export const ModalEditarEvento = ({
     if (!evento) return;
 
     try {
-      await axios.put(
-        `http://localhost:3000/api/eventos/${evento.ID_Evento}`,
+      await api.put(
+        `/eventos/${evento.ID_Evento}`,
         form
       );
       onSuccess();

@@ -3,12 +3,12 @@ import "../../../css/adm.css";
 import { useEffect, useState } from "react";
 import { ColaboradoresList } from "./administrativo/ColaboradoresList";
 import { EventosList } from "./administrativo/EventosList";
-import axios from "axios";
 import { HeaderControlsColaboradores } from "../../../components/HeaderControlsColaboradores";
 import { HeaderControlsEventos } from "../../../components/HeaderControlsEventos";
 import { type Colaborador, type Evento, type Tab } from "../../../utils/tipos";
 import { normalizarTexto } from "../../../utils/formatacoes";
 import { RelatorioList } from "./comercial/RelatorioList";
+import api from "../../../services/api";
 
 export const Administrativo = () => {
   const [activeTab, setActiveTab] = useState<Tab>("colaboradores");
@@ -45,7 +45,7 @@ export const Administrativo = () => {
   const carregarColaboradores = async () => {
     setLoadingColaboradores(true);
     try {
-      const response = await axios.get("http://localhost:3000/api/colaboradores");
+      const response = await api.get("/colaboradores");
       setColaboradores(response.data);
     } catch (error) {
       console.error("Erro ao carregar colaboradores:", error);
@@ -57,7 +57,7 @@ export const Administrativo = () => {
   const carregarEventos = async () => {
     setLoadingEventos(true);
     try {
-      const response = await axios.get("http://localhost:3000/api/eventos");
+      const response = await api.get("/eventos");
       setEventos(response.data);
     } catch (error) {
       console.error("Erro ao carregar eventos:", error);

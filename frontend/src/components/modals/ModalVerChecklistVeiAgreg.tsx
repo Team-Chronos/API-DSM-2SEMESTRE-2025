@@ -1,4 +1,4 @@
-import { Modal, Button, Accordion, Row, Col, Badge, Image } from "react-bootstrap";
+import { Modal, Button, Accordion, Row, Col, Badge } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { formatarCpf, formatarDataHora } from "../../utils/formatacoes";

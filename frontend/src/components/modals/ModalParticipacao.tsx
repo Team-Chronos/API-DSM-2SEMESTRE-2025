@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { tp_tipo_evento, type Notificacao } from "../../utils/tipos";
 import { dataHora } from "../../utils/facilidades";
+import api from "../../services/api";
 
 interface ModalParticipacaoProps {
   show: boolean;
@@ -59,7 +59,7 @@ export const ModalParticipacao = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/certificadoParticipacao", form);
+      await api.post("/certificadoParticipacao", form);
       onSuccess(evento.ID_Evento);
       limparForm();
       onClose();

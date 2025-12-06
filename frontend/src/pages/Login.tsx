@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import axios from "axios";
 import { useAuth } from '../context/AuthContext'
 import { Logo } from '../components/LogoLogin'
 import "../css/login.css"
 import { useNavigate } from 'react-router-dom'
+import api from '../services/api';
 
 export const Login = () => {
   const { login } = useAuth()
@@ -24,7 +24,7 @@ export const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/login", { email, senha });
+      const res = await api.post("/auth/login", { email, senha });
       login(res.data.token);
       setErroLogin('');
       navigate("/home");

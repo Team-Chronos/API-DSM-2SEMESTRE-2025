@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button, Form, Alert, Spinner, Row, Col } from 'react-bootstrap';
-import axios from 'axios';
+import api from '../../services/api';
 
 interface ModalGerarRelatorioProps {
   setor: number;
@@ -47,7 +47,7 @@ export const ModalGerarRelatorio = ({ setor, show, onClose, onSuccess }: ModalGe
         setError(null); 
         try {
           console.log("Enviando pedido GET /api/clientes/cidades"); 
-          const resCidades = await axios.get("http://localhost:3000/api/clientes/cidades"); 
+          const resCidades = await api.get("/clientes/cidades"); 
           console.log("Resposta cidades:", resCidades.data); 
           if (Array.isArray(resCidades.data)) {
             setCidades(resCidades.data); 
@@ -67,7 +67,7 @@ export const ModalGerarRelatorio = ({ setor, show, onClose, onSuccess }: ModalGe
         setIsLoadingSegmentos(true); 
         try {
           console.log("Enviando pedido GET /api/clientes/segmentos"); 
-          const resSegmentos = await axios.get("http://localhost:3000/api/clientes/segmentos"); 
+          const resSegmentos = await api.get("/clientes/segmentos"); 
           console.log("Resposta segmentos:", resSegmentos.data); 
            if (Array.isArray(resSegmentos.data)) {
              setSegmentos(resSegmentos.data); 
@@ -107,11 +107,11 @@ export const ModalGerarRelatorio = ({ setor, show, onClose, onSuccess }: ModalGe
     };
     console.log("Enviando payload:", payload); 
     const isPdf = ['eventos', 'participacao', 'colaboradores'].includes(tipoRelatorio); 
-    const url = isPdf ? "http://localhost:3000/api/relatorios/gerar-pdf" : "http://localhost:3000/api/relatorios/gerar-excel";
+    const url = isPdf ? "/relatorios/gerar-pdf" : "/relatorios/gerar-excel";
     console.log("A chamar URL:", url);
 
     try {
-      const response = await axios.post(url, payload, { responseType: 'blob' });
+      const response = await api.post(url, payload, { responseType: 'blob' });
       console.log("Relatório gerado, status:", response.status);
 
       const contentDisposition = response.headers['content-disposition'];

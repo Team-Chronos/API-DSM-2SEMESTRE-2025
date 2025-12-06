@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Card, Row, Col } from "react-bootstrap";
 import "../../../../css/ComercialDashboard.css";
 import {
@@ -12,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import api from "../../../../services/api";
 
 interface Cliente {
   ID_Cliente: number;
@@ -24,7 +24,7 @@ export const ComercialDashboard = () => {
 
   const carregarClientes = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/clientes");
+      const res = await api.get("/clientes");
       setClientes(res.data);
     } catch (err) {
       console.error(err);

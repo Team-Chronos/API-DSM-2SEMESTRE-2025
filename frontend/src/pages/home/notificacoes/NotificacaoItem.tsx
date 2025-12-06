@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
-import axios from "axios";
+import api from "../../../services/api";
 
 interface Props {
   data: any;
@@ -30,7 +30,7 @@ export const NotificacaoItem: React.FC<Props> = ({
   async function loadJustificativa() {
     if (!user || !data) return
     try{
-      const partEvento = await axios.get(`http://localhost:3000/api/participacaoEventos/${user.id}/${data.ID_Evento}`)
+      const partEvento = await api.get(`/participacaoEventos/${user.id}/${data.ID_Evento}`)
       setJustificativaSalva(partEvento.data.justificativa)
     }
     catch (err){

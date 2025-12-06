@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { IoIosContact, IoIosAddCircle } from "react-icons/io";
 import { ModalCadastroCliente } from "./ModalCadastroCliente";
 import "../../css/ModalDestaqueClientes.css";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 
 interface Cliente {
   ID_Cliente: number;
@@ -18,7 +18,7 @@ export const ModalDestaqueClientes = () => {
 
   const carregarClientes = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/clientes");
+      const res = await api.get("/clientes");
       setClientes(res.data);
     } catch (err) {
       console.error("Erro ao carregar clientes:", err);

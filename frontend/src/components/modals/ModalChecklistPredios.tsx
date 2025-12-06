@@ -1,6 +1,6 @@
 import { Button, Modal, Form } from "react-bootstrap";
 import { useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
 
 interface Props {
   show: boolean;
@@ -33,7 +33,7 @@ export function ModalChecklistPredios({
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/checklistPredios", data);
+      const response = await api.post("/checklistPredios", data);
       setMensagem(response.data.mensagem || "Checklist de fechamento enviado com sucesso!");
       onSucces();
       onClose();

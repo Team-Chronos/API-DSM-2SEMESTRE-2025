@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Spinner, Card, Row, Col, Badge, Accordion } from 'react-bootstrap';
+import api from '../../services/api';
 
 interface Checklist {
   id?: number | string;
@@ -785,7 +785,7 @@ const ModalChecklist = ({ show, onClose, onSuccess }: ModalChecklistProps) => {
         arcond_operacional: dadosParaEnvio.arcond_operacional
       });
 
-      await axios.post('http://localhost:3000/api/checklist', dadosParaEnvio);
+      await api.post('/checklist', dadosParaEnvio);
 
       onSuccess();
       limparForm();
@@ -1333,7 +1333,7 @@ function ChecklistPage() {
     try {
       setLoading((prev) => ({ ...prev, page: true }));
       setError(null);
-      const response = await axios.get('http://localhost:3000/api/checklist');
+      const response = await api.get('/checklist');
       const data = response.data;
 
       let checklistsData: Checklist[] = [];

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "../../../css/calendar.css";
 import type { Evento } from "../../../utils/tipos";
 import { normalizarTexto } from "../../../utils/formatacoes";
 import { ModalCadastroTarefa } from "../../../components/modals/ModalCadastroTarefa";
 import { ModalDetalhesTarefa } from "../../../components/modals/ModalDetalhesTarefa";
 import { useAuth } from "../../../context/AuthContext";
+import api from "../../../services/api";
 
 interface DiaSemana {
   numero: number;
@@ -212,8 +212,8 @@ export const Calendar = () => {
   useEffect(() => {
     const fetchEventos = async () => {
       try {
-        const response = await axios.get<Evento[]>(
-          "http://localhost:3000/api/eventos/"
+        const response = await api.get<Evento[]>(
+          "/eventos/"
         );
         setEventos(response.data);
       } catch (error) {
@@ -226,8 +226,8 @@ export const Calendar = () => {
   const carregarTarefas = async () => {
     if (!user?.id) return;
     try {
-      const response = await axios.get(
-        `http://localhost:3000/api/agenda/vendedor/${user.id}`
+      const response = await api.get(
+        `/agenda/vendedor/${user.id}`
       );
       setTarefas(response.data);
     } catch {
@@ -313,7 +313,7 @@ export const Calendar = () => {
 
   const handleExcluirTarefa = async (tarefa: Tarefa) => {
     try {
-      await axios.delete(`http://localhost:3000/api/agenda/${tarefa.ID_Agenda}`);
+      await api.delete(`/agenda/${tarefa.ID_Agenda}`);
       handleFecharDetalhes();
       carregarTarefas();
     } catch (error) {

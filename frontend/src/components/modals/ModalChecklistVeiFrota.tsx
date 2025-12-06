@@ -1,6 +1,6 @@
 import { Button, Modal, Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
 
 interface Props {
   show: boolean;
@@ -19,7 +19,7 @@ export function ModalChecklistVeiFrota({ show, onClose, onSucces, onErro, setMen
 
     const loadMotoristas = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/checklistVeiculoFrota/motoristas");
+        const { data } = await api.get("/checklistVeiculoFrota/motoristas");
         setMotoristas(data);
       } catch (err) {
         console.error("Erro ao carregar motoristas:", err);
@@ -39,7 +39,7 @@ export function ModalChecklistVeiFrota({ show, onClose, onSucces, onErro, setMen
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/api/checklistVeiculoFrota", formData
+      const response = await api.post("/checklistVeiculoFrota", formData
       );
 
       setMensagem(response.data.mensagem);
