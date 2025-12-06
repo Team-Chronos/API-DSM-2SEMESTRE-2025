@@ -33,9 +33,23 @@ const PORT = 3000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      const permitidos = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+      ];
+
+      const local = /^http:\/\/192\.168\.\d+\.\d+:5173$/;
+
+      if (permitidos.includes(origin) || local.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Não permitido pelo CORS"));
+      }
+    },
     credentials: true,
-    exposedHeaders: ["Content-Disposition"],
   })
 );
 
