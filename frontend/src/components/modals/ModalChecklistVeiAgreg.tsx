@@ -1,7 +1,7 @@
 import { Button, Modal, Form } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { formatarCpf } from "../../utils/formatacoes";
-import axios from "axios";
+import api from "../../services/api";
 
 interface Props {
   show: boolean;
@@ -18,7 +18,7 @@ export function ModalChecklistVeiAgreg({ show, onClose, onSucces, onErro, setMen
   useEffect(() => {
     const getResponsaveis = async () => {
       try{
-        const response = await axios.get("http://localhost:3000/api/checklistVeiculoAgregado/responsaveis")
+        const response = await api.get("/checklistVeiculoAgregado/responsaveis")
         setResponsaveisVistoria(response.data)
       } catch(error){
         console.error("Erro ao carregar responáveis pela vistoria:", error);
@@ -64,7 +64,7 @@ export function ModalChecklistVeiAgreg({ show, onClose, onSucces, onErro, setMen
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/checklistVeiculoAgregado", data, {
+      const response = await api.post("/checklistVeiculoAgregado", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMensagem(response.data.mensagem);

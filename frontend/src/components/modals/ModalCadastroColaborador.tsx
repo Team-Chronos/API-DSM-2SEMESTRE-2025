@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import axios from "axios";
 import { formatarCpf, formatarTelefone } from "../../utils/formatacoes";
 import type { Cargos } from "../../utils/tipos";
+import api from "../../services/api";
 
 interface ModalCadastroColaboradorProps {
   show: boolean;
@@ -25,7 +25,7 @@ export const ModalCadastroColaborador = ({ show, onClose, onSuccess }: ModalCada
 
   useEffect(() => {
     if (show) {
-      axios.get("http://localhost:3000/api/colaboradores/cargos")
+      api.get("/colaboradores/cargos")
         .then(response => {
           setCargos(response.data);
           if (response.data.length > 0) {
@@ -70,7 +70,7 @@ export const ModalCadastroColaborador = ({ show, onClose, onSuccess }: ModalCada
         telefone: form.telefone.replace(/\D/g, ''),
         cpf: form.cpf.replace(/\D/g, '')
       };
-      await axios.post("http://localhost:3000/api/colaboradores", payload);
+      await api.post("/colaboradores", payload);
       onSuccess();
       onClose();
       limparForm();

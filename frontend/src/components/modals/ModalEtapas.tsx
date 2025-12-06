@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import {
   DragDropContext,
   Droppable,
@@ -8,6 +7,7 @@ import {
 } from "@hello-pangea/dnd";
 import "../../css/ModalEtapas.css";
 import type { Cliente } from "../../utils/tipos";
+import api from "../../services/api";
 
 const etapasConfig = [
   { key: "prospects", label: "Prospects" },
@@ -33,8 +33,8 @@ export const ModalEtapas = () => {
 
   const carregarClientes = async () => {
     try {
-      const res = await axios.get<Cliente[]>(
-        "http://localhost:3000/api/clientes"
+      const res = await api.get<Cliente[]>(
+        "/clientes"
       );
 
       const novoEstado = etapasConfig.reduce((acc, etapa) => {
@@ -78,8 +78,8 @@ export const ModalEtapas = () => {
     });
 
     try {
-      await axios.put(
-        `http://localhost:3000/api/clientes/${movido.ID_Cliente}/etapa`,
+      await api.put(
+        `/clientes/${movido.ID_Cliente}/etapa`,
         { etapa: etapasConfig.find((e) => e.key === destinoKey)?.label }
       );
     } catch (err) {

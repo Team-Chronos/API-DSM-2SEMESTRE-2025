@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { formatarTelefone } from "../../../../utils/formatacoes";
-import axios from "axios";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 import { ModalConfirmacao } from "../../../../components/modals/ModalConfirmacao";
 import { ModalEditarColaborador } from "../../../../components/modals/ModalEditarColaborador";
 import type { Colaborador } from "../../../../utils/tipos";
+import api from "../../../../services/api";
 
 interface ColaboradoresListProps {
   colaboradores: Colaborador[];
@@ -56,7 +56,7 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
   const excluirColaborador = async () => {
     if (!colaboradorSelecionado) return;
     try {
-      await axios.delete(`http://localhost:3000/api/colaboradores/${colaboradorSelecionado.ID_colaborador}`);
+      await api.delete(`/colaboradores/${colaboradorSelecionado.ID_colaborador}`);
       setTituloMessage("Sucesso");
       setMensagem("Colaborador excluído com sucesso!");
       setShowMessage(true);
@@ -94,7 +94,7 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
 ];
 
   const RADIAN = Math.PI / 180;
-  const renderLabelPercentual = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+  const renderLabelPercentual = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
     if (percent === 0) return null;
 
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -141,7 +141,7 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
                     innerRadius={40}
                     dataKey="value"
                   >
-                    {data.map((entry, index) => (
+                    {data.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={cores[index % cores.length]} />
                     ))}
                   </Pie>

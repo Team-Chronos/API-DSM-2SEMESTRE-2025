@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import axios, { type AxiosRequestConfig } from "axios";
+import { type AxiosRequestConfig } from "axios";
 import { ModalGerarRelatorio } from "../../../../components/modals/ModalGerarRelatorio";
 import { useAuth } from "../../../../context/AuthContext";
 import "../../../../css/relatorio.css";
+import api from "../../../../services/api";
 
 interface Relatorio {
   ID_Relatorio: number;
@@ -28,7 +29,7 @@ export const RelatorioList = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await axios.get("http://localhost:3000/api/relatorios");
+      const res = await api.get("/relatorios");
       setRelatorios(res.data);
     } catch (err: any) {
       console.error("Erro ao carregar relatórios:", err);
@@ -57,8 +58,8 @@ export const RelatorioList = () => {
     setError(null);
     try {
       const config: AxiosRequestConfig = { responseType: "blob" };
-      const response = await axios.get(
-        `http://localhost:3000/api/relatorios/download/${filename}`,
+      const response = await api.get(
+        `/relatorios/download/${filename}`,
         config
       );
 
@@ -87,7 +88,7 @@ export const RelatorioList = () => {
     setConfirmingDeleteId(null);
     setError(null);
     try {
-      await axios.delete(`http://localhost:3000/api/relatorios/${reportId}`);
+      await api.delete(`/relatorios/${reportId}`);
       carregarRelatorios();
     } catch (err: any) {
       console.error("Erro ao excluir o relatório:", err);

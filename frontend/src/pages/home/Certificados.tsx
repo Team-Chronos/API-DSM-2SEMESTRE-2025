@@ -3,7 +3,7 @@ import "../../css/certificados.css";
 import { pdfjs } from "react-pdf";
 import PdfPreview from "../../components/modals/modalpdf";
 import { useAuth } from "../../context/AuthContext";
-import axios from "axios";
+import api from "../../services/api";
 
 const SearchIcon = () => (
   <svg
@@ -43,7 +43,7 @@ export const Certificados = () => {
 
   useEffect(() => {
     if (user) {
-      axios.get(`http://localhost:3000/api/certificadoParticipacao/usuario/${user.id}`)
+      api.get(`/certificadoParticipacao/usuario/${user.id}`)
         .then(res => {
           setCertificados(res.data);
         })

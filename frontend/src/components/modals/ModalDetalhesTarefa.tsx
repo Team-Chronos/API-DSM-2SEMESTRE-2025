@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Tarefa } from "../pages/home/eventos/Calendar";
+import type { Tarefa } from "../../pages/home/eventos/Calendar";
 
 interface ModalDetalhesTarefaProps {
   isOpen: boolean;

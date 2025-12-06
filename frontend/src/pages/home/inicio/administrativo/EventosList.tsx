@@ -1,11 +1,11 @@
 import { useState } from "react";
-import axios from "axios";
 import { formatarDataHora } from "../../../../utils/formatacoes";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 import { ModalConfirmacao } from "../../../../components/modals/ModalConfirmacao";
 import { ModalEditarEvento } from "../../../../components/modals/ModalEditarEvento";
 import { ModalConsultarEvento } from "../../../../components/modals/ModalConsultarEvento";
 import type { Evento } from "../../../../utils/tipos";
+import api from "../../../../services/api";
 
 interface EventosListProps {
   eventos: Evento[];
@@ -38,8 +38,8 @@ export const EventosList = ({
     if (!eventoSelecionado) return;
 
     try {
-      await axios.delete(
-        `http://localhost:3000/api/eventos/${eventoSelecionado.ID_Evento}`
+      await api.delete(
+        `/eventos/${eventoSelecionado.ID_Evento}`
       );
       setTituloMessage("Sucesso");
       setMensagem("Evento excluído com sucesso!");

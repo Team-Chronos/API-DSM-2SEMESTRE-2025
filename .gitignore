@@ -22,3 +22,5 @@ frontend/package-lock.json
 backend/reports/
 backend/src/certificados/
 backend/src/relatorios_part/
+frontend/src/services/api.ts
+backend/src/config/db.js
