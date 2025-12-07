@@ -10,7 +10,7 @@ export const HomeLayout = () => {
       <Sidebar
         onLogout={logout}
       />
-      <main className="home-main flex-grow-1 p-4 overflow-y-auto">{<Outlet />}</main>
+      <main className="home-main w-100 p-4 overflow-y-auto">{<Outlet />}</main>
     </div>
   );
 }

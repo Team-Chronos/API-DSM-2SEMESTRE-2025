@@ -1,9 +1,3 @@
-:root {
-    --azul: rgb(28, 28, 255);
-    --azul-escuro: rgb(13, 13, 139);
-    --azul-muito-escuro: rgb(13, 13, 99);
-}
-
 #adm-module .header-tabs {
     display: flex;
     gap: 0;
@@ -32,15 +26,6 @@
     box-shadow: 0 4px 12px rgba(35, 116, 171, 0.3);
 }
 
-#adm-module .header-tabs .btn.ativo::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background-color: #ffffff;
-}
 
 #adm-module .header-tabs .btn:first-child {
     border-radius: 10px 0 0 10px;
@@ -67,11 +52,6 @@
     background-color: var(--azul-escuro);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(35, 116, 171, 0.3);
-}
-
-#adm-module .page-header #btn-modal-cad .bi-plus-lg {
-    margin-right: 0.5rem;
-    font-size: 1.1rem;
 }
 
 #adm-module .botoes-tabela {
@@ -233,16 +213,6 @@
     background-color: #777777;
 }
 
-#adm-module .page-header .filter-wrapper label {
-    white-space: nowrap !important;
-    font-weight: 500 !important;
-    color: #495057 !important;
-    font-size: 0.93rem !important;
-    margin-right: 7px !important;
-    letter-spacing: 0;
-}
-
-#adm-module .page-header .filter-wrapper .form-select,
 #adm-module .filter-wrapper .form-select {
     min-width: 150px !important;
     border-radius: 8px !important;
@@ -259,20 +229,17 @@
     box-shadow: none !important;
 }
 
-#adm-module .page-header .filter-wrapper .form-select:focus,
 #adm-module .filter-wrapper .form-select:focus {
     border-color: var(--azul) !important;
     background: #e6f2fb !important;
 }
 
-#adm-module .page-header .filter-wrapper .form-select option,
 #adm-module .filter-wrapper .form-select option {
     color: var(--azul-escuro) !important;
     font-weight: 500 !important;
     background: #f8faff !important;
 }
 
-#adm-module .page-header .filter-wrapper,
 #adm-module .filter-wrapper {
     margin-right: 18px !important;
     display: flex !important;
@@ -325,18 +292,6 @@
     #adm-module .table tbody td {
         font-size: 0.9rem;
         padding: 0.75rem 0.5rem !important;
-    }
-}
-
-@media (max-width: 576px) {
-    #adm-module .header-tabs {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    #adm-module .header-tabs .btn {
-        border-radius: 8px !important;
-        border: none !important;
     }
 }
 

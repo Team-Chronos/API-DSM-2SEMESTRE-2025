@@ -7,29 +7,27 @@ interface HeaderProps {
 
 export const Header = ({ activeTab, setActiveTab }: HeaderProps) => {
   return (
-    <div className="page-header d-flex align-items-center justify-content-between mb-4">
-      <div className="header-tabs d-flex">
-        <div
-          id="btn-colaboradores"
-          className={`btn ${activeTab === "colaboradores" ? "ativo" : ""}`}
-          onClick={() => setActiveTab("colaboradores")}
-        >
-          Colaboradores
-        </div>
-        <div
-          id="btn-eventos"
-          className={`btn ${activeTab === "eventos" ? "ativo" : ""}`}
-          onClick={() => setActiveTab("eventos")}
-        >
-          Eventos
-        </div>
-        <div
-          id="btn-relatórios"
-          className={`btn ${activeTab === "relatórios" ? "ativo" : ""}`}
-          onClick={() => setActiveTab("relatórios")}
-        >
-          Relatórios
-        </div>
+    <div className="header-tabs d-flex flex-row flex-nowrap align-items-center">
+      <div
+        id="btn-colaboradores"
+        className={`btn ${activeTab === "colaboradores" ? "ativo" : ""}`}
+        onClick={() => setActiveTab("colaboradores")}
+      >
+        Colaboradores
+      </div>
+      <div
+        id="btn-eventos"
+        className={`btn ${activeTab === "eventos" ? "ativo" : ""}`}
+        onClick={() => setActiveTab("eventos")}
+      >
+        Eventos
+      </div>
+      <div
+        id="btn-relatórios"
+        className={`btn ${activeTab === "relatórios" ? "ativo" : ""}`}
+        onClick={() => setActiveTab("relatórios")}
+      >
+        Relatórios
       </div>
     </div>
   );

@@ -3,8 +3,8 @@ import "../../../css/adm.css";
 import { useEffect, useState } from "react";
 import { ColaboradoresList } from "./administrativo/ColaboradoresList";
 import { EventosList } from "./administrativo/EventosList";
-import { HeaderControlsColaboradores } from "../../../components/HeaderControlsColaboradores";
-import { HeaderControlsEventos } from "../../../components/HeaderControlsEventos";
+import { HeaderControlsColaboradores } from "./administrativo/HeaderControlsColaboradores";
+import { HeaderControlsEventos } from "./administrativo/HeaderControlsEventos";
 import { type Colaborador, type Evento, type Tab } from "../../../utils/tipos";
 import { normalizarTexto } from "../../../utils/formatacoes";
 import { RelatorioList } from "./comercial/RelatorioList";
@@ -97,7 +97,7 @@ export const Administrativo = () => {
           setSearchText={setSearchText}
         />
       ) : (null)}
-      <div id="lista-colaboradores-eventos">
+      <div id="lista-colaboradores-eventos" className={`table-responsive`}>
         {activeTab === "colaboradores" ? (
           <ColaboradoresList
             colaboradores={colaboradoresFiltrados}

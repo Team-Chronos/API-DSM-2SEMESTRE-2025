@@ -57,7 +57,7 @@ export const EventosList = ({
 
   return (
     <>
-      <table className="table table-hover align-middle">
+      <table className="table table-hover align-middle overflow-hidden px-5">
         <thead className="table-light">
           <tr>
             <th>ID</th>
@@ -69,37 +69,39 @@ export const EventosList = ({
         <tbody>
           {eventos.map((evento) => (
             <tr key={evento.ID_Evento}>
-              <td>{evento.ID_Evento}</td>
+              <td style={{ paddingLeft: ".7rem"}}>{evento.ID_Evento}</td>
               <td>{evento.Nome_Evento}</td>
               <td>{formatarDataHora(evento.Data_Evento)}</td>
               <td>
-                <button
-                  className="btn btn-sm btn-primary me-2"
-                  onClick={() => {
-                    setEventoSelecionado(evento);
-                    setShowEdit(true);
-                  }}
-                >
-                  Editar
-                </button>
-                <button
-                  className="btn btn-sm btn-primary me-2"
-                  onClick={() => {
-                    setEventoSelecionado(evento);
-                    setShowConsultar(true);
-                  }}
-                >
-                  Consultar
-                </button>
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => {
-                    setEventoSelecionado(evento);
-                    setShowConfirm(true);
-                  }}
-                >
-                  Excluir
-                </button>
+                <div className={`d-flex`}>
+                  <button
+                    className="btn btn-sm btn-primary me-2"
+                    onClick={() => {
+                      setEventoSelecionado(evento);
+                      setShowEdit(true);
+                    }}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn btn-sm btn-primary me-2"
+                    onClick={() => {
+                      setEventoSelecionado(evento);
+                      setShowConsultar(true);
+                    }}
+                  >
+                    Consultar
+                  </button>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => {
+                      setEventoSelecionado(evento);
+                      setShowConfirm(true);
+                    }}
+                  >
+                    Excluir
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

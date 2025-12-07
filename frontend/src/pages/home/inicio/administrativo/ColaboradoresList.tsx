@@ -185,31 +185,33 @@ export const ColaboradoresList = ({ colaboradores, loading, refetch }: Colaborad
               <tbody>
                 {colaboradores.map((colab) => (
                   <tr key={colab.ID_colaborador}>
-                    <td>{colab.ID_colaborador}</td>
+                    <td style={{ paddingLeft: ".7rem"}}>{colab.ID_colaborador}</td>
                     <td>{colab.Nome_Col}</td>
                     <td>{colab.Email}</td>
                     <td>{getNomeSetor(colab.Setor)}</td>
                     <td>{getNomeLocalidade(colab.Localidade)}</td>
-                    <td>{formatarTelefone(colab.Telefone)}</td>
+                    <td className={`text-nowrap`}>{formatarTelefone(colab.Telefone)}</td>
                     <td>
-                      <button
-                        className="btn btn-sm btn-primary me-2"
-                        onClick={() => {
-                          setColaboradorSelecionado(colab);
-                          setShowEdit(true);
-                        }}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          setColaboradorSelecionado(colab);
-                          setShowConfirm(true);
-                        }}
-                      >
-                        Excluir
-                      </button>
+                      <div className={`d-flex`}>
+                        <button
+                          className="btn btn-sm btn-primary me-2"
+                          onClick={() => {
+                            setColaboradorSelecionado(colab);
+                            setShowEdit(true);
+                          }}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => {
+                            setColaboradorSelecionado(colab);
+                            setShowConfirm(true);
+                          }}
+                        >
+                          Excluir
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

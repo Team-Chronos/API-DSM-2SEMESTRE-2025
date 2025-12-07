@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ModalCadastroColaborador } from "./modals/ModalCadastroColaborador";
-import { ModalMensagem } from "./modals/ModalMensagem";
+import { ModalCadastroColaborador } from "../../../../components/modals/ModalCadastroColaborador";
+import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
 
 interface Props {
   onSuccess: () => void;
