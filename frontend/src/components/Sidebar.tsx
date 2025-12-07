@@ -48,7 +48,7 @@ export const Sidebar = ({ onLogout }: SidebarProps) => {
           <div id="modulo">{setorTexto}</div>
         </div>
 
-        <nav className="my-auto">
+        <nav className="my-auto overflow-y-auto">
           <ul className="list-unstyled d-flex flex-column mb-0">
             {navItems.map((item) => {
               const iconName =
@@ -56,10 +56,9 @@ export const Sidebar = ({ onLogout }: SidebarProps) => {
               return (
                 <li
                   key={item.id}
-                  className={`d-flex align-items-center px-2 py-1 ${
+                  className={`d-flex px-2 py-1 ${
                     item.id === currentPath ? "active" : ""
                   }`}
-                  style={{ cursor: "pointer" }}
                   onClick={() => {
                     navigate(item.id === "inicio" ? "/" : `/${item.id}`)
                     setOpen(false)

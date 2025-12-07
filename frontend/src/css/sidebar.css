@@ -11,6 +11,8 @@
   border-radius: 10px;
   font-size: 1.4rem;
 
+  box-shadow: -2px 2px 10px 0 rgba(0, 0, 0, 0.3), -2px 2px 5px 0 rgba(0, 0, 0, 0.3), inset -1px 1px 5px 0 rgba(255, 255, 255, 0.3);
+
   transition: left .45s ease;
 }
 
@@ -21,30 +23,9 @@
   width: 15%;
   min-width: 250px;
 
-  transition: transform .4s ease;
-}
+  box-shadow: -2px 2px 10px 0 rgba(0, 0, 0, 0.5), -2px 2px 6px 0 rgba(0, 0, 0, 0.3);
 
-@media (max-width: 768px) {
-  #barra-lateral {
-    position: fixed;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    transform: translateX(-100%);
-    z-index: 998;
-  }
-
-  #barra-lateral.open {
-    transform: translateX(0);
-  }
-
-  .btn-toggle-sidebar {
-    display: block;
-  }
-
-  #barra-lateral.open ~ .btn-toggle-sidebar {
-    left: calc(250px + 16px);
-  }
+  transition: transform .4s ease, box-shadow .4s ease;
 }
 
 #barra-lateral #colab-info {
@@ -77,4 +58,43 @@
 }
 #barra-lateral nav > ul > li > .bi::before {
   font-size: 28px;
+}
+
+#barra-lateral nav::-webkit-scrollbar {
+  width: 10px;
+}
+#barra-lateral nav::-webkit-scrollbar-track {
+  background: rgb(255, 255, 255, 0.067);
+  border-radius: 7px;
+}
+#barra-lateral nav::-webkit-scrollbar-thumb {
+  background: var(--azul-escuro);
+  border-radius: 7px;
+}
+
+@media (max-width: 768px) {
+  #barra-lateral {
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+
+    box-shadow: none;
+
+    z-index: 998;
+  }
+
+  #barra-lateral.open {
+    transform: translateX(0);
+    box-shadow: -2px 2px 30px 0 rgba(0, 0, 0, 0.5), -2px 2px 10px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-toggle-sidebar {
+    display: block;
+  }
+
+  #barra-lateral.open ~ .btn-toggle-sidebar {
+    left: calc(250px + 16px);
+  }
 }
