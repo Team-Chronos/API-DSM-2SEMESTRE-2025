@@ -9,6 +9,7 @@ import { type Colaborador, type Evento, type Tab } from "../../../utils/tipos";
 import { normalizarTexto } from "../../../utils/formatacoes";
 import { RelatorioList } from "../../../components/RelatorioList";
 import api from "../../../services/api";
+import { GraficoModalidade } from "./administrativo/GraficoModalidade";
 
 export const Administrativo = () => {
   const [activeTab, setActiveTab] = useState<Tab>("colaboradores");
@@ -97,6 +98,13 @@ export const Administrativo = () => {
           setSearchText={setSearchText}
         />
       ) : (null)}
+      {activeTab === "colaboradores" && (
+        <div className={`grafico-modalidade`}>
+          <GraficoModalidade
+            colaboradores={colaboradores}
+          />
+        </div>
+      )}
       <div id="lista-colaboradores-eventos" className={`table-responsive`}>
         {activeTab === "colaboradores" ? (
           <ColaboradoresList
