@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { type AxiosRequestConfig } from "axios";
-import { ModalGerarRelatorio } from "../../../../components/modals/ModalGerarRelatorio";
-import { useAuth } from "../../../../context/AuthContext";
-import "../../../../css/relatorio.css";
-import api from "../../../../services/api";
+import { ModalGerarRelatorio } from "./modals/ModalGerarRelatorio";
+import { useAuth } from "../context/AuthContext";
+import "../css/relatorio.css";
+import api from "../services/api";
 
 interface Relatorio {
   ID_Relatorio: number;
@@ -204,7 +204,8 @@ export const RelatorioList = () => {
           className="relatorio-btn relatorio-btn-novo"
           onClick={() => setShowGerarRelatorioModal(true)}
         >
-          <i className="bi bi-plus-lg"></i> Gerar Novo Relatório
+          <i className="bi bi-plus-lg"></i>
+          <span>Gerar Novo Relatório</span>
         </button>
       </div>
 

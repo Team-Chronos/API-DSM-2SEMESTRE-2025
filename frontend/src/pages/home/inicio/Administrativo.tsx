@@ -7,7 +7,7 @@ import { HeaderControlsColaboradores } from "./administrativo/HeaderControlsCola
 import { HeaderControlsEventos } from "./administrativo/HeaderControlsEventos";
 import { type Colaborador, type Evento, type Tab } from "../../../utils/tipos";
 import { normalizarTexto } from "../../../utils/formatacoes";
-import { RelatorioList } from "./comercial/RelatorioList";
+import { RelatorioList } from "../../../components/RelatorioList";
 import api from "../../../services/api";
 
 export const Administrativo = () => {

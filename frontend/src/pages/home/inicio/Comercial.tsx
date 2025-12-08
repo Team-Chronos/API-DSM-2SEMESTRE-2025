@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ComercialDashboard } from "./comercial/ComercialDashboard";
 import { ClientesList } from "./comercial/ClientesList";
-import { RelatorioList } from "./comercial/RelatorioList";
+import { RelatorioList } from "../../../components/RelatorioList";
 import { ModalDestaqueClientes } from "../../../components/modals/ModalDestaqueClientes";
 import "../../../css/Comercial.css";
 import { ModalEtapas } from "../../../components/modals/ModalEtapas";
