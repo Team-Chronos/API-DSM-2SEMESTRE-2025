@@ -1,3 +1,9 @@
+#adm-module {
+    row-gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
 #adm-module .header-tabs {
     display: flex;
     gap: 0;
@@ -312,4 +318,20 @@
 #adm-module #descricao_evento {
     resize: vertical !important;
     min-height: 100px !important;
+}
+
+#adm-module .grafico-e-tabela {
+    gap: 1.5rem;
+    display: flex;
+    flex-direction: row;
+}
+
+#adm-module .grafico-modalidade {
+    min-width: 225px;
+}
+
+#adm-module .tabela-e-controles {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.5rem;
 }

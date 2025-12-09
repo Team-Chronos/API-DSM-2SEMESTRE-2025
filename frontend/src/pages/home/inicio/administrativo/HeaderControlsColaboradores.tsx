@@ -28,7 +28,7 @@ export const HeaderControlsColaboradores = ({
 
   return (
     <>
-      <div className="header-controls d-flex align-items-center gap-3 mb-4">
+      <div className="header-controls d-flex align-items-center gap-3">
         <div className="search-wrapper me-auto">
           <i className="bi bi-search"></i>
           <input

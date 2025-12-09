@@ -80,9 +80,17 @@ export const Administrativo = () => {
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-      />
-      {activeTab === "colaboradores" ? (
-        <HeaderControlsColaboradores
+        />
+      {activeTab === "colaboradores" && (
+        <div className={`grafico-modalidade`}>
+          <GraficoModalidade
+            colaboradores={colaboradores}
+            />
+        </div>
+      )}
+      <div className={`tabela-e-controles w-100 mb-5 mb-sm-0`}>
+        {activeTab === "colaboradores" ? (
+          <HeaderControlsColaboradores
           onSuccess={carregarColaboradores}
           filtroSetor={filtroSetor}
           setFiltroSetor={setFiltroSetor}
@@ -90,37 +98,31 @@ export const Administrativo = () => {
           setFiltroModalidade={setFiltroModalidade}
           searchText={searchText}
           setSearchText={setSearchText}
-        />
-      ) : activeTab === "eventos" ? (
-        <HeaderControlsEventos
+          />
+        ) : activeTab === "eventos" ? (
+          <HeaderControlsEventos
           onSuccess={carregarEventos}
           searchText={searchText}
           setSearchText={setSearchText}
-        />
-      ) : (null)}
-      {activeTab === "colaboradores" && (
-        <div className={`grafico-modalidade`}>
-          <GraficoModalidade
-            colaboradores={colaboradores}
           />
-        </div>
-      )}
-      <div id="lista-colaboradores-eventos" className={`table-responsive`}>
-        {activeTab === "colaboradores" ? (
-          <ColaboradoresList
+        ) : (null)}
+        <div id="lista-colaboradores-eventos" className={`table-responsive`}>
+          {activeTab === "colaboradores" ? (
+            <ColaboradoresList
             colaboradores={colaboradoresFiltrados}
             loading={loadingColaboradores}
             refetch={carregarColaboradores}
-          />
-        ) : activeTab === "eventos" ? (
-          <EventosList
+            />
+          ) : activeTab === "eventos" ? (
+            <EventosList
             eventos={eventosFiltrados}
             loading={loadingEventos}
             refetch={carregarEventos}
-          />
-        ) : (
-          <RelatorioList />
-        )}
+            />
+          ) : (
+            <RelatorioList />
+          )}
+        </div>
       </div>
     </div>
   );

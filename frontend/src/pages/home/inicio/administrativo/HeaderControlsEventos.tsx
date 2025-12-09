@@ -16,7 +16,7 @@ export const HeaderControlsEventos = ({ onSuccess, searchText, setSearchText }: 
 
   return (
     <>
-      <div className="header-controls d-flex align-items-center gap-3 mb-4">
+      <div className="header-controls d-flex align-items-center gap-3">
         <div className="search-wrapper">
           <i className="bi bi-search"></i>
           <input
