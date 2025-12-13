@@ -6,6 +6,7 @@ import { ModalEditarEvento } from "../../../../components/modals/ModalEditarEven
 import { ModalConsultarEvento } from "../../../../components/modals/ModalConsultarEvento";
 import type { Evento } from "../../../../utils/tipos";
 import api from "../../../../services/api";
+import "../../../../css/eventoList.css";
 
 interface EventosListProps {
   eventos: Evento[];
@@ -20,33 +21,28 @@ export const EventosList = ({
 }: EventosListProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-  const [tituloMessage, setTituloMessage] = useState<
-    "Sucesso" | "Erro" | "Aviso"
-  >("Aviso");
+  const [tituloMessage, setTituloMessage] =
+    useState<"Sucesso" | "Erro" | "Aviso">("Aviso");
   const [mensagem, setMensagem] = useState("");
   const [showEdit, setShowEdit] = useState(false);
   const [showConsultar, setShowConsultar] = useState(false);
-  const [eventoSelecionado, setEventoSelecionado] = useState<Evento | null>(
-    null
-  );
+  const [eventoSelecionado, setEventoSelecionado] =
+    useState<Evento | null>(null);
 
-  if (loading) return <p>Carregando...</p>;
+  if (loading) return <p className="eventos-loading">Carregando...</p>;
   if (eventos.length === 0)
-    return <p className="text-center mt-3">Nenhum evento cadastrado.</p>;
+    return <p className="eventos-empty">Nenhum evento cadastrado.</p>;
 
   const excluirEvento = async () => {
     if (!eventoSelecionado) return;
 
     try {
-      await api.delete(
-        `/eventos/${eventoSelecionado.ID_Evento}`
-      );
+      await api.delete(`/eventos/${eventoSelecionado.ID_Evento}`);
       setTituloMessage("Sucesso");
       setMensagem("Evento excluído com sucesso!");
       setShowMessage(true);
       refetch();
-    } catch (error) {
-      console.error("Erro ao excluir evento:", error);
+    } catch {
       setTituloMessage("Erro");
       setMensagem("Erro ao excluir evento.");
       setShowMessage(true);
@@ -57,56 +53,61 @@ export const EventosList = ({
 
   return (
     <>
-      <table className="table table-hover align-middle overflow-hidden px-5">
-        <thead className="table-light">
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Data e Hora</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {eventos.map((evento) => (
-            <tr key={evento.ID_Evento}>
-              <td style={{ paddingLeft: ".7rem"}}>{evento.ID_Evento}</td>
-              <td>{evento.Nome_Evento}</td>
-              <td>{formatarDataHora(evento.Data_Evento)}</td>
-              <td>
-                <div className={`d-flex`}>
-                  <button
-                    className="btn btn-sm btn-primary me-2"
-                    onClick={() => {
-                      setEventoSelecionado(evento);
-                      setShowEdit(true);
-                    }}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="btn btn-sm btn-primary me-2"
-                    onClick={() => {
-                      setEventoSelecionado(evento);
-                      setShowConsultar(true);
-                    }}
-                  >
-                    Consultar
-                  </button>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={() => {
-                      setEventoSelecionado(evento);
-                      setShowConfirm(true);
-                    }}
-                  >
-                    Excluir
-                  </button>
-                </div>
-              </td>
+      <div className="eventos-container">
+        <table className="eventos-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Data e Hora</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {eventos.map((evento) => (
+              <tr key={evento.ID_Evento}>
+                <td data-label="Nome">
+                  {evento.Nome_Evento}
+                </td>
+                <td data-label="Data e Hora">
+                  {formatarDataHora(evento.Data_Evento)}
+                </td>
+                <td data-label="Ações">
+                  <div className="eventos-acoes">
+                    <button
+                      className="eventos-btn eventos-btn-primary"
+                      onClick={() => {
+                        setEventoSelecionado(evento);
+                        setShowEdit(true);
+                      }}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="eventos-btn eventos-btn-primary"
+                      onClick={() => {
+                        setEventoSelecionado(evento);
+                        setShowConsultar(true);
+                      }}
+                    >
+                      Consultar
+                    </button>
+                    <button
+                      className="eventos-btn eventos-btn-danger"
+                      onClick={() => {
+                        setEventoSelecionado(evento);
+                        setShowConfirm(true);
+                      }}
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+
+        </table>
+      </div>
 
       <ModalEditarEvento
         show={showEdit}

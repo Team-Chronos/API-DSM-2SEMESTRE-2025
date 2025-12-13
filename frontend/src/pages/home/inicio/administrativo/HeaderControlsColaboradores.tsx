@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ModalCadastroColaborador } from "../../../../components/modals/ModalCadastroColaborador";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
-
+import "../../../../css/headerColab.css"
 interface Props {
   onSuccess: () => void;
   filtroSetor: string;

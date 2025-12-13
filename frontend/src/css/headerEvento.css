@@ -1,0 +1,53 @@
+.eventos-header{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.eventos-btn-add{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.9rem;
+    background-color: var(--azul);
+    color: #fff;
+    border:none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+}
+.eventos-btn-add:hover{
+    background-color: var(--azul-escuro);
+}
+.eventos-btn-icon{
+    font-size: 1rem;
+}
+
+@media(max-width: 991px){
+    .eventos-header{
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items:stretch !important;
+        gap: 1rem !important;
+        padding-bottom: 1rem;
+    }
+    .search-wrapper, #btn-modal-cad{
+        margin:0;
+        min-width: 100%;
+    }
+    .eventos-btn-add{
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center !important;
+        width: 100%;
+        font-size: 2rem;
+    }
+    .eventos-btn-add i {
+        font-size: 1.5rem;
+    }
+}   

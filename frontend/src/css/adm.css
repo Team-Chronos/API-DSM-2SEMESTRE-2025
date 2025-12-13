@@ -281,9 +281,13 @@
 }
 
 @media (max-width: 768px) {
+    .card shadow-sm{
+        display: block;
+    }
     #adm-module .header-tabs .btn {
         padding: 10px 16px;
         font-size: 0.9rem;
+        width: 100%;
     }
 
     #adm-module .col-md-3 {

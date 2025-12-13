@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import { type AxiosRequestConfig } from "axios";
+import {
+  FiDownload,
+  FiTrash2,
+  FiPlus,
+  FiAlertTriangle,
+  FiInbox,
+  FiAlertCircle
+} from "react-icons/fi";
 import { ModalGerarRelatorio } from "./modals/ModalGerarRelatorio";
 import { useAuth } from "../context/AuthContext";
 import "../css/relatorio.css";
@@ -21,8 +29,8 @@ export const RelatorioList = () => {
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [confirmingDeleteId, setConfirmingDeleteId] = useState<number | null>(null);
+
   const { user } = useAuth();
-  
   if (!user) return null;
 
   const carregarRelatorios = async () => {
@@ -31,8 +39,7 @@ export const RelatorioList = () => {
     try {
       const res = await api.get("/relatorios");
       setRelatorios(res.data);
-    } catch (err: any) {
-      console.error("Erro ao carregar relatórios:", err);
+    } catch {
       setError("Não foi possível carregar a lista de relatórios.");
       setRelatorios([]);
     } finally {
@@ -44,24 +51,12 @@ export const RelatorioList = () => {
     carregarRelatorios();
   }, []);
 
-  const handleCloseGerarRelatorioModal = () => {
-    setShowGerarRelatorioModal(false);
-  };
-
-  const handleSuccessGerarRelatorio = () => {
-    setShowGerarRelatorioModal(false);
-    carregarRelatorios();
-  };
-
   const handleDownload = async (reportId: number, filename: string) => {
     setDownloadingId(reportId);
     setError(null);
     try {
       const config: AxiosRequestConfig = { responseType: "blob" };
-      const response = await api.get(
-        `/relatorios/download/${filename}`,
-        config
-      );
+      const response = await api.get(`/relatorios/download/${filename}`, config);
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -71,13 +66,8 @@ export const RelatorioList = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (downloadError: any) {
-      console.error("Erro ao descarregar o relatório:", downloadError);
-      if (downloadError.response && downloadError.response.status === 404) {
-        setError("Não foi possível descarregar: Ficheiro não encontrado no servidor.");
-      } else {
-        setError("Erro ao descarregar o relatório.");
-      }
+    } catch {
+      setError("Erro ao descarregar o relatório.");
     } finally {
       setDownloadingId(null);
     }
@@ -86,17 +76,11 @@ export const RelatorioList = () => {
   const handleExcluir = async (reportId: number) => {
     setDeletingId(reportId);
     setConfirmingDeleteId(null);
-    setError(null);
     try {
       await api.delete(`/relatorios/${reportId}`);
       carregarRelatorios();
-    } catch (err: any) {
-      console.error("Erro ao excluir o relatório:", err);
-      if (err.response && err.response.status === 404) {
-        setError("Não foi possível excluir: Relatório não encontrado.");
-      } else {
-        setError("Erro ao excluir o relatório.");
-      }
+    } catch {
+      setError("Erro ao excluir o relatório.");
     } finally {
       setDeletingId(null);
     }
@@ -118,7 +102,7 @@ export const RelatorioList = () => {
       return (
         <tr>
           <td colSpan={4} className="relatorio-error-cell">
-            <i className="bi bi-exclamation-triangle"></i>
+            <FiAlertTriangle />
             <span>{error}</span>
           </td>
         </tr>
@@ -129,7 +113,7 @@ export const RelatorioList = () => {
       return (
         <tr>
           <td colSpan={4} className="relatorio-empty-cell">
-            <i className="bi bi-inbox"></i>
+            <FiInbox />
             <span>Nenhum relatório gerado ainda.</span>
           </td>
         </tr>
@@ -138,12 +122,14 @@ export const RelatorioList = () => {
 
     return relatorios.map((r) => (
       <tr key={r.ID_Relatorio}>
-        <td>{r.Nome_Relatorio}</td>
-        <td>
-          <span className="relatorio-tipo-badge">{r.Tipo_Relatorio}</span>
+        <td data-label="Nome">{r.Nome_Relatorio}</td>
+        <td data-label="Tipo">
+          <span className="relatorio-tipo-badge">
+            {r.Tipo_Relatorio}
+          </span>
         </td>
-        <td>{new Date(r.Data_Geracao).toLocaleString("pt-BR")}</td>
-        <td className="relatorio-acoes">
+        <td data-label="Data e Hora">{new Date(r.Data_Geracao).toLocaleString("pt-BR")}</td>
+        <td className="relatorio-acoes" data-label="Ações">
           {confirmingDeleteId === r.ID_Relatorio ? (
             <div className="relatorio-confirm-group">
               <button
@@ -151,11 +137,7 @@ export const RelatorioList = () => {
                 onClick={() => handleExcluir(r.ID_Relatorio)}
                 disabled={deletingId === r.ID_Relatorio}
               >
-                {deletingId === r.ID_Relatorio ? (
-                  <span className="relatorio-spinner-sm"></span>
-                ) : (
-                  "Confirmar"
-                )}
+                Confirmar
               </button>
               <button
                 className="relatorio-btn relatorio-btn-cancelar"
@@ -172,20 +154,17 @@ export const RelatorioList = () => {
                 disabled={downloadingId === r.ID_Relatorio || deletingId !== null}
                 onClick={() => handleDownload(r.ID_Relatorio, r.Nome_Relatorio)}
               >
-                {downloadingId === r.ID_Relatorio ? (
-                  <span className="relatorio-spinner-sm"></span>
-                ) : (
-                  <>
-                    <i className="bi bi-download"></i> Baixar
-                  </>
-                )}
+                <FiDownload />
+                <span>Baixar</span>
               </button>
+
               <button
                 className="relatorio-btn relatorio-btn-excluir"
                 disabled={downloadingId !== null || deletingId !== null}
                 onClick={() => setConfirmingDeleteId(r.ID_Relatorio)}
               >
-                <i className="bi bi-trash"></i> Excluir
+                <FiTrash2 />
+                <span>Excluir</span>
               </button>
             </div>
           )}
@@ -197,21 +176,20 @@ export const RelatorioList = () => {
   return (
     <div className="relatorio-container">
       <div className="relatorio-header">
-        <div className="relatorio-title-group">
-          <h3 className="relatorio-title">Relatórios Gerados</h3>
-        </div>
+        <h3 className="relatorio-title">Relatórios Gerados</h3>
+
         <button
           className="relatorio-btn relatorio-btn-novo"
           onClick={() => setShowGerarRelatorioModal(true)}
         >
-          <i className="bi bi-plus-lg"></i>
+          <FiPlus />
           <span>Gerar Novo Relatório</span>
         </button>
       </div>
 
       {error && relatorios.length > 0 && (
         <div className="relatorio-alert">
-          <i className="bi bi-exclamation-circle"></i>
+          <FiAlertCircle />
           <span>{error}</span>
         </div>
       )}
@@ -233,8 +211,8 @@ export const RelatorioList = () => {
       <ModalGerarRelatorio
         setor={user.setor}
         show={showGerarRelatorioModal}
-        onClose={handleCloseGerarRelatorioModal}
-        onSuccess={handleSuccessGerarRelatorio}
+        onClose={() => setShowGerarRelatorioModal(false)}
+        onSuccess={carregarRelatorios}
       />
     </div>
   );

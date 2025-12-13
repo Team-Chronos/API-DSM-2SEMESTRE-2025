@@ -1,0 +1,139 @@
+.eventos-container {
+  padding: 1.5rem 2rem;
+}
+
+.eventos-loading,
+.eventos-empty {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.eventos-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  font-size: 0.9rem;
+}
+
+.eventos-table thead th {
+  padding: 0.75rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #1e2a8a;
+  border-bottom: 2px solid #1e2a8a;
+  text-align: left;
+}
+
+.eventos-table tbody td {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1f2937;
+  vertical-align: middle;
+}
+
+.eventos-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.eventos-id {
+  font-weight: 500;
+}
+
+.eventos-acoes {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.eventos-btn {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.eventos-btn-primary {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.eventos-btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.eventos-btn-danger {
+  background-color: #dc2626;
+  color: #fff;
+}
+
+.eventos-btn-danger:hover {
+  background-color: #b91c1c;
+}
+
+
+
+@media (max-width: 991px) {
+  .eventos-container {
+    padding: 1rem;
+  }
+
+  .eventos-table thead {
+    display: none;
+  }
+
+  .eventos-table,
+  .eventos-table tbody,
+  .eventos-table tr,
+  .eventos-table td{
+    display: block;
+    width: 100%;
+  }
+  .eventos-table tr{
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rbga(0,0,0,0.05);
+    padding: 0.75rem;
+  }
+  .eventos-table td{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0 ;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    text-align: right;
+  }
+  .eventos-table td:last-child{
+    border-bottom: 0;
+    justify-content: flex-end;
+  }
+  .eventos-table td::before{
+    content: attr(data-label);
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.8rem;
+    text-align: left;
+    margin-right: 1rem;
+  }
+  
+}
+
+
+
+@media (min-width: 992px) {
+  .eventos-container {
+    padding: 2rem 2.5rem;
+  }
+
+  .eventos-table th,
+  .eventos-table td {
+    padding: 1rem;
+  }
+}

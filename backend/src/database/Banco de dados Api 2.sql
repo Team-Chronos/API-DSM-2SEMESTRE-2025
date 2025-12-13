@@ -264,8 +264,8 @@ CREATE TABLE Agenda (
     Tipo_Contato ENUM('Email', 'Telefone', 'Reunião', 'Visita', 'Proposta') DEFAULT 'Reunião',
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador),
-    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente)
+    FOREIGN KEY (ID_Colaborador) REFERENCES Colaboradores(ID_colaborador) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Cliente) REFERENCES Cliente(ID_Cliente) ON DELETE CASCADE
 );
 
 CREATE TABLE Relatorio (

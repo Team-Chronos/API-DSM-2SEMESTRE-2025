@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { ModalCadastroEvento } from "../../../../components/modals/ModalCadastroEvento";
 import { ModalMensagem } from "../../../../components/modals/ModalMensagem";
+import "../../../../css/headerEvento.css"
+import { GrAdd } from "react-icons/gr";
 
 interface Props {
   onSuccess: () => void;
@@ -16,7 +18,7 @@ export const HeaderControlsEventos = ({ onSuccess, searchText, setSearchText }: 
 
   return (
     <>
-      <div className="header-controls d-flex align-items-center gap-3">
+      <div className="eventos-header">
         <div className="search-wrapper">
           <i className="bi bi-search"></i>
           <input
@@ -28,9 +30,9 @@ export const HeaderControlsEventos = ({ onSuccess, searchText, setSearchText }: 
           />
         </div>
 
-        <button id="btn-modal-cad" className="btn btn-primary ms-auto text-nowrap" onClick={() => setShowModal(true)}>
-          <i className="bi bi-plus-lg"></i>
-          <span className={`d-none d-sm-inline-block ms-3`}>Adicionar Evento</span>
+        <button className="eventos-btn-add" onClick={() => setShowModal(true)}>
+          <i className="eventos-btn-icon"><GrAdd /></i>
+          <span className="eventos-btn-text">Adicionar Evento</span>
         </button>
       </div>
 

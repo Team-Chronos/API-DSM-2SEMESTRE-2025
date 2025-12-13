@@ -81,13 +81,13 @@ export const Administrativo = () => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         />
-      {activeTab === "colaboradores" && (
+      {/* {activeTab === "colaboradores" && (
         <div className={`grafico-modalidade`}>
           <GraficoModalidade
             colaboradores={colaboradores}
             />
         </div>
-      )}
+      )} */}
       <div className={`tabela-e-controles w-100 mb-5 mb-sm-0`}>
         {activeTab === "colaboradores" ? (
           <HeaderControlsColaboradores
