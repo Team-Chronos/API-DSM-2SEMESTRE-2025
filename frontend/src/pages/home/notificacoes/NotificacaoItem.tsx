@@ -29,11 +29,11 @@ export const NotificacaoItem: React.FC<Props> = ({
 
   async function loadJustificativa() {
     if (!user || !data) return
-    try{
+    try {
       const partEvento = await api.get(`/participacaoEventos/${user.id}/${data.ID_Evento}`)
       setJustificativaSalva(partEvento.data.justificativa)
     }
-    catch (err){
+    catch (err) {
       console.error("Erro ao carregar justificativa salva: " + err)
     }
   }
@@ -74,10 +74,12 @@ export const NotificacaoItem: React.FC<Props> = ({
   return (
     <div
       id={`evento-${data.ID_Evento}`}
-      className={`notification py-2 d-flex flex-row card ${!podeInteragir ? "inactive" : ""} ${getStatusClass(data.ID_Status)}`}
+      className={`notification ${!podeInteragir ? "inactive" : ""} ${getStatusClass(data.ID_Status)}`}
       onClick={() => setShowDetails(!showDetails)}
     >
-      <i className={ `bi bi-bell icon px-3 pt-3 ${getStatusClass(data.ID_Status)}`}></i>
+
+      <i className={`bi bi-bell icon ${getStatusClass(data.ID_Status)}`}></i>
+
       <div className="content pt-2">
         <strong>{data.Nome_Evento}</strong>
         <p>
@@ -98,12 +100,12 @@ export const NotificacaoItem: React.FC<Props> = ({
 
 
             {
-            data.ID_Status === 3 && justificativaSalva && (
-              <div className="mt-3">
-                <strong>Motivo da recusa:</strong>
-                <p className="mb-0">{justificativaSalva}</p>
-              </div>
-            )}
+              data.ID_Status === 3 && justificativaSalva && (
+                <div className="mt-3">
+                  <strong>Motivo da recusa:</strong>
+                  <p className="mb-0">{justificativaSalva}</p>
+                </div>
+              )}
 
             {podeInteragir && (
               <div className="buttons">
@@ -111,7 +113,7 @@ export const NotificacaoItem: React.FC<Props> = ({
                   className="btn-confirmar"
                   onClick={(e) => {
                     e.stopPropagation();
-                    {data.ID_Status === 1 ? (onAceitar()) : (onConcluir())}
+                    { data.ID_Status === 1 ? (onAceitar()) : (onConcluir()) }
                   }}
                 >
                   {data.ID_Status === 1 ? ("Aceitar") : (

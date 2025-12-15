@@ -6,11 +6,11 @@ export const Notificacoes = () => {
   const { user } = useAuth();
 
   if (!user) {
-    return <p className="text-center mt-3">Carregando usuário...</p>;
+    return <p>Carregando usuário...</p>;
   }
 
   return (
-    <div id="divNotificacoes" className="p-3">
+    <div id="divNotificacoes">
       <ListaNotificacoes idColab={user.id} />
     </div>
   );

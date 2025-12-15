@@ -1,19 +1,18 @@
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
-
-#divNotificacoes .notificacoes-wrapper {
-  padding: 20px;
+#divNotificacoes {
+  padding: 1.5rem;
 }
 
-#divNotificacoes .search-bar {
+.notificacoes-wrapper {
+  width: 100%;
+}
+
+.search-bar {
   position: relative;
-  display: flex;
-  align-items: center;
-  width: 400px;
-  max-width: 400px;
-  margin: 0 auto 20px auto;
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
 }
 
-#divNotificacoes .search-bar input {
+.search-bar input {
   width: 100%;
   height: 45px;
   padding: 10px 55px 10px 20px;
@@ -24,138 +23,206 @@
   outline: none;
 }
 
-#divNotificacoes .search-bar .bi-search {
+.search-bar i {
   position: absolute;
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
   width: 32px;
   height: 32px;
+  border-radius: 50%;
+  background: #888;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #888888;
-  color: #ffffff;
-  border-radius: 50%;
-  padding: 8px;
-  pointer-events: none;
 }
 
-#divNotificacoes .notification {
-  display: flex;
-  gap: 10px;
+.notificacoes-wrapper h4 {
+  text-align: center;
+  margin: 1.5rem 0 1rem;
+}
+
+.notificacoes-container {
   width: 60%;
-  border: 2px solid var(--blue, #1c1cff);
-  border-radius: 8px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.notification {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
   background: #f7f7f7;
-  padding: 10px;
-  margin: 0 auto 15px auto;
-  transition: 0.3s;
+  border-radius: 10px;
+  border: 2px solid var(--blue, #1c1cff);
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.notification.inactive {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.notification .icon {
+  font-size: 1.6rem;
+  margin-top: 0.25rem;
+  color: var(--blue, #1c1cff);
+}
+
+.notification.accept {
+  border-color: #28a745;
+}
+
+.notification.reject {
+  border-color: #dc3545;
+}
+
+.notification.concluded {
+  border-color: #28a745;
+}
+
+.notification .content strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--blue, #1c1cff);
+}
+
+.notification .content p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+}
+
+.details {
+  margin-top: 0.75rem;
+}
+
+.details a {
+  color: var(--blue, #1c1cff);
+  text-decoration: underline;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.btn-confirmar {
+  border: 2px solid #28a745;
+  color: #28a745;
+  background: white;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-#divNotificacoes .notification.inactive {
-  opacity: 0.6;
-  border: 1px solid #aaa;
+.btn-recusar {
+  border: 2px solid #dc3545;
+  color: #dc3545;
+  background: white;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-#divNotificacoes .notification .icon {
-  font-size: 22px;
-  color: var(--blue, #1c1cff);
-}
-
-#divNotificacoes .notification .content strong {
-  color: var(--blue, #1c1cff);
-}
-
-#divNotificacoes .notification .details {
-  margin-top: 8px;
-}
-
-#divNotificacoes .buttons {
+.justificativa {
   display: flex;
-  gap: 10px;
-  margin-top: 8px;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
-#divNotificacoes .accept.notification {
-  border: 2px solid #28a745;
-  background: #fff;
-  padding: 5px 15px;
-  border-radius: 6px;
-  font-weight: 600;
-}
-
-#divNotificacoes .reject.notification {
-  border: 2px solid #dc3546bb;
-  color: #c43442;
-  background: #fff;
-  padding: 5px 15px;
-  border-radius: 6px;
-  font-weight: 600;
-}
-
-#divNotificacoes .reject.icon {
-  color: #c43442;
-}
-
-#divNotificacoes .concluded.notification {
-  border: 2px solid #28a746a0;
-  color: #11832b;
-  background: #fff;
-  padding: 5px 15px;
-  border-radius: 6px;
-  font-weight: 600;
-}
-
-#divNotificacoes .concluded.icon {
-  color: #11832b;
-}
-
-#divNotificacoes .justificativa {
-  margin-top: 8px;
-  display: flex;
-  gap: 5px;
-}
-
-#divNotificacoes .justificativa textarea {
+.justificativa textarea {
   flex: 1;
   border-radius: 6px;
   border: 1px solid #ccc;
-  padding: 4px;
+  padding: 6px;
 }
 
-#divNotificacoes .send {
-  background-color: var(--blue, #1c1cff);
+.send {
+  background: var(--blue, #1c1cff);
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   cursor: pointer;
 }
 
-#divNotificacoes .btn-confirmar {
-  border: 2px solid #28a745;
-  color: #28a745;
-  background: #fff;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-weight: 600;
+.erro {
+  border-color: #dc3545;
 }
 
-#divNotificacoes .btn-confirmar:hover {
-  background-color: #f0fff0;
-}
-
-#divNotificacoes .btn-recusar {
-  border: 2px solid #dc3545;
+.text-danger {
   color: #dc3545;
-  background: #fff;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-weight: 600;
+  font-size: 0.85rem;
 }
 
-#divNotificacoes .btn-recusar:hover {
-  background-color: #fff0f0;
+.text-success {
+  color: #28a745;
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 991px) {
+  .notificacoes-wrapper {
+    padding: 2rem 0;
+  }
+
+  .search-bar {
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .notificacoes-container {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .notification {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 10px;
+    display: flex;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .notification .icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .notification .content strong {
+    font-size: 0.95rem;
+  }
+
+  .notification .content p {
+    font-size: 0.85rem;
+    margin: 0.2rem 0;
+  }
+
+  .details {
+    font-size: 0.85rem;
+  }
+
+  .buttons {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .btn-confirmar,
+  .btn-recusar {
+    width: 100%;
+    padding: 0.6rem;
+  }
+
 }
