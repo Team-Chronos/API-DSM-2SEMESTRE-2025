@@ -129,7 +129,7 @@ export async function listarResponsaveis(req, res) {
     const query = `
       SELECT col.Nome_col, rv.id_responsavel
       FROM responsaveisVistoria rv
-      INNER JOIN colaboradores col
+      INNER JOIN Colaboradores col
       ON col.ID_colaborador = rv.id_responsavel
     `;
     const [result] = await db.promise().query(query);
@@ -144,7 +144,7 @@ export async function listarResponsaveis(req, res) {
 
 export async function listarChecklistsVeiculoAgregado(req, res) {
   try {
-    const query = `SELECT cva.*, col.Nome_Col FROM checklistveiculoagregado cva left join colaboradores col on col.ID_colaborador = cva.id_responsavel_vistoria;`;
+    const query = `SELECT cva.*, col.Nome_Col FROM checklistVeiculoAgregado cva left join Colaboradores col on col.ID_colaborador = cva.id_responsavel_vistoria;`;
     const [result] = await db.promise().query(query);
     res.status(200).json(result);
   } catch (err) {
@@ -161,7 +161,7 @@ export async function listarChecklistPorId(req, res) {
   const { id } = req.params;
   try {
     const query = `
-      SELECT cva.*, col.Nome_Col FROM checklistVeiculoAgregado cva LEFT JOIN colaboradores col ON col.ID_colaborador = cva.id_responsavel_vistoria WHERE cva.ID_cva = ?;`;
+      SELECT cva.*, col.Nome_Col FROM checklistVeiculoAgregado cva LEFT JOIN Colaboradores col ON col.ID_colaborador = cva.id_responsavel_vistoria WHERE cva.ID_cva = ?;`;
     const [result] = await db.promise().query(query, [id]);
     if (result.length === 0) {
       return res.status(404).json({ mensagem: "Checklist não encontrado." });

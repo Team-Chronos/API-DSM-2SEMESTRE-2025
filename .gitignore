@@ -7,9 +7,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Arquivos de ambiente (senhas, conexões)
-.env
-
 # Cache do sistema
 .DS_Store
 Thumbs.db
@@ -22,3 +19,4 @@ frontend/package-lock.json
 backend/reports/
 backend/src/certificados/
 backend/src/relatorios_part/
+backend/uploads/
