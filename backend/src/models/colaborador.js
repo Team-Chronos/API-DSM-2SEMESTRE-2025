@@ -9,7 +9,7 @@ const Colaborador = {
 
   findByEmail: (email) => {
     const query =
-      "SELECT col.*, car.Nivel_Acesso FROM Colaboradores col inner join cargo car on car.ID_Cargo = col.ID_Cargo WHERE Email = ?";
+      "SELECT col.*, car.Nivel_Acesso FROM Colaboradores col inner join Cargo car on car.ID_Cargo = col.ID_Cargo WHERE Email = ?";
     return db.promise().query(query, [email]);
   },
 
