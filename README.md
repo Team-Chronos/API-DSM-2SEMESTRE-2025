@@ -18,7 +18,7 @@
   <a href ="#equipe">Equipe</a> |
 </p>
 
-> Status do Projeto: Em andamento ⏳ 
+> Status do Projeto: Concluída ✅ 
 >
 > Pasta de Documentação: [Documentação das Sprints](https://github.com/Team-Chronos/API-DSM-2SEMESTRE-2025/tree/main/docs)
 > 
